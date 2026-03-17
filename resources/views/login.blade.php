@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Login - Marketplace UMKM Fashion Wanita</title>
+    <title>Login</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 
@@ -11,13 +11,12 @@
 
     <div class="bg-white shadow-xl rounded-2xl w-[400px] p-10">
 
-        <!-- LOGO -->
         <div class="flex flex-col items-center mb-6">
             <img src="https://cdn-icons-png.flaticon.com/512/3081/3081559.png"
                 class="w-20 mb-3">
 
             <h1 class="text-2xl font-bold text-[#5c3d2e]">
-                Marketplace UMKM
+                FemmeMart
             </h1>
 
         </div>
@@ -25,7 +24,6 @@
         <form method="POST" action="/login">
             @csrf
 
-            <!-- Username -->
             <div class="mb-4">
                 <label class="block text-gray-600 mb-2">Username</label>
                 <input type="text"
@@ -34,7 +32,6 @@
                     placeholder="Masukkan username">
             </div>
 
-            <!-- Password -->
             <div class="mb-6">
                 <label class="block text-gray-600 mb-2">Password</label>
                 <input type="password"
@@ -43,7 +40,6 @@
                     placeholder="Masukkan password">
             </div>
 
-            <!-- Button -->
             <button
                 class="w-full bg-[#8b5e3c] text-white py-3 rounded-lg hover:bg-[#6f4e37] transition">
                 Login
