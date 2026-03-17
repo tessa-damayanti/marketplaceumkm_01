@@ -34,7 +34,7 @@ class KategoriController extends Controller
             [
                 'id'        => 3,
                 'nama'      => 'Cardigan',
-                'deskripsi' => 'Cardigan rajut hangat dan stylish',
+                'deskripsi' => 'Cardigan rajut hangat dan stylish untuk berbagai kesempatan',
                 'icon'      => 'cardigan',
                 'produk'    => [
                     ['nama' => 'Cardigan Rajut Coklat', 'icon' => 'cardigan'],
@@ -45,7 +45,7 @@ class KategoriController extends Controller
             [
                 'id'        => 4,
                 'nama'      => 'Rok',
-                'deskripsi' => 'Rok wanita berbagai model dan panjang',
+                'deskripsi' => 'Rok wanita berbagai model dan panjang untuk gaya feminin yang anggun',
                 'icon'      => 'rok',
                 'produk'    => [
                     ['nama' => 'Rok Midi Kasual',   'icon' => 'rok'],

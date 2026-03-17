@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kategori Produk - FashionHub UMKM</title>
+    <title>Kategori Produk - FemmeMart</title>
     <style>
         * {
             margin: 0;
@@ -73,6 +73,9 @@
             cursor: pointer;
             border: 2px solid transparent;
             transition: transform 0.2s, border-color 0.2s, box-shadow 0.2s;
+
+            display: flex;
+            flex-direction: column;
         }
 
         .card-kategori:hover {
@@ -102,6 +105,17 @@
         .card-kategori-body {
             padding: 14px;
             background: #fff8f2;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .klik-info {
+            margin-top: auto;
+            /* dorong ke bawah */
+            font-size: 11px;
+            color: #c9a882;
+            font-style: italic;
         }
 
         .badge {
@@ -255,7 +269,7 @@
 <body>
 
     <div class="header">
-        <h1>Marketplace UMKM</h1>
+        <h1>FemmeMart</h1>
         <p>Marketplace Fashion Wanita Terpercaya</p>
     </div>
 
@@ -266,7 +280,7 @@
             <p>Pilih kategori untuk melihat koleksi produk</p>
         </div>
 
-        {{-- ======== GRID KATEGORI ======== --}}
+        <!-- GRID KATEGORI -->
         <div class="grid-kategori">
             @foreach ($kategori as $index => $item)
             <div class="card-kategori"
@@ -326,7 +340,7 @@
             @endforeach
         </div>
 
-        {{-- ======== SECTION PRODUK ======== --}}
+        <!-- SECTION PRODUK -->
         @foreach ($kategori as $index => $item)
         <div class="produk-section" id="produk-{{ $index }}">
             <div class="produk-header">
@@ -427,7 +441,7 @@
     </div>
 
     <div class="footer">
-        &copy; 2026 Marketplace UMKM
+        &copy; 2026 Marketplace UMKM Fashion Wanita
     </div>
 
     <script>
