@@ -16,15 +16,15 @@
         }
 
         .soft-shadow {
-            box-shadow: 0 24px 60px rgba(105, 76, 57, 0.15);
+            box-shadow: 0 24px 60px rgba(92, 68, 50, 0.15);
         }
 
         .brown-gradient {
-            background: linear-gradient(135deg, #c59a7d 0%, #a97d5d 100%);
+            background: linear-gradient(135deg, #c9b8a6 0%, #b9a48f 100%);
         }
 
         .left-gradient {
-            background: linear-gradient(135deg, #c59a7d 0%, #b08467 45%, #8f654a 100%);
+            background: linear-gradient(135deg, #c9b8a6 0%, #b9a48f 45%, #a78d78 100%);
         }
 
         .fade-up {
@@ -44,8 +44,8 @@
         }
     </style>
 </head>
-
-<body class="min-h-screen bg-[#f8f3ee] flex items-center justify-center px-4 py-8">
+<body class="min-h-screen bg-[#e6dbcf] flex items-center justify-center px-4 py-8">
+<!-- <body class="min-h-screen bg-[#f7f2eb] flex items-center justify-center px-4 py-8"> -->
 
     <div class="w-full max-w-6xl rounded-[34px] overflow-hidden bg-white soft-shadow fade-up">
         <div class="grid md:grid-cols-2 min-h-[620px]">
@@ -66,46 +66,60 @@
             </div>
 
             <!-- RIGHT SIDE -->
-            <div class="bg-[#fffaf6] flex items-center justify-center px-8 py-10 md:px-14">
+            <div class="bg-[#f4ede5] flex items-center justify-center px-8 py-10 md:px-14">
                 <div class="w-full max-w-md">
                     <div class="text-center mb-10">
-                        <h2 class="text-4xl font-bold text-[#5d4030]">Login</h2>
+                        <h2 class="text-4xl font-bold text-[#5c4432]">Login</h2>
                     </div>
 
                     <form class="space-y-5" method="GET" action="{{ route('admin.dashboard') }}">
+
+                        <!-- USERNAME -->
                         <div>
-                            <label class="block text-sm font-semibold text-[#6f5443] mb-2">
+                            <label class="block text-sm font-semibold text-[#5c4432] mb-2">
                                 Username
                             </label>
                             <div class="relative">
-                                <span class="absolute left-4 top-1/2 -translate-y-1/2 text-[#b08a71] text-lg">👤</span>
+                                <span class="absolute left-4 top-1/2 -translate-y-1/2 text-[#a78d78]">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.5 20.25a8.25 8.25 0 0115 0" />
+                                    </svg>
+                                </span>
                                 <input
                                     name="username"
                                     type="text"
                                     placeholder="Masukkan username"
-                                    class="w-full h-14 rounded-2xl border border-[#e5d6c8] bg-white pl-12 pr-4 text-[#5a4030] placeholder:text-[#b79b87] focus:outline-none focus:ring-2 focus:ring-[#c79d7d] focus:border-[#c79d7d] transition">
+                                    class="w-full h-14 rounded-2xl border border-[#e0d2c3] bg-[#fbf7f2] pl-12 pr-4 text-[#5c4432] placeholder:text-[#b7a08c] focus:outline-none focus:ring-2 focus:ring-[#a78d78] focus:border-[#a78d78] transition">
                             </div>
                         </div>
 
+                        <!-- PASSWORD -->
                         <div>
-                            <label class="block text-sm font-semibold text-[#6f5443] mb-2">
+                            <label class="block text-sm font-semibold text-[#5c4432] mb-2">
                                 Password
                             </label>
                             <div class="relative">
-                                <span class="absolute left-4 top-1/2 -translate-y-1/2 text-[#b08a71] text-lg">🔒</span>
+                                <span class="absolute left-4 top-1/2 -translate-y-1/2 text-[#a78d78]">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M16.5 10.5V7.875a4.125 4.125 0 10-8.25 0V10.5M5.25 10.5h13.5v8.25a2.25 2.25 0 01-2.25 2.25H7.5a2.25 2.25 0 01-2.25-2.25V10.5z" />
+                                    </svg>
+                                </span>
                                 <input
                                     name="password"
                                     type="password"
                                     placeholder="Masukkan password"
-                                    class="w-full h-14 rounded-2xl border border-[#e5d6c8] bg-white pl-12 pr-4 text-[#5a4030] placeholder:text-[#b79b87] focus:outline-none focus:ring-2 focus:ring-[#c79d7d] focus:border-[#c79d7d] transition">
+                                    class="w-full h-14 rounded-2xl border border-[#e0d2c3] bg-[#fbf7f2] pl-12 pr-4 text-[#5c4432] placeholder:text-[#b7a08c] focus:outline-none focus:ring-2 focus:ring-[#a78d78] focus:border-[#a78d78] transition">
                             </div>
                         </div>
+
                         <br>
+
                         <button
                             type="submit"
-                            class="w-full h-14 rounded-2xl bg-[#b08467] hover:bg-[#996e52] text-white text-lg font-semibold shadow-[0_14px_28px_rgba(176,132,103,0.28)] transition">
+                            class="w-full h-14 rounded-2xl bg-[#a78d78] hover:bg-[#8f7561] text-white text-lg font-semibold shadow-[0_14px_28px_rgba(167,141,120,0.28)] transition">
                             Login
                         </button>
+
                     </form>
                 </div>
             </div>
