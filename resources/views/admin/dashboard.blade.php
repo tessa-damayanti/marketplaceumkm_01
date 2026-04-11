@@ -238,8 +238,7 @@
       border-collapse: separate;
       border-spacing: 0;
       border: 1px solid var(--border-strong);
-      border-radius: 0;
-      background: var(--bg-panel);
+background: var(--bg-panel);
     }
 
     thead th {
@@ -499,7 +498,6 @@
       background: var(--bg-panel);
       color: var(--text-main);
       outline: none;
-      resize: none;
       transition: border-color 0.15s;
     }
 
@@ -935,14 +933,14 @@
       </div>
 
       <div class="sidebar-spacer"></div>
-      <div class="sidebar-logout" onclick="window.location.href='{{ route('home') }}'">
+      <a href="{{ route('home') }}" class="sidebar-logout">
         <svg class="nav-icon" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
           <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
           <polyline points="16 17 21 12 16 7" />
           <line x1="21" y1="12" x2="9" y2="12" />
         </svg>
         Keluar
-      </div>
+      </a>
     </aside>
 
     <!-- MAIN WRAP -->
@@ -1144,7 +1142,7 @@
     <div class="modal">
       <div class="modal-header">
         <span class="modal-title" id="prod-modal-title">Tambah Produk</span>
-        <button class="modal-close" onclick="closeModal('modal-tambah-produk')">×</button>
+        <button class="modal-close" onclick="closeModal('modal-tambah-produk')">&times;</button>
       </div>
       <div class="modal-body">
         <div>
@@ -1174,7 +1172,7 @@
         </div>
         <div>
           <label class="field-label">Deskripsi</label>
-          <textarea id="prod-desk" rows="4" placeholder="Deskripsi produk..." style="width:100%;"></textarea>
+          <textarea id="prod-desk" rows="4" placeholder="Deskripsi produk..." style="width:100%;resize:vertical;"></textarea>
         </div>
       </div>
       <div class="modal-footer">
@@ -1202,7 +1200,7 @@
     <div class="modal modal-sm">
       <div class="modal-header">
         <span class="modal-title" id="kat-modal-title">Tambah Kategori</span>
-        <button class="modal-close" onclick="closeModal('modal-tambah-kat')">×</button>
+        <button class="modal-close" onclick="closeModal('modal-tambah-kat')">&times;</button>
       </div>
       <div class="modal-body">
         <div>
@@ -1235,10 +1233,10 @@
     <div class="modal modal-sm">
       <div class="modal-header">
         <span class="modal-title">Edit Stok Produk</span>
-        <button class="modal-close" onclick="closeModal('modal-stok')">×</button>
+        <button class="modal-close" onclick="closeModal('modal-stok')">&times;</button>
       </div>
       <div class="modal-body">
-        <p style="font-size:13.5px;font-weight:700;color:#555;" id="stok-modal-produk-name">Produk: —</p>
+        <p style="font-size:13.5px;font-weight:700;color:#555;" id="stok-modal-produk-name">Produk: -</p>
         <div class="stok-row">
           <label>Ukuran S:</label>
           <input type="number" id="stok-s" min="0" value="0">
@@ -1267,7 +1265,7 @@
   <div class="overlay" id="modal-pesanan">
     <div class="modal" style="width:520px;">
       <div class="modal-header">
-        <span class="modal-title" id="pesanan-modal-title">Detail Pesanan — ID</span>
+        <span class="modal-title" id="pesanan-modal-title">Detail Pesanan - ID</span>
       </div>
       <div class="modal-body" id="pesanan-modal-body"></div>
       <div class="modal-footer">
@@ -1824,7 +1822,7 @@
       viewingPesananId = id;
       const total = o.items.reduce((s, i) => s + i.harga * i.qty, 0);
 
-      document.getElementById('pesanan-modal-title').textContent = `Detail Pesanan  —  ${o.id}`;
+      document.getElementById('pesanan-modal-title').textContent = `Detail Pesanan - ${o.id}`;
       document.getElementById('pesanan-modal-body').innerHTML = `
     <div class="detail-grid">
       <div class="detail-field">
