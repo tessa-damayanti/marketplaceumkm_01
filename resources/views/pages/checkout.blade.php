@@ -48,7 +48,7 @@
                             <label class="mb-2 block text-lg font-medium text-[#2f241d]">Alamat</label>
                             <textarea
                                 rows="6"
-                                class="w-full rounded-xl border border-[#8f7561] px-4 py-3 outline-none focus:border-[#5c4432]"
+                                class="w-full resize-none rounded-xl border border-[#8f7561] px-4 py-3 outline-none focus:border-[#5c4432]"
                             ></textarea>
                         </div>
                     </div>

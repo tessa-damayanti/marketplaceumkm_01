@@ -7,6 +7,21 @@
   <title>Dashboard</title>
   <style>
     /* basic reset */
+    :root {
+      --bg-page: #f7f2eb;
+      --bg-soft: #f0e7dd;
+      --bg-panel: #fffaf5;
+      --bg-accent-soft: #e8ded3;
+      --bg-accent: #d8c3af;
+      --bg-accent-deep: #a78d78;
+      --bg-accent-hover: #8f7561;
+      --text-main: #5c4432;
+      --text-soft: #7b6858;
+      --text-muted: #9a8575;
+      --border-soft: #e2d4c5;
+      --border-strong: #d8c3af;
+    }
+
     * {
       box-sizing: border-box;
     }
@@ -15,8 +30,8 @@
       margin: 0;
       padding: 0;
       font-family: 'Segoe UI', system-ui, sans-serif;
-      background: #f0f0f0;
-      color: #1a1a1a;
+      background: var(--bg-page);
+      color: var(--text-main);
     }
 
     .shell {
@@ -28,8 +43,8 @@
     .sidebar {
       width: 220px;
       min-width: 220px;
-      background: #fff;
-      border-right: 1px solid #e5e5e5;
+      background: var(--bg-panel);
+      border-right: 1px solid var(--border-soft);
       display: flex;
       flex-direction: column;
       padding: 0 0 24px;
@@ -37,12 +52,11 @@
     }
 
     .sidebar-logo {
-      padding: 22px 24px 18px;
+      padding: 22px 24px 14px;
       font-size: 22px;
       font-weight: 800;
       letter-spacing: -0.5px;
-      color: #1a1a1a;
-      border-bottom: 1px solid #f0f0f0;
+      color: var(--text-main);
     }
 
     .sidebar-section-label {
@@ -50,8 +64,8 @@
       font-weight: 700;
       text-transform: uppercase;
       letter-spacing: 1px;
-      color: #999;
-      padding: 18px 24px 8px;
+      color: var(--text-muted);
+      padding: 14px 24px 8px;
     }
 
     .nav-item {
@@ -64,19 +78,19 @@
       cursor: pointer;
       font-size: 13.5px;
       font-weight: 500;
-      color: #555;
+      color: var(--text-soft);
       transition: background 0.15s, color 0.15s;
       text-decoration: none;
     }
 
     .nav-item:hover {
-      background: #f5f5f5;
-      color: #1a1a1a;
+      background: var(--bg-soft);
+      color: var(--text-main);
     }
 
     .nav-item.active {
-      background: #f0f0f0;
-      color: #1a1a1a;
+      background: var(--bg-accent-soft);
+      color: var(--text-main);
       font-weight: 700;
     }
 
@@ -100,14 +114,14 @@
       cursor: pointer;
       font-size: 13.5px;
       font-weight: 500;
-      color: #888;
+      color: var(--text-muted);
       transition: background 0.15s;
       user-select: none;
     }
 
     .sidebar-logout:hover {
-      background: #fff0f0;
-      color: #c0392b;
+      background: #f3e6db;
+      color: var(--bg-accent-hover);
     }
 
     .main-wrap {
@@ -124,20 +138,21 @@
       padding: 0 28px;
       height: 56px;
       min-height: 56px;
-      background: #f0f0f0;
-      border-bottom: 1px solid #e0e0e0;
+      background: var(--bg-accent);
+      border-bottom: 1px solid var(--border-strong);
     }
 
     .topbar-title {
       font-size: 18px;
       font-weight: 800;
       letter-spacing: -0.3px;
+      color: var(--text-main);
     }
 
     .topbar-greeting {
       font-size: 13px;
-      color: #777;
-      font-weight: 500;
+      color: var(--text-main);
+      font-weight: 600;
     }
 
     .main-content {
@@ -147,9 +162,9 @@
     }
 
     .surface {
-      background: #fff;
+      background: var(--bg-panel);
       border-radius: 12px;
-      border: 1px solid #e8e8e8;
+      border: 1px solid var(--border-soft);
     }
 
     .surface-pad {
@@ -164,33 +179,33 @@
     }
 
     .stat-card {
-      background: #fff;
+      background: var(--bg-panel);
       border-radius: 12px;
-      border: 1px solid #e8e8e8;
+      border: 1px solid var(--border-soft);
       padding: 20px 22px;
     }
 
     .stat-label {
       font-size: 11px;
-      font-weight: 700;
+      font-weight: 600;
       text-transform: uppercase;
       letter-spacing: 1px;
-      color: #999;
+      color: var(--text-soft);
       margin-bottom: 6px;
     }
 
     .stat-value {
       font-size: 32px;
       font-weight: 800;
-      color: #1a1a1a;
+      color: var(--text-main);
       line-height: 1;
       margin-bottom: 4px;
     }
 
     .stat-sub {
-      font-size: 12px;
-      color: #888;
-      font-weight: 500;
+      font-size: 13px;
+      color: var(--text-soft);
+      font-weight: 600;
     }
 
     .sec-header {
@@ -209,34 +224,70 @@
 
     .sec-sub {
       font-size: 12px;
-      color: #999;
+      color: var(--text-muted);
       margin-top: 2px;
     }
 
     .tbl-wrap {
       overflow-x: auto;
+      padding: 0 22px 18px;
     }
 
     table {
       width: 100%;
-      border-collapse: collapse;
+      border-collapse: separate;
+      border-spacing: 0;
+      border: 1px solid var(--border-strong);
+      border-radius: 0;
+      background: var(--bg-panel);
     }
 
     thead th {
-      background: #f7f7f7;
-      padding: 10px 14px;
+      background: var(--bg-soft);
+      padding: 12px 20px;
       font-size: 12px;
-      font-weight: 700;
-      text-align: left;
-      color: #555;
-      border-bottom: 1px solid #ebebeb;
+      font-weight: 800;
+      text-align: center;
+      color: var(--text-main);
+      border-bottom: 1px solid var(--border-strong);
+      border-right: 1px solid var(--border-strong);
     }
 
     tbody td {
-      padding: 11px 14px;
-      border-bottom: 1px solid #f2f2f2;
+      padding: 14px 20px;
+      border-bottom: 1px solid var(--border-soft);
+      border-right: 1px solid var(--border-strong);
       font-size: 13px;
-      color: #333;
+      color: var(--text-main);
+      font-weight: 500;
+    }
+
+    tbody td strong {
+      font-weight: 500;
+    }
+
+    .action-cell {
+      text-align: left;
+    }
+
+    .action-buttons {
+      display: inline-flex;
+      align-items: center;
+      justify-content: flex-start;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    thead th:last-child,
+    tbody td:last-child {
+      border-right: none;
+    }
+
+    .data-surface {
+      max-width: 1360px;
+      margin: 0 auto;
+      box-shadow: 0 12px 28px rgba(92, 68, 50, 0.08);
+      overflow: hidden;
     }
 
     tbody tr:last-child td {
@@ -244,7 +295,11 @@
     }
 
     tbody tr:hover td {
-      background: #fafafa;
+      background: #fdf7f1;
+    }
+
+    .table-head-spacer {
+      height: 20px;
     }
 
     .pagi-row {
@@ -252,9 +307,8 @@
       align-items: center;
       justify-content: space-between;
       padding: 12px 18px;
-      border-top: 1px solid #f0f0f0;
       font-size: 12px;
-      color: #888;
+      color: var(--text-soft);
     }
 
     .pagi-btns {
@@ -267,11 +321,11 @@
       width: 28px;
       height: 28px;
       border-radius: 7px;
-      border: 1px solid #e0e0e0;
-      background: #fff;
+      border: 1px solid var(--border-soft);
+      background: var(--bg-panel);
       font-size: 12px;
       cursor: pointer;
-      color: #555;
+      color: var(--text-soft);
       display: flex;
       align-items: center;
       justify-content: center;
@@ -279,13 +333,13 @@
     }
 
     .pagi-btn:hover {
-      background: #f5f5f5;
+      background: var(--bg-soft);
     }
 
     .pagi-btn.active {
-      background: #1a1a1a;
+      background: var(--bg-accent-deep);
       color: #fff;
-      border-color: #1a1a1a;
+      border-color: var(--bg-accent-deep);
       font-weight: 700;
     }
 
@@ -299,24 +353,24 @@
       font-size: 13px;
       font-weight: 600;
       font-family: inherit;
-      border: 1px solid #d5d5d5;
-      background: #f0f0f0;
-      color: #333;
+      border: 1px solid var(--border-strong);
+      background: var(--bg-soft);
+      color: var(--text-main);
       transition: background 0.12s, border-color 0.12s;
     }
 
     .btn:hover {
-      background: #e5e5e5;
+      background: var(--bg-accent-soft);
     }
 
     .btn-dark {
-      background: #1a1a1a;
+      background: var(--bg-accent-deep);
       color: #fff;
-      border-color: #1a1a1a;
+      border-color: var(--bg-accent-deep);
     }
 
     .btn-dark:hover {
-      background: #333;
+      background: var(--bg-accent-hover);
     }
 
     .btn-sm {
@@ -326,13 +380,13 @@
     }
 
     .btn-danger {
-      background: #fff0f0;
-      color: #c0392b;
-      border-color: #f5c6c6;
+      background: #fbf4ed;
+      color: #9b5d37;
+      border-color: #e5c7b0;
     }
 
     .btn-danger:hover {
-      background: #fde0e0;
+      background: #f3e4d8;
     }
 
     .badge {
@@ -344,32 +398,93 @@
     }
 
     .badge-belum {
-      background: #fff3cd;
-      color: #856404;
+      background: #f3e7d8;
+      color: #8f6a43;
     }
 
     .badge-berhasil {
-      background: #d1f0e0;
-      color: #1a7a4a;
+      background: #e5eee6;
+      color: #6a7f5f;
     }
 
     .badge-gagal {
-      background: #fde8e8;
-      color: #b91c1c;
+      background: #f7e7df;
+      color: #9b5d37;
     }
 
     .toolbar {
       display: flex;
       align-items: center;
       justify-content: space-between;
+      gap: 14px;
+      flex-wrap: wrap;
       padding: 16px 20px;
-      border-bottom: 1px solid #f0f0f0;
     }
 
     .toolbar-left {
       display: flex;
       align-items: center;
       gap: 10px;
+      flex: 1;
+      flex-wrap: wrap;
+      min-width: 0;
+    }
+
+    .search-wrap {
+      position: relative;
+      width: 320px;
+      min-width: 320px;
+      flex: 0 0 320px;
+    }
+
+    .search-input {
+      width: 100%;
+      min-height: 42px;
+      padding: 10px 16px;
+      border: 1px solid #bfa58e;
+      border-radius: 999px;
+      background: #fdfaf7;
+      font-size: 14px;
+      color: var(--text-main);
+      outline: none;
+      transition: border-color 0.15s, background-color 0.15s, box-shadow 0.15s;
+    }
+
+    .search-icon {
+      display: none;
+    }
+
+    .search-input::placeholder {
+      color: var(--text-soft);
+    }
+
+    .search-input:focus {
+      border-color: #8f7561;
+      background: #fffdf9;
+      box-shadow: 0 0 0 2px rgba(191, 165, 142, 0.12);
+    }
+
+    .toolbar select {
+      min-width: 190px;
+      min-height: 42px;
+      flex: 0 0 auto;
+    }
+
+    @media (max-width: 720px) {
+      .toolbar {
+        align-items: stretch;
+      }
+
+      .toolbar-left {
+        width: 100%;
+      }
+
+      .search-wrap,
+      .toolbar select {
+        width: 100%;
+        min-width: 0;
+        flex-basis: auto;
+      }
     }
 
     select,
@@ -378,26 +493,27 @@
     textarea {
       font-family: inherit;
       font-size: 13px;
-      border: 1px solid #d8d8d8;
+      border: 1px solid var(--border-strong);
       border-radius: 8px;
       padding: 8px 12px;
-      background: #fff;
-      color: #1a1a1a;
+      background: var(--bg-panel);
+      color: var(--text-main);
       outline: none;
+      resize: none;
       transition: border-color 0.15s;
     }
 
     select:focus,
     input:focus,
     textarea:focus {
-      border-color: #1a1a1a;
+      border-color: var(--bg-accent-deep);
     }
 
     label.field-label {
       display: block;
       font-size: 12px;
       font-weight: 700;
-      color: #555;
+      color: var(--text-soft);
       margin-bottom: 5px;
     }
 
@@ -405,13 +521,16 @@
       width: 36px;
       height: 36px;
       border-radius: 6px;
-      background: #f0f0f0;
-      border: 1px solid #e0e0e0;
+      background: var(--bg-accent-soft);
+      border: 1px solid var(--border-strong);
       display: flex;
       align-items: center;
       justify-content: center;
-      color: #aaa;
-      font-size: 16px;
+      color: var(--text-main);
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      overflow: hidden;
     }
 
     .overlay {
@@ -426,6 +545,11 @@
 
     .overlay.open {
       display: flex;
+    }
+
+    .overlay-top {
+      align-items: flex-start;
+      padding-top: 28px;
     }
 
     .modal {
@@ -476,8 +600,7 @@
     }
 
     .modal-footer {
-      padding: 14px 22px;
-      border-top: 1px solid #f0f0f0;
+      padding: 10px 22px 16px;
       display: flex;
       justify-content: flex-end;
       gap: 8px;
@@ -588,13 +711,20 @@
     .bukti-thumb {
       width: 44px;
       height: 44px;
-      background: #e5e5e5;
+      background: var(--bg-accent-soft);
+      border: 1px solid var(--border-strong);
       border-radius: 6px;
       display: flex;
       align-items: center;
       justify-content: center;
-      color: #bbb;
-      font-size: 18px;
+      color: var(--text-soft);
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      text-align: center;
+      line-height: 1.2;
+      padding: 4px;
+      overflow: hidden;
     }
 
     .items-block {
@@ -618,13 +748,24 @@
     .item-thumb {
       width: 36px;
       height: 36px;
-      background: #f0f0f0;
+      background: var(--bg-accent-soft);
+      border: 1px solid var(--border-strong);
       border-radius: 6px;
       display: flex;
       align-items: center;
       justify-content: center;
-      color: #bbb;
-      font-size: 14px;
+      color: var(--text-main);
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      overflow: hidden;
+    }
+
+    .thumb-image {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
     }
 
     .item-info {
@@ -681,16 +822,65 @@
     }
 
     .status-edit-sel {
-      border-radius: 7px;
-      padding: 7px 12px;
-      font-size: 13px;
+      width: 100%;
+      min-height: 44px;
+      padding: 10px 42px 10px 14px;
+      font-size: 14px;
       font-weight: 600;
+      border: 1px solid #d9d9d9;
+      border-radius: 12px;
+      background-color: #fff;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='18' viewBox='0 0 24 24' fill='none' stroke='%23222222' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 14px center;
+      background-size: 16px;
+      appearance: none;
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
+      transition: border-color 0.15s, box-shadow 0.15s, background-color 0.15s;
+    }
+
+    .status-edit-sel:hover {
+      background-color: #fcfcfc;
+      border-color: #cfcfcf;
+    }
+
+    .status-edit-sel:focus {
+      border-color: #1a1a1a;
+      box-shadow: 0 0 0 3px rgba(26, 26, 26, 0.08);
+    }
+
+    .status-edit-wrap {
+      display: grid;
+      grid-template-columns: 120px minmax(0, 1fr);
+      align-items: center;
+      gap: 12px;
+      margin-top: -2px;
+      margin-bottom: 10px;
+      padding: 14px 16px;
+      border: 1px solid #efefef;
+      border-radius: 12px;
+      background: #fafafa;
+    }
+
+    .status-edit-wrap .field-label {
+      margin-bottom: 0;
+      font-size: 13px;
+      color: #444;
+    }
+
+    @media (max-width: 640px) {
+      .status-edit-wrap {
+        grid-template-columns: 1fr;
+        align-items: stretch;
+      }
     }
 
     .id-cell {
-      font-size: 12px;
-      color: #aaa;
-      font-weight: 600;
+      font-size: 13px;
+      color: #333;
+      font-weight: 500;
     }
   </style>
 </head>
@@ -745,7 +935,7 @@
       </div>
 
       <div class="sidebar-spacer"></div>
-      <div class="sidebar-logout">
+      <div class="sidebar-logout" onclick="window.location.href='{{ route('home') }}'">
         <svg class="nav-icon" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
           <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
           <polyline points="16 17 21 12 16 7" />
@@ -769,13 +959,13 @@
           <div class="stat-row">
             <div class="stat-card">
               <div class="stat-label">Total Pesanan</div>
-              <div class="stat-value" id="s-pesanan">8</div>
-              <div class="stat-sub">4 Kategori aktif</div>
-            </div>
-            <div class="stat-card">
-              <div class="stat-label">Total Produk</div>
-              <div class="stat-value" id="s-produk">12</div>
+              <div class="stat-value" id="s-pesanan">6</div>
               <div class="stat-sub">Pesanan masuk</div>
+            </div>
+            <div class="stat-card ">
+              <div class="stat-label">Total Produk</div>
+              <div class="stat-value" id="s-produk">8</div>
+              <div class="stat-sub">Produk</div>
             </div>
             <div class="stat-card">
               <div class="stat-label">Total Kategori</div>
@@ -784,11 +974,10 @@
             </div>
           </div>
 
-          <div class="surface">
+          <div class="surface data-surface">
             <div class="sec-header">
               <div>
                 <div class="sec-title">Pesanan Terbaru</div>
-                <div class="sec-sub">Daftar pesanan terbaru.</div>
               </div>
               <button class="btn btn-sm" onclick="goPage('pesanan')">Lihat Semua</button>
             </div>
@@ -807,11 +996,11 @@
               </table>
             </div>
             <div class="pagi-row">
-              <span id="dash-pagi-info">1 – 3 dari 3</span>
+              <span id="dash-pagi-info">1 - 3 dari 3</span>
               <div class="pagi-btns">
-                <button class="pagi-btn">«</button>
+                <button class="pagi-btn">&lt;&lt;</button>
                 <button class="pagi-btn active">1</button>
-                <button class="pagi-btn">»</button>
+                <button class="pagi-btn">&gt;&gt;</button>
               </div>
             </div>
           </div>
@@ -819,7 +1008,7 @@
 
         <!--PAGE: PRODUK-->
         <div class="page" id="page-produk">
-          <div class="surface">
+          <div class="surface data-surface">
             <div class="toolbar">
               <div class="toolbar-left">
                 <select id="produk-filter-kat" onchange="renderProdukTable()">
@@ -848,11 +1037,11 @@
               </table>
             </div>
             <div class="pagi-row">
-              <span id="produk-pagi-info">1 – 4 dari 4</span>
+              <span id="produk-pagi-info">1 - 4 dari 4</span>
               <div class="pagi-btns">
-                <button class="pagi-btn">«</button>
+                <button class="pagi-btn">&lt;&lt;</button>
                 <button class="pagi-btn active">1</button>
-                <button class="pagi-btn">»</button>
+                <button class="pagi-btn">&gt;&gt;</button>
               </div>
             </div>
           </div>
@@ -860,7 +1049,7 @@
 
         <!-- PAGE: KATEGORI -->
         <div class="page" id="page-kategori">
-          <div class="surface">
+          <div class="surface data-surface">
             <div class="toolbar">
               <div></div>
               <button class="btn btn-dark" onclick="openModal('modal-tambah-kat'); setKatModalMode('add')">+ Tambah Kategori</button>
@@ -880,9 +1069,10 @@
           </div>
         </div>
 
-        <!-- ══ PAGE: STOK PRODUK ══ -->
+        <!-- PAGE: STOK PRODUK -->
         <div class="page" id="page-stok">
-          <div class="surface">
+          <div class="surface data-surface">
+            <div class="table-head-spacer"></div>
             <div class="tbl-wrap">
               <table>
                 <thead>
@@ -901,9 +1091,21 @@
           </div>
         </div>
 
-        <!-- ══ PAGE: PESANAN ══ -->
+        <!-- PAGE: PESANAN -->
         <div class="page" id="page-pesanan">
-          <div class="surface">
+          <div class="surface data-surface">
+            <div class="toolbar">
+              <div class="toolbar-left">
+                <div class="search-wrap">
+                  <svg class="search-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <circle cx="11" cy="11" r="7"></circle>
+                    <path d="M20 20L17 17"></path>
+                  </svg>
+
+                  <input type="text" id="pesanan-search" class="search-input" placeholder="Cari pesanan..." oninput="renderPesananTable()">
+                </div>
+              </div>
+            </div>
             <div class="tbl-wrap">
               <table>
                 <thead>
@@ -920,11 +1122,11 @@
               </table>
             </div>
             <div class="pagi-row">
-              <span id="pesanan-pagi-info">1 – 3 dari 3</span>
+              <span id="pesanan-pagi-info">1 - 3 dari 3</span>
               <div class="pagi-btns">
-                <button class="pagi-btn">«</button>
+                <button class="pagi-btn">&lt;&lt;</button>
                 <button class="pagi-btn active">1</button>
-                <button class="pagi-btn">»</button>
+                <button class="pagi-btn">&gt;&gt;</button>
               </div>
             </div>
           </div>
@@ -972,7 +1174,7 @@
         </div>
         <div>
           <label class="field-label">Deskripsi</label>
-          <textarea id="prod-desk" rows="4" placeholder="Deskripsi produk..." style="width:100%;resize:vertical;"></textarea>
+          <textarea id="prod-desk" rows="4" placeholder="Deskripsi produk..." style="width:100%;"></textarea>
         </div>
       </div>
       <div class="modal-footer">
@@ -983,7 +1185,7 @@
   </div>
 
   <!-- Hapus Produk Konfirmasi -->
-  <div class="overlay" id="modal-hapus-produk">
+  <div class="overlay overlay-top" id="modal-hapus-produk">
     <div class="modal modal-sm">
       <div class="confirm-box">
         <p>Apakah kamu yakin ingin menghapus produk ini?</p>
@@ -1016,7 +1218,7 @@
   </div>
 
   <!-- Hapus Kategori Konfirmasi -->
-  <div class="overlay" id="modal-hapus-kat">
+  <div class="overlay overlay-top" id="modal-hapus-kat">
     <div class="modal modal-sm">
       <div class="confirm-box">
         <p>Apakah kamu yakin ingin menghapus kategori ini?</p>
@@ -1066,7 +1268,6 @@
     <div class="modal" style="width:520px;">
       <div class="modal-header">
         <span class="modal-title" id="pesanan-modal-title">Detail Pesanan — ID</span>
-        <button class="modal-close" onclick="closeModal('modal-pesanan')">⊗</button>
       </div>
       <div class="modal-body" id="pesanan-modal-body"></div>
       <div class="modal-footer">
@@ -1341,6 +1542,29 @@
       return 'Rp' + Number(n).toLocaleString('id-ID');
     }
 
+    const produkImages = {
+      'Kemeja Stripe': 'https://i.pinimg.com/1200x/b1/cc/2f/b1cc2fb9a73cb56f46e167b47d4febbf.jpg',
+      'Kemeja Hitam': 'https://i.pinimg.com/736x/b3/3f/b9/b33fb97104fe57a9b2c093f6e0b857ec.jpg',
+      'Gaun Ivory': 'https://i.pinimg.com/1200x/11/59/c1/1159c13c68d7581c8253d1fdb5b77e99.jpg',
+      'Gaun Floral Pastel': 'https://img.fantaskycdn.com/6bdf5a35272dcc4348d5b0a5594b3d78_1024x.jpeg',
+      'Kardigan Floral': 'https://i.pinimg.com/1200x/9f/d0/5b/9fd05ba93f69906a9875be57f76906ed.jpg',
+      'Kardigan Rajut': 'https://i.pinimg.com/736x/78/2a/3d/782a3d260721c8f3d515966337443416.jpg',
+      'Rok Denim': 'https://i.pinimg.com/736x/1a/66/22/1a66221e9292bb9a8c2e7d4fd618db5d.jpg',
+      'Rok Plisket': 'https://i.pinimg.com/736x/ff/b9/06/ffb9065c829ab35740b27c4f962300bf.jpg',
+    };
+
+    function getProdukImage(name = '') {
+      return produkImages[name] || '';
+    }
+
+    function renderThumb(name = '', className = 'foto-cell') {
+      const image = getProdukImage(name);
+      if (image) {
+        return `<div class="${className}" title="Foto ${name}"><img src="${image}" alt="${name}" class="thumb-image"></div>`;
+      }
+      return `<div class="${className}" title="Foto ${name}">${name.split(' ').map(part => part[0]).slice(0, 2).join('').toUpperCase() || '--'}</div>`;
+    }
+
     function statusBadge(s) {
       if (s === 'Pembayaran Berhasil') return `<span class="badge badge-berhasil">${s}</span>`;
       if (s === 'Pembayaran Gagal') return `<span class="badge badge-gagal">${s}</span>`;
@@ -1370,7 +1594,7 @@
       <td>${rp(o.items.reduce((s,i) => s + i.harga * i.qty, 0))}</td>
     </tr>`).join('');
 
-      document.getElementById('dash-pagi-info').textContent = `1 – ${recent.length} dari ${pesananList.length}`;
+      document.getElementById('dash-pagi-info').textContent = `1 - ${recent.length} dari ${pesananList.length}`;
     }
 
     // PRODUK
@@ -1381,17 +1605,19 @@
       document.getElementById('produk-tbody').innerHTML = list.map(p => `
     <tr>
       <td class="id-cell">${p.id}</td>
-      <td><div class="foto-cell">🖼</div></td>
+      <td>${renderThumb(p.nama, 'foto-cell')}</td>
       <td><strong>${p.nama}</strong></td>
       <td>${p.kategori}</td>
       <td>${rp(p.harga)}</td>
-      <td style="display:flex;gap:6px;">
-        <button class="btn btn-sm" onclick="openEditProduk('${p.id}')">Edit</button>
-        <button class="btn btn-sm btn-danger" onclick="openHapusProduk('${p.id}')">Hapus</button>
+      <td class="action-cell">
+        <div class="action-buttons">
+          <button class="btn btn-sm" onclick="openEditProduk('${p.id}')">Edit</button>
+          <button class="btn btn-sm btn-danger" onclick="openHapusProduk('${p.id}')">Hapus</button>
+        </div>
       </td>
     </tr>`).join('');
 
-      document.getElementById('produk-pagi-info').textContent = `1 – ${list.length} dari ${list.length}`;
+      document.getElementById('produk-pagi-info').textContent = `1 - ${list.length} dari ${list.length}`;
     }
 
     function setModalMode(mode) {
@@ -1477,9 +1703,11 @@
     <tr>
       <td class="id-cell">${k.id}</td>
       <td><strong>${k.nama}</strong></td>
-      <td style="display:flex;gap:6px;">
-        <button class="btn btn-sm" onclick="openEditKat('${k.id}')">Edit</button>
-        <button class="btn btn-sm btn-danger" onclick="openHapusKat('${k.id}')">Hapus</button>
+      <td class="action-cell">
+        <div class="action-buttons">
+          <button class="btn btn-sm" onclick="openEditKat('${k.id}')">Edit</button>
+          <button class="btn btn-sm btn-danger" onclick="openHapusKat('${k.id}')">Hapus</button>
+        </div>
       </td>
     </tr>`).join('');
     }
@@ -1569,7 +1797,15 @@
 
     // PESANAN
     function renderPesananTable() {
-      document.getElementById('pesanan-tbody').innerHTML = pesananList.map(o => `
+      const keyword = (document.getElementById('pesanan-search')?.value || '').trim().toLowerCase();
+      const list = keyword ? pesananList.filter(o =>
+        o.id.toLowerCase().includes(keyword) ||
+        o.tanggal.toLowerCase().includes(keyword) ||
+        o.nama.toLowerCase().includes(keyword) ||
+        o.status.toLowerCase().includes(keyword)
+      ) : pesananList;
+
+      document.getElementById('pesanan-tbody').innerHTML = list.map(o => `
     <tr>
       <td class="id-cell">${o.id}</td>
       <td>${o.tanggal}</td>
@@ -1579,7 +1815,7 @@
       <td><button class="btn btn-sm" onclick="openDetailPesanan('${o.id}')">Detail</button></td>
     </tr>`).join('');
 
-      document.getElementById('pesanan-pagi-info').textContent = `1 – ${pesananList.length} dari ${pesananList.length}`;
+      document.getElementById('pesanan-pagi-info').textContent = `${list.length ? 1 : 0} - ${list.length} dari ${pesananList.length}`;
     }
 
     function openDetailPesanan(id) {
@@ -1588,7 +1824,7 @@
       viewingPesananId = id;
       const total = o.items.reduce((s, i) => s + i.harga * i.qty, 0);
 
-      document.getElementById('pesanan-modal-title').textContent = `Detail Pesanan  —  ID ${o.id}`;
+      document.getElementById('pesanan-modal-title').textContent = `Detail Pesanan  —  ${o.id}`;
       document.getElementById('pesanan-modal-body').innerHTML = `
     <div class="detail-grid">
       <div class="detail-field">
@@ -1616,7 +1852,7 @@
     <div>
       <label class="field-label" style="margin-bottom:6px;">Bukti Pembayaran</label>
       <div class="bukti-row">
-        <div class="bukti-thumb">🖼</div>
+        ${renderThumb(o.items[0]?.produk || o.nama, 'bukti-thumb')}
         <button class="btn btn-sm" style="margin-left:auto;">Lihat Bukti</button>
       </div>
     </div>
@@ -1626,7 +1862,7 @@
       <div class="items-block">
         ${o.items.map(i => `
           <div class="item-row">
-            <div class="item-thumb">🖼</div>
+            ${renderThumb(i.produk, 'item-thumb')}
             <div class="item-info">
               <div class="item-name">${i.produk}</div>
               <div class="item-size">${i.ukuran}</div>
@@ -1640,9 +1876,9 @@
       </div>
     </div>
 
-    <div>
-      <label class="field-label">Update Status</label>
-      <select class="status-edit-sel" id="status-select" style="width:100%;">
+    <div class="status-edit-wrap">
+      <label class="field-label" for="status-select">Update Status</label>
+      <select class="status-edit-sel" id="status-select">
         <option ${o.status==='Belum Dibayar'       ?'selected':''}>Belum Dibayar</option>
         <option ${o.status==='Pembayaran Berhasil' ?'selected':''}>Pembayaran Berhasil</option>
         <option ${o.status==='Pembayaran Gagal'    ?'selected':''}>Pembayaran Gagal</option>
