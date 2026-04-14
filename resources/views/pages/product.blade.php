@@ -3,19 +3,18 @@
 @section('title', 'Produk')
 
 @section('content')
-@section('content')
 
 @if(session('success'))
-    <div id="toast-success"
-        class="fixed top-5 right-5 z-[999] rounded-2xl bg-[#5c4432] px-5 py-3 text-sm font-medium text-white shadow-xl">
-        {{ session('success') }}
-    </div>
+<div id="toast-success"
+    class="fixed top-5 right-5 z-[999] rounded-2xl bg-[#5c4432] px-5 py-3 text-sm font-medium text-white shadow-xl">
+    {{ session('success') }}
+</div>
 
-    <script>
-        setTimeout(() => {
-            document.getElementById('toast-success').remove();
-        }, 2000);
-    </script>
+<script>
+    setTimeout(() => {
+        document.getElementById('toast-success').remove();
+    }, 2000);
+</script>
 @endif
 
 @php
@@ -243,12 +242,105 @@ $defaultCategory = request('category', 'kemeja');
         border-radius: 28px;
         overflow: hidden;
         box-shadow: 0 4px 18px rgba(167, 141, 120, 0.12);
-        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        transition: transform 0.35s ease, box-shadow 0.35s ease, opacity 0.35s ease;
+        opacity: 0;
+        transform: translateY(28px) scale(0.98);
+        will-change: transform, opacity;
+    }
+
+    .product-card.show {
+        animation: cardReveal 0.7s cubic-bezier(0.22, 1, 0.36, 1) forwards;
     }
 
     .product-card:hover {
-        transform: translateY(-4px);
+        transform: translateY(-6px) scale(1.01);
         box-shadow: 0 14px 32px rgba(167, 141, 120, 0.18);
+    }
+
+    @keyframes cardReveal {
+        0% {
+            opacity: 0;
+            transform: translateY(28px) scale(0.98);
+        }
+
+        60% {
+            opacity: 1;
+            transform: translateY(-4px) scale(1.01);
+        }
+
+        100% {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+        }
+    }
+
+    .product-card:nth-child(1).show {
+        animation-delay: 0.05s;
+    }
+
+    .product-card:nth-child(2).show {
+        animation-delay: 0.12s;
+    }
+
+    .product-card:nth-child(3).show {
+        animation-delay: 0.19s;
+    }
+
+    .product-card:nth-child(4).show {
+        animation-delay: 0.26s;
+    }
+
+    .product-card:nth-child(5).show {
+        animation-delay: 0.33s;
+    }
+
+    .product-card:nth-child(6).show {
+        animation-delay: 0.40s;
+    }
+
+    .product-card:nth-child(7).show {
+        animation-delay: 0.47s;
+    }
+
+    .product-card:nth-child(8).show {
+        animation-delay: 0.54s;
+    }
+
+    #productModal {
+        opacity: 0;
+        transition: opacity 0.25s ease;
+    }
+
+    #productModal.flex {
+        opacity: 1;
+    }
+
+    #productModal>div {
+        transform: translateY(20px) scale(0.98);
+        opacity: 0;
+        transition: transform 0.3s ease, opacity 0.3s ease;
+    }
+
+    #productModal.flex>div {
+        transform: translateY(0) scale(1);
+        opacity: 1;
+    }
+
+    #toast-success,
+    #toast {
+        animation: toastSlideIn 0.45s ease;
+    }
+
+    @keyframes toastSlideIn {
+        from {
+            opacity: 0;
+            transform: translateY(-14px) scale(0.97);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+        }
     }
 </style>
 
@@ -422,12 +514,21 @@ $defaultCategory = request('category', 'kemeja');
 
 @push('scripts')
 <script>
-    const allProducts = @json($products);
+    const allProducts = JSON.parse('@json($products)');
     let currentQty = 1;
     let currentStock = 1;
     let selectedSize = null;
     let currentProduct = null;
-    let currentCategory = @json($defaultCategory);
+    let currentCategory = JSON.parse('@json($defaultCategory)');
+
+    function animateProductCards() {
+        const cards = document.querySelectorAll('#product-grid .product-card');
+        cards.forEach((card) => {
+            card.classList.remove('show');
+            void card.offsetWidth;
+            card.classList.add('show');
+        });
+    }
 
     function openModalFromElement(element) {
         const product = JSON.parse(element.dataset.product);
@@ -510,21 +611,21 @@ $defaultCategory = request('category', 'kemeja');
     }
 
     function addToCart() {
-    if (!selectedSize) {
-        alert('Silakan pilih size terlebih dahulu.');
-        return;
+        if (!selectedSize) {
+            alert('Silakan pilih size terlebih dahulu.');
+            return;
+        }
+
+        document.getElementById('cart_name').value = currentProduct.name;
+        document.getElementById('cart_category').value = currentProduct.category;
+        document.getElementById('cart_image').value = currentProduct.image;
+        document.getElementById('cart_price').value = String(currentProduct.price).replace(/\./g, '');
+        document.getElementById('cart_size').value = selectedSize;
+        document.getElementById('cart_qty').value = currentQty;
+        document.getElementById('cart_stock').value = currentProduct.stock;
+
+        document.getElementById('cartForm').submit();
     }
-
-    document.getElementById('cart_name').value = currentProduct.name;
-    document.getElementById('cart_category').value = currentProduct.category;
-    document.getElementById('cart_image').value = currentProduct.image;
-    document.getElementById('cart_price').value = String(currentProduct.price).replace(/\./g, '');
-    document.getElementById('cart_size').value = selectedSize;
-    document.getElementById('cart_qty').value = currentQty;
-    document.getElementById('cart_stock').value = currentProduct.stock;
-
-    document.getElementById('cartForm').submit();
-}
 
     function buyNow() {
         if (!selectedSize) {
@@ -549,6 +650,8 @@ $defaultCategory = request('category', 'kemeja');
 
         grid.innerHTML = '';
         cards.forEach(card => grid.appendChild(card));
+
+        animateProductCards();
     });
 
     window.addEventListener('click', function(event) {
@@ -556,6 +659,10 @@ $defaultCategory = request('category', 'kemeja');
         if (event.target === modal) {
             closeModal();
         }
+    });
+
+    document.addEventListener('DOMContentLoaded', function() {
+        animateProductCards();
     });
 </script>
 @endpush

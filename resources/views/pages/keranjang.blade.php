@@ -1,8 +1,13 @@
-@extends('layouts.app')
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Keranjang</title>
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
+</head>
+<body class="bg-[#f5ede4]">
 
-@section('title', 'Keranjang')
-
-@section('content')
     @php
         $total = collect($cartItems)->sum(fn($item) => $item['price'] * $item['qty']);
     @endphp
@@ -119,57 +124,57 @@
                     </p>
                 </div>
 
-                <a
-                    href="{{ route('checkout') }}"
+                
+                    <a href="{{ route('checkout') }}"
                     class="inline-flex h-[54px] w-[140px] items-center justify-center rounded-[16px] bg-[#6b4d37] text-lg font-semibold text-white transition hover:bg-[#5a3f2e]">
                     Beli
                 </a>
             </div>
         </div>
     </section>
-@endsection
 
-@push('scripts')
-<script>
-    function formatRupiah(number) {
-        return 'Rp' + number.toLocaleString('id-ID');
-    }
+    <script>
+        function formatRupiah(number) {
+            return 'Rp' + number.toLocaleString('id-ID');
+        }
 
-    function updateCartTotal() {
-        let total = 0;
-        const checkboxes = document.querySelectorAll('.item-check');
+        function updateCartTotal() {
+            let total = 0;
+            const checkboxes = document.querySelectorAll('.item-check');
 
-        checkboxes.forEach((checkbox) => {
-            if (checkbox.checked) {
-                const price = parseInt(checkbox.dataset.price);
-                const qty = parseInt(checkbox.dataset.qty);
-                total += price * qty;
-            }
-        });
-
-        document.getElementById('cart-total').innerText = formatRupiah(total);
-    }
-
-    document.addEventListener('DOMContentLoaded', function () {
-        const checkAll = document.getElementById('check-all');
-        const itemChecks = document.querySelectorAll('.item-check');
-
-        updateCartTotal();
-
-        checkAll.addEventListener('change', function () {
-            itemChecks.forEach((item) => {
-                item.checked = checkAll.checked;
+            checkboxes.forEach((checkbox) => {
+                if (checkbox.checked) {
+                    const price = parseInt(checkbox.dataset.price);
+                    const qty = parseInt(checkbox.dataset.qty);
+                    total += price * qty;
+                }
             });
-            updateCartTotal();
-        });
 
-        itemChecks.forEach((item) => {
-            item.addEventListener('change', function () {
-                const allChecked = [...itemChecks].every((cb) => cb.checked);
-                checkAll.checked = allChecked;
+            document.getElementById('cart-total').innerText = formatRupiah(total);
+        }
+
+        document.addEventListener('DOMContentLoaded', function () {
+            const checkAll = document.getElementById('check-all');
+            const itemChecks = document.querySelectorAll('.item-check');
+
+            updateCartTotal();
+
+            checkAll.addEventListener('change', function () {
+                itemChecks.forEach((item) => {
+                    item.checked = checkAll.checked;
+                });
                 updateCartTotal();
             });
+
+            itemChecks.forEach((item) => {
+                item.addEventListener('change', function () {
+                    const allChecked = [...itemChecks].every((cb) => cb.checked);
+                    checkAll.checked = allChecked;
+                    updateCartTotal();
+                });
+            });
         });
-    });
-</script>
-@endpush
+    </script>
+
+</body>
+</html>
