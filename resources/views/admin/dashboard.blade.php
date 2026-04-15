@@ -5,890 +5,16 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Dashboard</title>
-  <style>
-    /* basic reset */
-    :root {
-      --bg-page: #f7f2eb;
-      --bg-soft: #f0e7dd;
-      --bg-panel: #fffaf5;
-      --bg-accent-soft: #e8ded3;
-      --bg-accent: #d8c3af;
-      --bg-accent-deep: #a78d78;
-      --bg-accent-hover: #8f7561;
-      --text-main: #5c4432;
-      --text-soft: #7b6858;
-      --text-muted: #9a8575;
-      --border-soft: #e2d4c5;
-      --border-strong: #d8c3af;
-    }
+  @vite(['resources/css/app.css', 'resources/css/admin-dashboard.css', 'resources/js/app.js'])
 
-    * {
-      box-sizing: border-box;
-    }
-
-    body {
-      margin: 0;
-      padding: 0;
-      font-family: 'Segoe UI', system-ui, sans-serif;
-      background: var(--bg-page);
-      color: var(--text-main);
-    }
-
-    .shell {
-      display: flex;
-      height: 100vh;
-      overflow: hidden;
-    }
-
-    .sidebar {
-      width: 220px;
-      min-width: 220px;
-      background: var(--bg-panel);
-      border-right: 1px solid var(--border-soft);
-      display: flex;
-      flex-direction: column;
-      padding: 0 0 24px;
-      overflow-y: auto;
-    }
-
-    .sidebar-logo {
-      padding: 22px 24px 14px;
-      font-size: 22px;
-      font-weight: 800;
-      letter-spacing: -0.5px;
-      color: var(--text-main);
-    }
-
-    .sidebar-section-label {
-      font-size: 11px;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      color: var(--text-muted);
-      padding: 14px 24px 8px;
-    }
-
-    .nav-item {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      padding: 10px 20px;
-      margin: 1px 8px;
-      border-radius: 8px;
-      cursor: pointer;
-      font-size: 13.5px;
-      font-weight: 500;
-      color: var(--text-soft);
-      transition: background 0.15s, color 0.15s;
-      text-decoration: none;
-    }
-
-    .nav-item:hover {
-      background: var(--bg-soft);
-      color: var(--text-main);
-    }
-
-    .nav-item.active {
-      background: var(--bg-accent-soft);
-      color: var(--text-main);
-      font-weight: 700;
-    }
-
-    .nav-icon {
-      width: 18px;
-      height: 18px;
-      flex-shrink: 0;
-    }
-
-    .sidebar-spacer {
-      flex: 1;
-    }
-
-    .sidebar-logout {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      padding: 10px 20px;
-      margin: 0 8px;
-      border-radius: 8px;
-      cursor: pointer;
-      font-size: 13.5px;
-      font-weight: 500;
-      color: var(--text-muted);
-      transition: background 0.15s;
-      user-select: none;
-    }
-
-    .sidebar-logout:hover {
-      background: #f3e6db;
-      color: var(--bg-accent-hover);
-    }
-
-    .main-wrap {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      overflow: hidden;
-    }
-
-    .topbar {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 0 28px;
-      height: 56px;
-      min-height: 56px;
-      background: var(--bg-accent);
-      border-bottom: 1px solid var(--border-strong);
-    }
-
-    .topbar-title {
-      font-size: 18px;
-      font-weight: 800;
-      letter-spacing: -0.3px;
-      color: var(--text-main);
-    }
-
-    .topbar-greeting {
-      font-size: 13px;
-      color: var(--text-main);
-      font-weight: 600;
-    }
-
-    .main-content {
-      flex: 1;
-      overflow-y: auto;
-      padding: 24px 28px;
-    }
-
-    .surface {
-      background: var(--bg-panel);
-      border-radius: 12px;
-      border: 1px solid var(--border-soft);
-    }
-
-    .surface-pad {
-      padding: 20px 22px;
-    }
-
-    .stat-row {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 14px;
-      margin-bottom: 20px;
-    }
-
-    .stat-card {
-      background: var(--bg-panel);
-      border-radius: 12px;
-      border: 1px solid var(--border-soft);
-      padding: 20px 22px;
-    }
-
-    .stat-label {
-      font-size: 11px;
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      color: var(--text-soft);
-      margin-bottom: 6px;
-    }
-
-    .stat-value {
-      font-size: 32px;
-      font-weight: 800;
-      color: var(--text-main);
-      line-height: 1;
-      margin-bottom: 4px;
-    }
-
-    .stat-sub {
-      font-size: 13px;
-      color: var(--text-soft);
-      font-weight: 600;
-    }
-
-    .sec-header {
-      display: flex;
-      align-items: flex-start;
-      justify-content: space-between;
-      padding: 20px 22px 0;
-      margin-bottom: 4px;
-    }
-
-    .sec-title {
-      font-size: 18px;
-      font-weight: 800;
-      letter-spacing: -0.3px;
-    }
-
-    .sec-sub {
-      font-size: 12px;
-      color: var(--text-muted);
-      margin-top: 2px;
-    }
-
-    .tbl-wrap {
-      overflow-x: auto;
-      padding: 0 22px 18px;
-    }
-
-    table {
-      width: 100%;
-      border-collapse: separate;
-      border-spacing: 0;
-      border: 1px solid var(--border-strong);
-background: var(--bg-panel);
-    }
-
-    thead th {
-      background: var(--bg-soft);
-      padding: 12px 20px;
-      font-size: 12px;
-      font-weight: 800;
-      text-align: center;
-      color: var(--text-main);
-      border-bottom: 1px solid var(--border-strong);
-      border-right: 1px solid var(--border-strong);
-    }
-
-    tbody td {
-      padding: 14px 20px;
-      border-bottom: 1px solid var(--border-soft);
-      border-right: 1px solid var(--border-strong);
-      font-size: 13px;
-      color: var(--text-main);
-      font-weight: 500;
-    }
-
-    tbody td strong {
-      font-weight: 500;
-    }
-
-    .action-cell {
-      text-align: left;
-    }
-
-    .action-buttons {
-      display: inline-flex;
-      align-items: center;
-      justify-content: flex-start;
-      gap: 10px;
-      flex-wrap: wrap;
-    }
-
-    thead th:last-child,
-    tbody td:last-child {
-      border-right: none;
-    }
-
-    .data-surface {
-      max-width: 1360px;
-      margin: 0 auto;
-      box-shadow: 0 12px 28px rgba(92, 68, 50, 0.08);
-      overflow: hidden;
-    }
-
-    tbody tr:last-child td {
-      border-bottom: none;
-    }
-
-    tbody tr:hover td {
-      background: #fdf7f1;
-    }
-
-    .table-head-spacer {
-      height: 20px;
-    }
-
-    .pagi-row {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 12px 18px;
-      font-size: 12px;
-      color: var(--text-soft);
-    }
-
-    .pagi-btns {
-      display: flex;
-      align-items: center;
-      gap: 4px;
-    }
-
-    .pagi-btn {
-      width: 28px;
-      height: 28px;
-      border-radius: 7px;
-      border: 1px solid var(--border-soft);
-      background: var(--bg-panel);
-      font-size: 12px;
-      cursor: pointer;
-      color: var(--text-soft);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: background 0.12s;
-    }
-
-    .pagi-btn:hover {
-      background: var(--bg-soft);
-    }
-
-    .pagi-btn.active {
-      background: var(--bg-accent-deep);
-      color: #fff;
-      border-color: var(--bg-accent-deep);
-      font-weight: 700;
-    }
-
-    .btn {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      padding: 8px 16px;
-      border-radius: 8px;
-      cursor: pointer;
-      font-size: 13px;
-      font-weight: 600;
-      font-family: inherit;
-      border: 1px solid var(--border-strong);
-      background: var(--bg-soft);
-      color: var(--text-main);
-      transition: background 0.12s, border-color 0.12s;
-    }
-
-    .btn:hover {
-      background: var(--bg-accent-soft);
-    }
-
-    .btn-dark {
-      background: var(--bg-accent-deep);
-      color: #fff;
-      border-color: var(--bg-accent-deep);
-    }
-
-    .btn-dark:hover {
-      background: var(--bg-accent-hover);
-    }
-
-    .btn-sm {
-      padding: 5px 12px;
-      font-size: 12px;
-      border-radius: 7px;
-    }
-
-    .btn-danger {
-      background: #fbf4ed;
-      color: #9b5d37;
-      border-color: #e5c7b0;
-    }
-
-    .btn-danger:hover {
-      background: #f3e4d8;
-    }
-
-    .badge {
-      display: inline-block;
-      padding: 3px 10px;
-      border-radius: 20px;
-      font-size: 11px;
-      font-weight: 700;
-    }
-
-    .badge-belum {
-      background: #f3e7d8;
-      color: #8f6a43;
-    }
-
-    .badge-berhasil {
-      background: #e5eee6;
-      color: #6a7f5f;
-    }
-
-    .badge-gagal {
-      background: #f7e7df;
-      color: #9b5d37;
-    }
-
-    .toolbar {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 14px;
-      flex-wrap: wrap;
-      padding: 16px 20px;
-    }
-
-    .toolbar-left {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      flex: 1;
-      flex-wrap: wrap;
-      min-width: 0;
-    }
-
-    .search-wrap {
-      position: relative;
-      width: 320px;
-      min-width: 320px;
-      flex: 0 0 320px;
-    }
-
-    .search-input {
-      width: 100%;
-      min-height: 42px;
-      padding: 10px 16px;
-      border: 1px solid #bfa58e;
-      border-radius: 999px;
-      background: #fdfaf7;
-      font-size: 14px;
-      color: var(--text-main);
-      outline: none;
-      transition: border-color 0.15s, background-color 0.15s, box-shadow 0.15s;
-    }
-
-    .search-icon {
-      display: none;
-    }
-
-    .search-input::placeholder {
-      color: var(--text-soft);
-    }
-
-    .search-input:focus {
-      border-color: #8f7561;
-      background: #fffdf9;
-      box-shadow: 0 0 0 2px rgba(191, 165, 142, 0.12);
-    }
-
-    .toolbar select {
-      min-width: 190px;
-      min-height: 42px;
-      flex: 0 0 auto;
-    }
-
-    @media (max-width: 720px) {
-      .toolbar {
-        align-items: stretch;
-      }
-
-      .toolbar-left {
-        width: 100%;
-      }
-
-      .search-wrap,
-      .toolbar select {
-        width: 100%;
-        min-width: 0;
-        flex-basis: auto;
-      }
-    }
-
-    select,
-    input[type="text"],
-    input[type="number"],
-    textarea {
-      font-family: inherit;
-      font-size: 13px;
-      border: 1px solid var(--border-strong);
-      border-radius: 8px;
-      padding: 8px 12px;
-      background: var(--bg-panel);
-      color: var(--text-main);
-      outline: none;
-      transition: border-color 0.15s;
-    }
-
-    select:focus,
-    input:focus,
-    textarea:focus {
-      border-color: var(--bg-accent-deep);
-    }
-
-    label.field-label {
-      display: block;
-      font-size: 12px;
-      font-weight: 700;
-      color: var(--text-soft);
-      margin-bottom: 5px;
-    }
-
-    .foto-cell {
-      width: 36px;
-      height: 36px;
-      border-radius: 6px;
-      background: var(--bg-accent-soft);
-      border: 1px solid var(--border-strong);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: var(--text-main);
-      font-size: 11px;
-      font-weight: 700;
-      text-transform: uppercase;
-      overflow: hidden;
-    }
-
-    .overlay {
-      display: none;
-      position: fixed;
-      inset: 0;
-      background: rgba(0, 0, 0, 0.30);
-      z-index: 500;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .overlay.open {
-      display: flex;
-    }
-
-    .overlay-top {
-      align-items: flex-start;
-      padding-top: 28px;
-    }
-
-    .modal {
-      background: #fff;
-      border-radius: 14px;
-      width: 480px;
-      max-width: 96vw;
-      max-height: 90vh;
-      overflow-y: auto;
-      box-shadow: 0 8px 40px rgba(0, 0, 0, 0.14);
-    }
-
-    .modal-sm {
-      width: 380px;
-    }
-
-    .modal-header {
-      padding: 20px 22px 16px;
-      border-bottom: 1px solid #f0f0f0;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    .modal-title {
-      font-size: 17px;
-      font-weight: 800;
-    }
-
-    .modal-close {
-      background: none;
-      border: none;
-      cursor: pointer;
-      font-size: 20px;
-      color: #999;
-      line-height: 1;
-    }
-
-    .modal-close:hover {
-      color: #333;
-    }
-
-    .modal-body {
-      padding: 20px 22px;
-      display: flex;
-      flex-direction: column;
-      gap: 14px;
-    }
-
-    .modal-footer {
-      padding: 10px 22px 16px;
-      display: flex;
-      justify-content: flex-end;
-      gap: 8px;
-    }
-
-    .field-group {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 12px;
-    }
-
-    .upload-zone {
-      border: 1.5px dashed #ccc;
-      border-radius: 8px;
-      padding: 14px 16px;
-      background: #fafafa;
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      cursor: pointer;
-    }
-
-    .upload-zone:hover {
-      border-color: #999;
-      background: #f5f5f5;
-    }
-
-    .upload-zone input[type="file"] {
-      display: none;
-    }
-
-    .upload-btn-fake {
-      padding: 6px 14px;
-      border-radius: 7px;
-      background: #e8e8e8;
-      border: 1px solid #d0d0d0;
-      font-size: 12px;
-      font-weight: 600;
-      color: #444;
-      white-space: nowrap;
-    }
-
-    .upload-hint {
-      font-size: 12px;
-      color: #aaa;
-    }
-
-    .confirm-box {
-      padding: 28px 24px;
-    }
-
-    .confirm-box p {
-      font-size: 14px;
-      font-weight: 600;
-      color: #1a1a1a;
-      line-height: 1.5;
-      margin-bottom: 20px;
-    }
-
-    .confirm-actions {
-      display: flex;
-      justify-content: center;
-      gap: 10px;
-    }
-
-    .detail-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 10px;
-      margin-bottom: 14px;
-    }
-
-    .detail-field {
-      background: #f8f8f8;
-      border-radius: 8px;
-      padding: 10px 14px;
-    }
-
-    .detail-field-label {
-      font-size: 10px;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.8px;
-      color: #999;
-      margin-bottom: 4px;
-    }
-
-    .detail-field-value {
-      font-size: 13.5px;
-      font-weight: 600;
-      color: #1a1a1a;
-    }
-
-    .detail-field-full {
-      grid-column: 1 / -1;
-    }
-
-    .bukti-row {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      background: #f8f8f8;
-      border-radius: 8px;
-      padding: 10px 14px;
-      margin-bottom: 14px;
-    }
-
-    .bukti-thumb {
-      width: 44px;
-      height: 44px;
-      background: var(--bg-accent-soft);
-      border: 1px solid var(--border-strong);
-      border-radius: 6px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: var(--text-soft);
-      font-size: 10px;
-      font-weight: 700;
-      text-transform: uppercase;
-      text-align: center;
-      line-height: 1.2;
-      padding: 4px;
-      overflow: hidden;
-    }
-
-    .items-block {
-      border: 1px solid #ebebeb;
-      border-radius: 8px;
-      overflow: hidden;
-    }
-
-    .item-row {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      padding: 10px 14px;
-      border-bottom: 1px solid #f2f2f2;
-    }
-
-    .item-row:last-child {
-      border-bottom: none;
-    }
-
-    .item-thumb {
-      width: 36px;
-      height: 36px;
-      background: var(--bg-accent-soft);
-      border: 1px solid var(--border-strong);
-      border-radius: 6px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: var(--text-main);
-      font-size: 11px;
-      font-weight: 700;
-      text-transform: uppercase;
-      overflow: hidden;
-    }
-
-    .thumb-image {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      display: block;
-    }
-
-    .item-info {
-      flex: 1;
-    }
-
-    .item-name {
-      font-size: 13px;
-      font-weight: 700;
-    }
-
-    .item-size {
-      font-size: 11px;
-      color: #999;
-    }
-
-    .item-price {
-      font-size: 13px;
-      font-weight: 700;
-    }
-
-    .total-row {
-      display: flex;
-      justify-content: space-between;
-      padding: 11px 14px;
-      font-weight: 700;
-      background: #f8f8f8;
-      border-top: 1px solid #ebebeb;
-    }
-
-    .stok-row {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 4px 0;
-    }
-
-    .stok-row label {
-      font-size: 13.5px;
-      font-weight: 500;
-    }
-
-    .stok-row input {
-      width: 100px;
-      text-align: right;
-    }
-
-    .page {
-      display: none;
-    }
-
-    .page.active {
-      display: block;
-    }
-
-    .status-edit-sel {
-      width: 100%;
-      min-height: 44px;
-      padding: 10px 42px 10px 14px;
-      font-size: 14px;
-      font-weight: 600;
-      border: 1px solid #d9d9d9;
-      border-radius: 12px;
-      background-color: #fff;
-      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='18' viewBox='0 0 24 24' fill='none' stroke='%23222222' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
-      background-repeat: no-repeat;
-      background-position: right 14px center;
-      background-size: 16px;
-      appearance: none;
-      -webkit-appearance: none;
-      -moz-appearance: none;
-      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
-      transition: border-color 0.15s, box-shadow 0.15s, background-color 0.15s;
-    }
-
-    .status-edit-sel:hover {
-      background-color: #fcfcfc;
-      border-color: #cfcfcf;
-    }
-
-    .status-edit-sel:focus {
-      border-color: #1a1a1a;
-      box-shadow: 0 0 0 3px rgba(26, 26, 26, 0.08);
-    }
-
-    .status-edit-wrap {
-      display: grid;
-      grid-template-columns: 120px minmax(0, 1fr);
-      align-items: center;
-      gap: 12px;
-      margin-top: -2px;
-      margin-bottom: 10px;
-      padding: 14px 16px;
-      border: 1px solid #efefef;
-      border-radius: 12px;
-      background: #fafafa;
-    }
-
-    .status-edit-wrap .field-label {
-      margin-bottom: 0;
-      font-size: 13px;
-      color: #444;
-    }
-
-    @media (max-width: 640px) {
-      .status-edit-wrap {
-        grid-template-columns: 1fr;
-        align-items: stretch;
-      }
-    }
-
-    .id-cell {
-      font-size: 13px;
-      color: #333;
-      font-weight: 500;
-    }
-  </style>
 </head>
 
-<body>
+<body class="bg-[#f7f2eb] text-[#5c4432] antialiased">
 
-  <div class="shell">
+  <div class="shell min-h-screen">
 
-    <!-- SIDEBAR -->
-    <aside class="sidebar">
+    <!-- sidebar -->
+    <aside class="sidebar hidden md:flex">
       <div class="sidebar-logo">Velora</div>
       <div class="sidebar-section-label">Menu Utama</div>
 
@@ -945,199 +71,26 @@ background: var(--bg-panel);
 
     <!-- MAIN WRAP -->
     <div class="main-wrap">
-      <div class="topbar">
+      <div class="topbar sticky top-0 z-20">
         <span class="topbar-title" id="topbar-title">Dashboard</span>
         <span class="topbar-greeting">Selamat Datang, Admin</span>
       </div>
 
       <div class="main-content">
 
-        <!-- PAGE: DASHBOARD -->
-        <div class="page active" id="page-dashboard">
-          <div class="stat-row">
-            <div class="stat-card">
-              <div class="stat-label">Total Pesanan</div>
-              <div class="stat-value" id="s-pesanan">6</div>
-              <div class="stat-sub">Pesanan masuk</div>
-            </div>
-            <div class="stat-card ">
-              <div class="stat-label">Total Produk</div>
-              <div class="stat-value" id="s-produk">8</div>
-              <div class="stat-sub">Produk</div>
-            </div>
-            <div class="stat-card">
-              <div class="stat-label">Total Kategori</div>
-              <div class="stat-value">4</div>
-              <div class="stat-sub">Kategori</div>
-            </div>
-          </div>
-
-          <div class="surface data-surface">
-            <div class="sec-header">
-              <div>
-                <div class="sec-title">Pesanan Terbaru</div>
-              </div>
-              <button class="btn btn-sm" onclick="goPage('pesanan')">Lihat Semua</button>
-            </div>
-            <div class="tbl-wrap">
-              <table>
-                <thead>
-                  <tr>
-                    <th>ID</th>
-                    <th>Nama</th>
-                    <th>Produk</th>
-                    <th>Status</th>
-                    <th>Total</th>
-                  </tr>
-                </thead>
-                <tbody id="dash-orders-tbody"></tbody>
-              </table>
-            </div>
-            <div class="pagi-row">
-              <span id="dash-pagi-info">1 - 3 dari 3</span>
-              <div class="pagi-btns">
-                <button class="pagi-btn">&lt;&lt;</button>
-                <button class="pagi-btn active">1</button>
-                <button class="pagi-btn">&gt;&gt;</button>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!--PAGE: PRODUK-->
-        <div class="page" id="page-produk">
-          <div class="surface data-surface">
-            <div class="toolbar">
-              <div class="toolbar-left">
-                <select id="produk-filter-kat" onchange="renderProdukTable()">
-                  <option value="">Semua Kategori</option>
-                  <option>Gaun</option>
-                  <option>Kemeja</option>
-                  <option>Kardigan</option>
-                  <option>Rok</option>
-                </select>
-              </div>
-              <button class="btn btn-dark" onclick="openModal('modal-tambah-produk'); setModalMode('add')">+ Tambah Produk</button>
-            </div>
-            <div class="tbl-wrap">
-              <table>
-                <thead>
-                  <tr>
-                    <th>ID</th>
-                    <th>Foto</th>
-                    <th>Nama Produk</th>
-                    <th>Kategori</th>
-                    <th>Harga</th>
-                    <th>Aksi</th>
-                  </tr>
-                </thead>
-                <tbody id="produk-tbody"></tbody>
-              </table>
-            </div>
-            <div class="pagi-row">
-              <span id="produk-pagi-info">1 - 4 dari 4</span>
-              <div class="pagi-btns">
-                <button class="pagi-btn">&lt;&lt;</button>
-                <button class="pagi-btn active">1</button>
-                <button class="pagi-btn">&gt;&gt;</button>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- PAGE: KATEGORI -->
-        <div class="page" id="page-kategori">
-          <div class="surface data-surface">
-            <div class="toolbar">
-              <div></div>
-              <button class="btn btn-dark" onclick="openModal('modal-tambah-kat'); setKatModalMode('add')">+ Tambah Kategori</button>
-            </div>
-            <div class="tbl-wrap">
-              <table>
-                <thead>
-                  <tr>
-                    <th>ID</th>
-                    <th>Nama Kategori</th>
-                    <th>Aksi</th>
-                  </tr>
-                </thead>
-                <tbody id="kategori-tbody"></tbody>
-              </table>
-            </div>
-          </div>
-        </div>
-
-        <!-- PAGE: STOK PRODUK -->
-        <div class="page" id="page-stok">
-          <div class="surface data-surface">
-            <div class="table-head-spacer"></div>
-            <div class="tbl-wrap">
-              <table>
-                <thead>
-                  <tr>
-                    <th>Produk</th>
-                    <th style="text-align:center;">S</th>
-                    <th style="text-align:center;">M</th>
-                    <th style="text-align:center;">L</th>
-                    <th style="text-align:center;">XL</th>
-                    <th>Aksi</th>
-                  </tr>
-                </thead>
-                <tbody id="stok-tbody"></tbody>
-              </table>
-            </div>
-          </div>
-        </div>
-
-        <!-- PAGE: PESANAN -->
-        <div class="page" id="page-pesanan">
-          <div class="surface data-surface">
-            <div class="toolbar">
-              <div class="toolbar-left">
-                <div class="search-wrap">
-                  <svg class="search-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                    <circle cx="11" cy="11" r="7"></circle>
-                    <path d="M20 20L17 17"></path>
-                  </svg>
-
-                  <input type="text" id="pesanan-search" class="search-input" placeholder="Cari pesanan..." oninput="renderPesananTable()">
-                </div>
-              </div>
-            </div>
-            <div class="tbl-wrap">
-              <table>
-                <thead>
-                  <tr>
-                    <th>ID</th>
-                    <th>Tanggal Pemesanan</th>
-                    <th>Nama</th>
-                    <th>Status</th>
-                    <th>Total</th>
-                    <th>Aksi</th>
-                  </tr>
-                </thead>
-                <tbody id="pesanan-tbody"></tbody>
-              </table>
-            </div>
-            <div class="pagi-row">
-              <span id="pesanan-pagi-info">1 - 3 dari 3</span>
-              <div class="pagi-btns">
-                <button class="pagi-btn">&lt;&lt;</button>
-                <button class="pagi-btn active">1</button>
-                <button class="pagi-btn">&gt;&gt;</button>
-              </div>
-            </div>
-          </div>
-        </div>
+        @include('admin.sections.dashboard-page')
+        @include('admin.sections.produk-page')
+        @include('admin.sections.kategori-page')
+        @include('admin.sections.stok-page')
+        @include('admin.sections.pesanan-page')
 
       </div>
     </div>
   </div>
 
 
-  <!-- MODALS-->
-
-  <!-- Tambah / Edit Produk -->
+  <!-- modal-->
+  <!-- tambah dan edit produk -->
   <div class="overlay" id="modal-tambah-produk">
     <div class="modal">
       <div class="modal-header">
@@ -1195,7 +148,7 @@ background: var(--bg-panel);
     </div>
   </div>
 
-  <!-- Tambah / Edit Kategori -->
+  <!-- tambah dan edit kategori -->
   <div class="overlay" id="modal-tambah-kat">
     <div class="modal modal-sm">
       <div class="modal-header">
@@ -1215,7 +168,7 @@ background: var(--bg-panel);
     </div>
   </div>
 
-  <!-- Hapus Kategori Konfirmasi -->
+  <!-- Hapus Kategori -->
   <div class="overlay overlay-top" id="modal-hapus-kat">
     <div class="modal modal-sm">
       <div class="confirm-box">
@@ -1277,7 +230,7 @@ background: var(--bg-panel);
 
 
   <script>
-    // DATA
+    // data
 
     let produkList = [{
         id: 'P001',
@@ -1501,6 +454,7 @@ background: var(--bg-panel);
     let deletingKatId = null;
     let editingStokId = null;
     let viewingPesananId = null;
+    let selectedProdukImage = '';
     let produkIdCounter = 9;
     let katIdCounter = 5;
 
@@ -1551,12 +505,15 @@ background: var(--bg-panel);
       'Rok Plisket': 'https://i.pinimg.com/736x/ff/b9/06/ffb9065c829ab35740b27c4f962300bf.jpg',
     };
 
-    function getProdukImage(name = '') {
+    function getProdukImage(name = '', explicitImage = '') {
+      if (explicitImage) return explicitImage;
+      const produk = produkList.find(item => item.nama === name);
+      if (produk?.image) return produk.image;
       return produkImages[name] || '';
     }
 
-    function renderThumb(name = '', className = 'foto-cell') {
-      const image = getProdukImage(name);
+    function renderThumb(name = '', className = 'foto-cell', imageUrl = '') {
+      const image = getProdukImage(name, imageUrl);
       if (image) {
         return `<div class="${className}" title="Foto ${name}"><img src="${image}" alt="${name}" class="thumb-image"></div>`;
       }
@@ -1592,7 +549,7 @@ background: var(--bg-panel);
       <td>${rp(o.items.reduce((s,i) => s + i.harga * i.qty, 0))}</td>
     </tr>`).join('');
 
-      document.getElementById('dash-pagi-info').textContent = `1 - ${recent.length} dari ${pesananList.length}`;
+      document.getElementById('dash-pagi-info').textContent = `1 - ${recent.length} dari ${recent.length}`;
     }
 
     // PRODUK
@@ -1603,7 +560,7 @@ background: var(--bg-panel);
       document.getElementById('produk-tbody').innerHTML = list.map(p => `
     <tr>
       <td class="id-cell">${p.id}</td>
-      <td>${renderThumb(p.nama, 'foto-cell')}</td>
+      <td>${renderThumb(p.nama, 'foto-cell', p.image || '')}</td>
       <td><strong>${p.nama}</strong></td>
       <td>${p.kategori}</td>
       <td>${rp(p.harga)}</td>
@@ -1620,11 +577,13 @@ background: var(--bg-panel);
 
     function setModalMode(mode) {
       editingProdukId = null;
+      selectedProdukImage = '';
       document.getElementById('prod-modal-title').textContent = 'Tambah Produk';
       document.getElementById('prod-nama').value = '';
       document.getElementById('prod-kat').value = 'Gaun';
       document.getElementById('prod-harga').value = '';
       document.getElementById('prod-desk').value = '';
+      document.getElementById('file-upload').value = '';
       document.getElementById('upload-hint').textContent = 'Belum ada file dipilih';
     }
 
@@ -1637,6 +596,8 @@ background: var(--bg-panel);
       document.getElementById('prod-kat').value = p.kategori;
       document.getElementById('prod-harga').value = p.harga;
       document.getElementById('prod-desk').value = p.deskripsi;
+      selectedProdukImage = p.image || '';
+      document.getElementById('file-upload').value = '';
       document.getElementById('upload-hint').textContent = 'Foto tersimpan';
       openModal('modal-tambah-produk');
     }
@@ -1664,6 +625,7 @@ background: var(--bg-panel);
           p.kategori = kat;
           p.harga = harga;
           p.deskripsi = desk;
+          if (selectedProdukImage) p.image = selectedProdukImage;
         }
       } else {
         const newId = 'P' + String(produkIdCounter++).padStart(3, '0');
@@ -1673,6 +635,7 @@ background: var(--bg-panel);
           kategori: kat,
           harga,
           deskripsi: desk,
+          image: selectedProdukImage,
           stok: {
             S: 0,
             M: 0,
@@ -1692,7 +655,18 @@ background: var(--bg-panel);
     }
 
     function handleFileChange(input) {
-      document.getElementById('upload-hint').textContent = input.files[0]?.name || 'Belum ada file dipilih';
+      const file = input.files[0];
+      document.getElementById('upload-hint').textContent = file?.name || 'Belum ada file dipilih';
+      if (!file) {
+        selectedProdukImage = '';
+        return;
+      }
+
+      const reader = new FileReader();
+      reader.onload = () => {
+        selectedProdukImage = String(reader.result || '');
+      };
+      reader.readAsDataURL(file);
     }
 
     // KATEGORI
