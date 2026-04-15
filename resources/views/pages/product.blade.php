@@ -3,16 +3,16 @@
 @section('title', 'Produk')
 
 @section('content')
-
-@if(session('success'))
-<div id="toast-success"
+@if (session('success'))
+<div
+    id="toast-success"
     class="fixed top-5 right-5 z-[999] rounded-2xl bg-[#5c4432] px-5 py-3 text-sm font-medium text-white shadow-xl">
     {{ session('success') }}
 </div>
 
 <script>
     setTimeout(() => {
-        document.getElementById('toast-success').remove();
+        document.getElementById('toast-success')?.remove();
     }, 2000);
 </script>
 @endif
@@ -59,8 +59,8 @@ $products = [
 'stock' => 7,
 'price' => '152.000',
 ],
-],
 
+],
 'gaun' => [
 [
 'name' => 'Gaun Biru Wrap',
@@ -189,163 +189,17 @@ $products = [
 ];
 
 $defaultCategory = request('category', 'kemeja');
+
+$tabClass = 'inline-flex cursor-pointer items-center gap-[7px] whitespace-nowrap rounded-full bg-[#E8DED3] px-4 py-[0.62rem] text-[0.82rem] font-medium text-[#5B4636] no-underline transition-all duration-200 ease-in-out hover:-translate-y-[1px] hover:bg-[#DED1C2]';
+$tabActiveClass = 'shadow-[inset_0_0_0_1px_rgba(140,117,99,0.18)]';
+$iconWrapClass = 'inline-flex h-[18px] w-[18px] flex-shrink-0 items-center justify-center rounded-full bg-[#F0E7DD]';
+$svgClass = 'h-3 w-3 fill-[#A78D78] stroke-[#A78D78]';
+$cardClass = 'product-card cursor-pointer overflow-hidden rounded-[28px] bg-white opacity-0 shadow-[0_4px_18px_rgba(167,141,120,0.12)] transition-all duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-[6px] hover:scale-[1.01] hover:shadow-[0_14px_32px_rgba(167,141,120,0.18)]';
+$primaryBtnClass = 'w-full rounded-xl bg-[#a78d78] py-2.5 font-medium text-white transition hover:bg-[#8f7561]';
+$modalBtnClass = 'rounded-2xl py-3 font-semibold text-white transition';
 @endphp
 
-<style>
-    .cat-tab {
-        display: inline-flex;
-        align-items: center;
-        gap: 7px;
-        font-size: 0.82rem;
-        font-weight: 500;
-        padding: 0.62rem 1rem;
-        border-radius: 999px;
-        border: none;
-        color: #5B4636;
-        background: #E8DED3;
-        cursor: pointer;
-        transition: all 0.22s ease;
-        white-space: nowrap;
-        text-decoration: none;
-    }
-
-    .cat-tab:hover {
-        background: #DED1C2;
-        transform: translateY(-1px);
-    }
-
-    .cat-tab.active {
-        background: #E8DED3;
-        box-shadow: inset 0 0 0 1px rgba(140, 117, 99, 0.18);
-    }
-
-    .cat-icon {
-        width: 18px;
-        height: 18px;
-        border-radius: 999px;
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        flex-shrink: 0;
-        background: #F0E7DD;
-    }
-
-    .cat-tab svg {
-        width: 12px;
-        height: 12px;
-        stroke: #A78D78;
-        fill: #A78D78;
-    }
-
-    .product-card {
-        background: #ffffff;
-        border-radius: 28px;
-        overflow: hidden;
-        box-shadow: 0 4px 18px rgba(167, 141, 120, 0.12);
-        transition: transform 0.35s ease, box-shadow 0.35s ease, opacity 0.35s ease;
-        opacity: 0;
-        transform: translateY(28px) scale(0.98);
-        will-change: transform, opacity;
-    }
-
-    .product-card.show {
-        animation: cardReveal 0.7s cubic-bezier(0.22, 1, 0.36, 1) forwards;
-    }
-
-    .product-card:hover {
-        transform: translateY(-6px) scale(1.01);
-        box-shadow: 0 14px 32px rgba(167, 141, 120, 0.18);
-    }
-
-    @keyframes cardReveal {
-        0% {
-            opacity: 0;
-            transform: translateY(28px) scale(0.98);
-        }
-
-        60% {
-            opacity: 1;
-            transform: translateY(-4px) scale(1.01);
-        }
-
-        100% {
-            opacity: 1;
-            transform: translateY(0) scale(1);
-        }
-    }
-
-    .product-card:nth-child(1).show {
-        animation-delay: 0.05s;
-    }
-
-    .product-card:nth-child(2).show {
-        animation-delay: 0.12s;
-    }
-
-    .product-card:nth-child(3).show {
-        animation-delay: 0.19s;
-    }
-
-    .product-card:nth-child(4).show {
-        animation-delay: 0.26s;
-    }
-
-    .product-card:nth-child(5).show {
-        animation-delay: 0.33s;
-    }
-
-    .product-card:nth-child(6).show {
-        animation-delay: 0.40s;
-    }
-
-    .product-card:nth-child(7).show {
-        animation-delay: 0.47s;
-    }
-
-    .product-card:nth-child(8).show {
-        animation-delay: 0.54s;
-    }
-
-    #productModal {
-        opacity: 0;
-        transition: opacity 0.25s ease;
-    }
-
-    #productModal.flex {
-        opacity: 1;
-    }
-
-    #productModal>div {
-        transform: translateY(20px) scale(0.98);
-        opacity: 0;
-        transition: transform 0.3s ease, opacity 0.3s ease;
-    }
-
-    #productModal.flex>div {
-        transform: translateY(0) scale(1);
-        opacity: 1;
-    }
-
-    #toast-success,
-    #toast {
-        animation: toastSlideIn 0.45s ease;
-    }
-
-    @keyframes toastSlideIn {
-        from {
-            opacity: 0;
-            transform: translateY(-14px) scale(0.97);
-        }
-
-        to {
-            opacity: 1;
-            transform: translateY(0) scale(1);
-        }
-    }
-</style>
-
-<div id="toast"
-    class="fixed top-5 right-5 z-[999] hidden rounded-2xl bg-[#5c4432] px-5 py-3 text-sm font-medium text-white shadow-xl">
+<div id="toast" class="fixed top-5 right-5 z-[999] hidden rounded-2xl bg-[#5c4432] px-5 py-3 text-sm font-medium text-white shadow-xl">
     Ditambahkan ke keranjang
 </div>
 
@@ -359,7 +213,8 @@ $defaultCategory = request('category', 'kemeja');
         </div>
 
         <div>
-            <select id="sortSelect"
+            <select
+                id="sortSelect"
                 class="rounded-2xl border border-[#e0d2c3] bg-[#e8ded3] px-4 py-3 text-sm font-medium text-[#5B4636] outline-none">
                 <option value="default">Terbaru</option>
                 <option value="price-asc">Harga: Terendah</option>
@@ -371,9 +226,9 @@ $defaultCategory = request('category', 'kemeja');
 
 <section id="kategori" class="mx-auto max-w-7xl px-6 pb-6 pt-8">
     <div class="flex flex-wrap gap-3" id="categoryTabs">
-        <a href="{{ route('product') }}?category=kemeja" class="cat-tab {{ $defaultCategory == 'kemeja' ? 'active' : '' }}">
-            <span class="cat-icon">
-                <svg viewBox="0 0 24 24">
+        <a href="{{ route('product') }}?category=kemeja" class="{{ $tabClass }} {{ $defaultCategory == 'kemeja' ? $tabActiveClass : '' }}">
+            <span class="{{ $iconWrapClass }}">
+                <svg viewBox="0 0 24 24" class="{{ $svgClass }}">
                     <path d="M19 21H5V8l3-2 2 2h4l2-2 3 2z"></path>
                     <path d="M9 6V4h6v2"></path>
                 </svg>
@@ -381,9 +236,9 @@ $defaultCategory = request('category', 'kemeja');
             Kemeja
         </a>
 
-        <a href="{{ route('product') }}?category=gaun" class="cat-tab {{ $defaultCategory == 'gaun' ? 'active' : '' }}">
-            <span class="cat-icon">
-                <svg viewBox="0 0 24 24">
+        <a href="{{ route('product') }}?category=gaun" class="{{ $tabClass }} {{ $defaultCategory == 'gaun' ? $tabActiveClass : '' }}">
+            <span class="{{ $iconWrapClass }}">
+                <svg viewBox="0 0 24 24" class="{{ $svgClass }}">
                     <path d="M12 4l2 4 4 10H6l4-10 2-4z"></path>
                     <circle cx="12" cy="3.5" r="1.2" fill="#A78D78" stroke="none"></circle>
                 </svg>
@@ -391,9 +246,9 @@ $defaultCategory = request('category', 'kemeja');
             Gaun
         </a>
 
-        <a href="{{ route('product') }}?category=cardigan" class="cat-tab {{ $defaultCategory == 'cardigan' ? 'active' : '' }}">
-            <span class="cat-icon">
-                <svg viewBox="0 0 24 24">
+        <a href="{{ route('product') }}?category=cardigan" class="{{ $tabClass }} {{ $defaultCategory == 'cardigan' ? $tabActiveClass : '' }}">
+            <span class="{{ $iconWrapClass }}">
+                <svg viewBox="0 0 24 24" class="{{ $svgClass }}">
                     <path d="M7 21V8l3-2 2 2 2-2 3 2v13"></path>
                     <path d="M12 8v13"></path>
                 </svg>
@@ -401,9 +256,9 @@ $defaultCategory = request('category', 'kemeja');
             Cardigan
         </a>
 
-        <a href="{{ route('product') }}?category=rok" class="cat-tab {{ $defaultCategory == 'rok' ? 'active' : '' }}">
-            <span class="cat-icon">
-                <svg viewBox="0 0 24 24">
+        <a href="{{ route('product') }}?category=rok" class="{{ $tabClass }} {{ $defaultCategory == 'rok' ? $tabActiveClass : '' }}">
+            <span class="{{ $iconWrapClass }}">
+                <svg viewBox="0 0 24 24" class="{{ $svgClass }}">
                     <path d="M9 4h6l1 3-1.5 13h-5L8 7z"></path>
                 </svg>
             </span>
@@ -414,9 +269,11 @@ $defaultCategory = request('category', 'kemeja');
 
 <section class="mx-auto max-w-7xl px-6 pb-12">
     <div id="product-grid" class="grid grid-cols-1 gap-7 sm:grid-cols-2 lg:grid-cols-4">
-        @foreach ($products[$defaultCategory] as $product)
+        @foreach ($products[$defaultCategory] as $index => $product)
         <div
-            class="product-card cursor-pointer"
+            class="{{ $cardClass }}"
+            style="transform: translateY(28px) scale(0.98);"
+            data-delay="{{ [0.05, 0.12, 0.19, 0.26, 0.33, 0.40, 0.47, 0.54][$index] ?? 0 }}"
             data-price="{{ str_replace('.', '', $product['price']) }}"
             data-name="{{ strtolower($product['name']) }}"
             data-product='@json($product)'
@@ -436,8 +293,7 @@ $defaultCategory = request('category', 'kemeja');
                     Rp{{ $product['price'] }}
                 </p>
 
-                <button type="button"
-                    class="w-full rounded-xl bg-[#a78d78] py-2.5 font-medium text-white transition hover:bg-[#8f7561]">
+                <button type="button" class="{{ $primaryBtnClass }}">
                     Lihat Detail
                 </button>
             </div>
@@ -446,8 +302,13 @@ $defaultCategory = request('category', 'kemeja');
     </div>
 </section>
 
-<div id="productModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/50 px-4">
-    <div class="relative w-full max-w-5xl overflow-hidden rounded-3xl bg-white shadow-2xl">
+<div
+    id="productModal"
+    class="fixed inset-0 z-50 hidden items-center justify-center bg-black/50 px-4 opacity-0 transition-opacity duration-200 ease-in-out">
+    <div
+        id="productModalPanel"
+        class="relative w-full max-w-5xl overflow-hidden rounded-3xl bg-white shadow-2xl opacity-0 transition-all duration-300 ease-in-out"
+        style="transform: translateY(20px) scale(0.98);">
         <button onclick="closeModal()" class="absolute right-5 top-4 z-10 text-3xl text-gray-500 hover:text-black">
             &times;
         </button>
@@ -480,19 +341,17 @@ $defaultCategory = request('category', 'kemeja');
                 <div class="mb-6">
                     <h3 class="mb-2 font-semibold text-[#5c4432]">Jumlah</h3>
                     <div class="flex items-center gap-3">
-                        <button onclick="decreaseQty()" class="h-11 w-11 rounded-xl bg-[#e9ddd0] text-xl font-bold text-[#5c4432] hover:bg-[#dccab5]">-</button>
+                        <button type="button" onclick="decreaseQty()" class="h-11 w-11 rounded-xl bg-[#e9ddd0] text-xl font-bold text-[#5c4432] hover:bg-[#dccab5]">-</button>
                         <span id="qtyValue" class="w-10 text-center text-xl font-semibold text-[#5c4432]">1</span>
-                        <button onclick="increaseQty()" class="h-11 w-11 rounded-xl bg-[#e9ddd0] text-xl font-bold text-[#5c4432] hover:bg-[#dccab5]">+</button>
+                        <button type="button" onclick="increaseQty()" class="h-11 w-11 rounded-xl bg-[#e9ddd0] text-xl font-bold text-[#5c4432] hover:bg-[#dccab5]">+</button>
                     </div>
                 </div>
 
                 <div class="grid grid-cols-1 gap-3 sm:grid-cols-2">
-                    <button onclick="addToCart()"
-                        class="rounded-2xl bg-[#a78d78] py-3 font-semibold text-white transition hover:bg-[#8f7561]">
+                    <button type="button" onclick="addToCart()" class="{{ $modalBtnClass }} bg-[#a78d78] hover:bg-[#8f7561]">
                         Tambah ke Keranjang
                     </button>
-                    <button onclick="buyNow()"
-                        class="rounded-2xl bg-[#5c4432] py-3 font-semibold text-white transition hover:bg-[#4b3728]">
+                    <button type="button" onclick="buyNow()" class="{{ $modalBtnClass }} bg-[#5c4432] hover:bg-[#4b3728]">
                         Beli Sekarang
                     </button>
                 </div>
@@ -500,6 +359,7 @@ $defaultCategory = request('category', 'kemeja');
         </div>
     </div>
 </div>
+
 <form id="cartForm" action="{{ route('cart.add') }}" method="POST" class="hidden">
     @csrf
     <input type="hidden" name="name" id="cart_name">
@@ -514,19 +374,30 @@ $defaultCategory = request('category', 'kemeja');
 
 @push('scripts')
 <script>
-    const allProducts = JSON.parse('@json($products)');
+    const allProducts = @json($products);
     let currentQty = 1;
     let currentStock = 1;
     let selectedSize = null;
     let currentProduct = null;
-    let currentCategory = JSON.parse('@json($defaultCategory)');
+    let currentCategory = @json($defaultCategory);
 
     function animateProductCards() {
         const cards = document.querySelectorAll('#product-grid .product-card');
+
+        cards.forEach((card, index) => {
+            card.style.transitionDelay = `${index * 0.07}s`;
+            card.style.opacity = '1';
+            card.style.transform = 'translateY(0) scale(1)';
+        });
+    }
+
+    function resetProductCards() {
+        const cards = document.querySelectorAll('#product-grid .product-card');
+
         cards.forEach((card) => {
-            card.classList.remove('show');
-            void card.offsetWidth;
-            card.classList.add('show');
+            card.style.transitionDelay = '0s';
+            card.style.opacity = '0';
+            card.style.transform = 'translateY(28px) scale(0.98)';
         });
     }
 
@@ -552,32 +423,52 @@ $defaultCategory = request('category', 'kemeja');
         const sizesContainer = document.getElementById('modalSizes');
         sizesContainer.innerHTML = '';
 
-        product.sizes.forEach(size => {
+        product.sizes.forEach((size) => {
             sizesContainer.innerHTML += `
-                <button
-                    type="button"
-                    onclick="selectSize(this, '${size}')"
-                    class="size-btn rounded-2xl border border-[#d8c3af] bg-[#fbf7f2] px-5 py-3 text-[#6d5644] transition hover:border-[#b08b68] hover:bg-[#efe3d5]">
-                    ${size}
-                </button>
-            `;
+                    <button
+                        type="button"
+                        onclick="selectSize(this, '${size}')"
+                        class="size-btn rounded-2xl border border-[#d8c3af] bg-[#fbf7f2] px-5 py-3 text-[#6d5644] transition hover:border-[#b08b68] hover:bg-[#efe3d5]">
+                        ${size}
+                    </button>
+                `;
         });
 
         const modal = document.getElementById('productModal');
+        const panel = document.getElementById('productModalPanel');
+
         modal.classList.remove('hidden');
         modal.classList.add('flex');
+
+        requestAnimationFrame(() => {
+            modal.classList.remove('opacity-0');
+            modal.classList.add('opacity-100');
+            panel.classList.remove('opacity-0');
+            panel.classList.add('opacity-100');
+            panel.style.transform = 'translateY(0) scale(1)';
+        });
     }
 
     function closeModal() {
         const modal = document.getElementById('productModal');
-        modal.classList.add('hidden');
-        modal.classList.remove('flex');
+        const panel = document.getElementById('productModalPanel');
+
+        modal.classList.remove('opacity-100');
+        modal.classList.add('opacity-0');
+        panel.classList.remove('opacity-100');
+        panel.classList.add('opacity-0');
+        panel.style.transform = 'translateY(20px) scale(0.98)';
+
+        setTimeout(() => {
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+        }, 250);
     }
 
     function selectSize(element, size) {
         selectedSize = size;
 
-        document.querySelectorAll('.size-btn').forEach(btn => {
+        document.querySelectorAll('.size-btn').forEach((btn) => {
             btn.classList.remove('bg-[#a78d78]', 'text-white', 'border-[#a78d78]');
             btn.classList.add('bg-[#fbf7f2]', 'text-[#6d5644]', 'border-[#d8c3af]');
         });
@@ -598,16 +489,6 @@ $defaultCategory = request('category', 'kemeja');
             currentQty--;
             document.getElementById('qtyValue').innerText = currentQty;
         }
-    }
-
-    function showToast(message) {
-        const toast = document.getElementById('toast');
-        toast.innerText = message;
-        toast.classList.remove('hidden');
-
-        setTimeout(() => {
-            toast.classList.add('hidden');
-        }, 2000);
     }
 
     function addToCart() {
@@ -648,10 +529,13 @@ $defaultCategory = request('category', 'kemeja');
             cards.sort((a, b) => parseInt(b.dataset.price) - parseInt(a.dataset.price));
         }
 
+        resetProductCards();
         grid.innerHTML = '';
-        cards.forEach(card => grid.appendChild(card));
+        cards.forEach((card) => grid.appendChild(card));
 
-        animateProductCards();
+        requestAnimationFrame(() => {
+            animateProductCards();
+        });
     });
 
     window.addEventListener('click', function(event) {

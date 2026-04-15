@@ -21,3 +21,7 @@ Route::post('/cart/update', [CartController::class, 'update'])->name('cart.updat
 Route::get('/login', [LoginController::class, 'index'])->name('login');
 Route::get('/dashboard', [DashboardController::class, 'index'])->name('admin.dashboard');
 Route::get('/kategori', [KategoriController::class, 'index'])->name('kategori.index');
+
+Route::get('/ririn', function () {
+    return view('ririn'); 
+});
