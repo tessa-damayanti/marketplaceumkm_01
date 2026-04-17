@@ -44,14 +44,15 @@
         }
     </style>
 </head>
+
 <body class="min-h-screen bg-[#e6dbcf] flex items-center justify-center px-4 py-8">
-<!-- <body class="min-h-screen bg-[#f7f2eb] flex items-center justify-center px-4 py-8"> -->
+    <!-- <body class="min-h-screen bg-[#f7f2eb] flex items-center justify-center px-4 py-8"> -->
 
     <div class="w-full max-w-6xl rounded-[34px] overflow-hidden bg-white soft-shadow fade-up">
         <div class="grid md:grid-cols-2 min-h-[620px]">
 
             <!-- LEFT SIDE -->
-            <div class="relative left-gradient text-white overflow-hidden">
+            <div class="relative bg-gradient-to-r from-[#c9b8a6] via-[#b9a48f] to-[#a78d78] text-white overflow-hidden">
                 <div class="absolute inset-0 bg-black/5"></div>
                 <div class="absolute -top-20 -left-20 w-56 h-56 rounded-full bg-white/10"></div>
                 <div class="absolute -bottom-24 -right-16 w-72 h-72 rounded-full bg-white/10"></div>
@@ -72,7 +73,7 @@
                         <h2 class="text-4xl font-bold text-[#5c4432]">Login</h2>
                     </div>
 
-                    <form class="space-y-5" method="GET" action="{{ route('admin.dashboard') }}">
+                    <form class="space-y-5" onsubmit="return false;">
 
                         <!-- USERNAME -->
                         <div>
@@ -115,7 +116,7 @@
                         <br>
 
                         <button
-                            type="submit"
+                            type="button"
                             class="w-full h-14 rounded-2xl bg-[#a78d78] hover:bg-[#8f7561] text-white text-lg font-semibold shadow-[0_14px_28px_rgba(167,141,120,0.28)] transition">
                             Login
                         </button>

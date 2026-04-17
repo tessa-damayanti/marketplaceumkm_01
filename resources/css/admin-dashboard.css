@@ -230,7 +230,7 @@
       border-collapse: separate;
       border-spacing: 0;
       border: 1px solid var(--border-strong);
-background: var(--bg-panel);
+      background: var(--bg-panel);
     }
 
     thead th {
@@ -603,19 +603,21 @@ background: var(--bg-panel);
     }
 
     .upload-zone {
-      border: 1.5px dashed #ccc;
-      border-radius: 8px;
+      min-height: 82px;
+      border: 2px dashed var(--border-strong);
+      border-radius: 16px;
       padding: 14px 16px;
-      background: #fafafa;
+      background: var(--bg-panel);
       display: flex;
       align-items: center;
       gap: 12px;
       cursor: pointer;
+      transition: border-color 0.15s, background-color 0.15s, box-shadow 0.15s;
     }
 
     .upload-zone:hover {
-      border-color: #999;
-      background: #f5f5f5;
+      border-color: var(--bg-accent-deep);
+      background: #fdf7f1;
     }
 
     .upload-zone input[type="file"] {
@@ -623,19 +625,65 @@ background: var(--bg-panel);
     }
 
     .upload-btn-fake {
-      padding: 6px 14px;
-      border-radius: 7px;
-      background: #e8e8e8;
-      border: 1px solid #d0d0d0;
+      min-height: 48px;
+      padding: 0 22px;
+      border-radius: 16px;
+      background: #f3efe9;
+      border: 2px solid var(--border-soft);
       font-size: 12px;
-      font-weight: 600;
-      color: #444;
+      font-weight: 700;
+      color: var(--text-main);
       white-space: nowrap;
+      display: inline-flex;
+      align-items: center;
     }
 
     .upload-hint {
       font-size: 12px;
-      color: #aaa;
+      color: var(--text-muted);
+    }
+
+    #modal-tambah-produk .field-label {
+      margin-bottom: 10px;
+      font-size: 13px;
+      color: var(--text-main);
+    }
+
+    #modal-tambah-produk input[type="text"],
+    #modal-tambah-produk select,
+    #modal-tambah-produk textarea {
+      width: 100%;
+      min-height: 56px;
+      border: 2px solid var(--border-strong);
+      border-radius: 16px;
+      padding: 14px 18px;
+      background: var(--bg-panel);
+      font-size: 14px;
+      line-height: 1.4;
+      appearance: none;
+      -webkit-appearance: none;
+      -moz-appearance: none;
+    }
+
+    #modal-tambah-produk textarea {
+      min-height: 160px;
+      padding-top: 18px;
+    }
+
+    #modal-tambah-produk select {
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='none' stroke='%237b6858' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m5 7 5 5 5-5'/%3E%3C/svg%3E");
+      background-position: right 18px center;
+      background-repeat: no-repeat;
+      background-size: 18px;
+      padding-right: 52px;
+    }
+
+    #modal-tambah-produk input[type="text"]:focus,
+    #modal-tambah-produk select:focus,
+    #modal-tambah-produk textarea:focus,
+    #modal-tambah-produk .upload-zone:focus-within {
+      border-color: var(--bg-accent-deep);
+      box-shadow: 0 0 0 3px rgba(167, 141, 120, 0.14);
     }
 
     .confirm-box {
