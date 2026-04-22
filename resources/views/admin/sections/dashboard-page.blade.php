@@ -42,9 +42,9 @@
     <div class="pagi-row">
       <span id="dash-pagi-info">1 - 5 dari 5</span>
       <div class="pagi-btns">
-        <button class="pagi-btn">&lt;&lt;</button>
+        <button class="pagi-btn">&lt;</button>
         <button class="pagi-btn active">1</button>
-        <button class="pagi-btn">&gt;&gt;</button>
+        <button class="pagi-btn">&gt;</button>
       </div>
     </div>
   </div>

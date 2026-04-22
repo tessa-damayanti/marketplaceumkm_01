@@ -223,7 +223,7 @@
       <div class="modal-body" id="pesanan-modal-body"></div>
       <div class="modal-footer">
         <button class="btn" onclick="closeModal('modal-pesanan')">Batal</button>
-        <button class="btn btn-dark" onclick="saveEditStatus()">Edit Status</button>
+        <button class="btn btn-dark" onclick="saveEditStatus()">Simpan</button>
       </div>
     </div>
   </div>
@@ -362,7 +362,7 @@
         nama: 'Citra',
         hp: '08132244551',
         alamat: 'Jln. Ahmad Yani No. 22',
-        status: 'Belum Dibayar',
+        status: 'Menunggu Verifikasi',
         items: [{
           produk: 'Kemeja Hitam',
           ukuran: 'L',
@@ -376,7 +376,7 @@
         nama: 'Ayu Putri',
         hp: '08211234567',
         alamat: 'Jln. Sudirman No. 45',
-        status: 'Pembayaran Berhasil',
+        status: 'Pembayaran Valid',
         items: [{
           produk: 'Gaun Floral Pastel',
           ukuran: 'M',
@@ -390,7 +390,7 @@
         nama: 'Dinda',
         hp: '08567890123',
         alamat: 'Jln. Merdeka Blok C5',
-        status: 'Pembayaran Gagal',
+        status: 'Pembayaran Ditolak',
         items: [{
           produk: 'Rok Plisket',
           ukuran: 'S',
@@ -409,7 +409,7 @@
         nama: 'Naura',
         hp: '08129876543',
         alamat: 'Jln. Pahlawan No. 8',
-        status: 'Belum Dibayar',
+        status: 'Menunggu Verifikasi',
         items: [{
           produk: 'Gaun Ivory',
           ukuran: 'S',
@@ -423,7 +423,7 @@
         nama: 'Cahya Yanti',
         hp: '08561234567',
         alamat: 'Jln. Diponegoro No. 3',
-        status: 'Pembayaran Berhasil',
+        status: 'Konfirmasi Ulang',
         items: [{
           produk: 'Kemeja Stripe',
           ukuran: 'M',
@@ -437,7 +437,7 @@
         nama: 'Merita Anisa',
         hp: '08781234567',
         alamat: 'Jln. Kenanga No. 12',
-        status: 'Pembayaran Berhasil',
+        status: 'Pembayaran Valid',
         items: [{
           produk: 'Kardigan Floral',
           ukuran: 'L',
@@ -505,6 +505,28 @@
       'Rok Plisket': 'https://i.pinimg.com/736x/ff/b9/06/ffb9065c829ab35740b27c4f962300bf.jpg',
     };
 
+    const editIcon = `
+      <svg viewBox="0 0 24 24" fill="none" stroke-width="2">
+        <path d="M3 17.25V21h3.75L17.8 9.94l-3.75-3.75L3 17.25z"></path>
+        <path d="M14.06 4.94l3.75 3.75"></path>
+      </svg>`;
+
+    const deleteIcon = `
+      <svg viewBox="0 0 24 24" fill="none" stroke-width="2">
+        <path d="M3 6h18"></path>
+        <path d="M8 6V4h8v2"></path>
+        <path d="M19 6l-1 14H6L5 6"></path>
+        <path d="M10 11v6"></path>
+        <path d="M14 11v6"></path>
+      </svg>`;
+
+    const detailIcon = `
+      <svg viewBox="0 0 24 24" fill="none" stroke-width="2">
+        <circle cx="12" cy="12" r="9"></circle>
+        <path d="M12 16v-4"></path>
+        <path d="M12 8h.01"></path>
+      </svg>`;
+
     function getProdukImage(name = '', explicitImage = '') {
       if (explicitImage) return explicitImage;
       const produk = produkList.find(item => item.nama === name);
@@ -521,8 +543,9 @@
     }
 
     function statusBadge(s) {
-      if (s === 'Pembayaran Berhasil') return `<span class="badge badge-berhasil">${s}</span>`;
-      if (s === 'Pembayaran Gagal') return `<span class="badge badge-gagal">${s}</span>`;
+      if (s === 'Pembayaran Valid') return `<span class="badge badge-berhasil">${s}</span>`;
+      if (s === 'Pembayaran Ditolak') return `<span class="badge badge-gagal">${s}</span>`;
+      if (s === 'Menunggu Konfirmasi') return `<span class="badge badge-konfirmasi">${s}</span>`;
       return `<span class="badge badge-belum">${s}</span>`;
     }
 
@@ -566,8 +589,8 @@
       <td>${rp(p.harga)}</td>
       <td class="action-cell">
         <div class="action-buttons">
-          <button class="btn btn-sm" onclick="openEditProduk('${p.id}')">Edit</button>
-          <button class="btn btn-sm btn-danger" onclick="openHapusProduk('${p.id}')">Hapus</button>
+          <button class="icon-btn icon-btn-edit" type="button" onclick="openEditProduk('${p.id}')" aria-label="Edit produk">${editIcon}</button>
+          <button class="icon-btn icon-btn-delete" type="button" onclick="openHapusProduk('${p.id}')" aria-label="Hapus produk">${deleteIcon}</button>
         </div>
       </td>
     </tr>`).join('');
@@ -677,8 +700,8 @@
       <td><strong>${k.nama}</strong></td>
       <td class="action-cell">
         <div class="action-buttons">
-          <button class="btn btn-sm" onclick="openEditKat('${k.id}')">Edit</button>
-          <button class="btn btn-sm btn-danger" onclick="openHapusKat('${k.id}')">Hapus</button>
+          <button class="icon-btn icon-btn-edit" type="button" onclick="openEditKat('${k.id}')" aria-label="Edit kategori">${editIcon}</button>
+          <button class="icon-btn icon-btn-delete" type="button" onclick="openHapusKat('${k.id}')" aria-label="Hapus kategori">${deleteIcon}</button>
         </div>
       </td>
     </tr>`).join('');
@@ -740,7 +763,11 @@
       <td style="text-align:center;">${p.stok.M}</td>
       <td style="text-align:center;">${p.stok.L}</td>
       <td style="text-align:center;">${p.stok.XL}</td>
-      <td><button class="btn btn-sm" onclick="openEditStok('${p.id}')">Edit</button></td>
+      <td class="action-cell">
+        <div class="action-buttons">
+          <button class="icon-btn icon-btn-edit" type="button" onclick="openEditStok('${p.id}')" aria-label="Edit stok">${editIcon}</button>
+        </div>
+      </td>
     </tr>`).join('');
     }
 
@@ -769,25 +796,38 @@
 
     // PESANAN
     function renderPesananTable() {
-      const keyword = (document.getElementById('pesanan-search')?.value || '').trim().toLowerCase();
-      const list = keyword ? pesananList.filter(o =>
-        o.id.toLowerCase().includes(keyword) ||
-        o.tanggal.toLowerCase().includes(keyword) ||
-        o.nama.toLowerCase().includes(keyword) ||
-        o.status.toLowerCase().includes(keyword)
-      ) : pesananList;
+      const filterStatus = document.getElementById('pesanan-filter-status')?.value || '';
+      const dateFrom = document.getElementById('pesanan-date-from')?.value || '';
+      const dateTo = document.getElementById('pesanan-date-to')?.value || '';
 
-      document.getElementById('pesanan-tbody').innerHTML = list.map(o => `
-    <tr>
-      <td class="id-cell">${o.id}</td>
-      <td>${o.tanggal}</td>
-      <td><strong>${o.nama}</strong></td>
-      <td>${statusBadge(o.status)}</td>
-      <td>${rp(o.items.reduce((s,i) => s + i.harga * i.qty, 0))}</td>
-      <td><button class="btn btn-sm" onclick="openDetailPesanan('${o.id}')">Detail</button></td>
-    </tr>`).join('');
+      const list = pesananList.filter(o => {
+        const matchStatus = !filterStatus || o.status === filterStatus;
 
-      document.getElementById('pesanan-pagi-info').textContent = `${list.length ? 1 : 0} - ${list.length} dari ${pesananList.length}`;
+        let matchDate = true;
+        if (dateFrom || dateTo) {
+          const parts = o.tanggal.split('-');
+          const tglISO = parts[2] + '-' + parts[1] + '-' + parts[0];
+          if (dateFrom && tglISO < dateFrom) matchDate = false;
+          if (dateTo && tglISO > dateTo) matchDate = false;
+        }
+
+        return matchStatus && matchDate;
+      });
+
+      document.getElementById('pesanan-tbody').innerHTML = list.length ?
+        list.map(o => `
+            <tr>
+                <td class="id-cell">${o.id}</td>
+                <td>${o.tanggal}</td>
+                <td><strong>${o.nama}</strong></td>
+                <td>${statusBadge(o.status)}</td>
+                <td>${rp(o.items.reduce((s,i) => s + i.harga * i.qty, 0))}</td>
+                <td><button class="btn btn-sm" onclick="openDetailPesanan('${o.id}')">Detail</button></td>
+            </tr>`).join('') :
+        `<tr><td colspan="6" style="text-align:center;color:#b7a08c;padding:20px;">Tidak ada pesanan ditemukan.</td></tr>`;
+
+      document.getElementById('pesanan-pagi-info').textContent =
+        `${list.length ? 1 : 0} - ${list.length} dari ${pesananList.length}`;
     }
 
     function openDetailPesanan(id) {
@@ -851,9 +891,10 @@
     <div class="status-edit-wrap">
       <label class="field-label" for="status-select">Update Status</label>
       <select class="status-edit-sel" id="status-select">
-        <option ${o.status==='Belum Dibayar'       ?'selected':''}>Belum Dibayar</option>
-        <option ${o.status==='Pembayaran Berhasil' ?'selected':''}>Pembayaran Berhasil</option>
-        <option ${o.status==='Pembayaran Gagal'    ?'selected':''}>Pembayaran Gagal</option>
+        <option ${o.status==='Menunggu Verifikasi'       ?'selected':''}>Menunggu Verifikasi</option>
+        <option ${o.status==='Pembayaran Valid' ?'selected':''}>Pembayaran Valid</option>
+        <option ${o.status==='Pembayaran Ditolak'    ?'selected':''}>Pembayaran Ditolak</option>
+        <option ${o.status==='Konfirmasi Ulang'    ?'selected':''}>Konfirmaasi Ulang</option>
       </select>
     </div>`;
 
