@@ -6,7 +6,7 @@
     <title>@yield('title', 'Velora')</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
-<body class="bg-[#f7f2eb] text-[#5c4432] scroll-smooth">
+<body class="bg-[#f7f2eb] text-[#5c4432] scroll-smooth font-['Poppins',sans-serif]"></body>
 
     @include('partials.navbar')
 

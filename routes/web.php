@@ -19,9 +19,14 @@ Route::post('/cart/remove', [CartController::class, 'remove'])->name('cart.remov
 Route::post('/cart/update', [CartController::class, 'update'])->name('cart.update');
 
 Route::get('/login', [LoginController::class, 'index'])->name('login');
+Route::post('/login', [LoginController::class, 'login'])->name('login.post');
+Route::post('/register', [LoginController::class, 'register'])->name('register.post');
 Route::get('/dashboard', [DashboardController::class, 'index'])->name('admin.dashboard');
 Route::get('/kategori', [KategoriController::class, 'index'])->name('kategori.index');
 
 Route::get('/ririn', function () {
     return view('ririn'); 
 });
+
+Route::get('/login', [LoginController::class, 'index'])->name('login');
+Route::get('/register', [LoginController::class, 'showRegister'])->name('register');

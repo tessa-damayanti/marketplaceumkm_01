@@ -10,4 +10,9 @@ class LoginController extends Controller
     {
         return view('admin.login');
     }
+
+    public function showRegister()
+    {
+        return view('pages.register'); // sesuaikan nama view blade register kamu
+    }
 }

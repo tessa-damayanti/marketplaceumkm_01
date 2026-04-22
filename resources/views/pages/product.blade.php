@@ -26,7 +26,12 @@ $products = [
 'image' => 'https://i.pinimg.com/1200x/b1/cc/2f/b1cc2fb9a73cb56f46e167b47d4febbf.jpg',
 'desc' => 'Kemeja wanita bermotif garis dengan desain rapi dan sederhana. Terbuat dari bahan katun ringan yang nyaman dipakai untuk aktivitas sehari-hari seperti kuliah maupun bekerja.',
 'sizes' => ['S', 'M', 'L', 'XL'],
-'stock' => 10,
+'stock' => [
+    'S' => 5,
+    'M' => 8,
+    'L' => 3,
+    'XL' => 6,
+],
 'price' => '100.000',
 ],
 
@@ -36,7 +41,12 @@ $products = [
 'image' => 'https://i.pinimg.com/1200x/5e/a1/60/5ea160d8d804b678e9f839e1021c89fc.jpg',
 'desc' => 'Kemeja polos dengan desain minimalis dan tampilan elegan. Menggunakan bahan katun halus yang nyaman dan mudah dipadukan untuk kegiatan formal maupun semi formal.',
 'sizes' => ['S', 'M', 'L', 'XL'],
-'stock' => 14,
+'stock' => [
+    'S' => 7,
+    'M' => 10,
+    'L' => 5,
+    'XL' => 4,
+],
 'price' => '110.000',
 ],
 
@@ -46,7 +56,12 @@ $products = [
 'image' => 'https://i.pinimg.com/1200x/fa/37/44/fa3744102139679f39713c145c3d22f1.jpg',
 'desc' => 'Kemeja berbahan linen ringan dengan desain feminin dan detail pita di bagian leher. Nyaman digunakan untuk tampilan santai yang tetap rapi dan elegan.',
 'sizes' => ['S', 'M', 'L', 'XL'],
-'stock' => 9,
+'stock' => [
+    'S' => 2,
+    'M' => 4,
+    'L' => 1,
+    'XL' => 2,
+],
 'price' => '145.000',
 ],
 
@@ -56,7 +71,12 @@ $products = [
 'image' => 'https://i.pinimg.com/736x/b3/3f/b9/b33fb97104fe57a9b2c093f6e0b857ec.jpg',
 'desc' => 'Kemeja dengan potongan modern yang mengikuti bentuk tubuh. Menggunakan bahan katun stretch yang nyaman dan cocok untuk tampilan formal maupun semi formal.',
 'sizes' => ['S', 'M', 'L', 'XL'],
-'stock' => 7,
+'stock' => [
+    'S' => 1,
+    'M' => 2,
+    'L' => 3,
+    'XL' => 1,
+],
 'price' => '152.000',
 ],
 
@@ -68,7 +88,12 @@ $products = [
 'image' => 'https://i.pinimg.com/736x/99/55/47/9955473e19a196b4eaa1533b10922b6a.jpg',
 'desc' => 'Dress midi wanita dengan model wrap dan pita di pinggang yang memberikan kesan ramping dan elegan. Terbuat dari bahan katun ringan dan nyaman.',
 'sizes' => ['S', 'M', 'L', 'XL'],
-'stock' => 8,
+'stock' => [
+    'S' => 3,
+    'M' => 5,
+    'L' => 2,
+    'XL' => 1,
+],
 'price' => '170.000',
 ],
 
@@ -78,7 +103,12 @@ $products = [
 'image' => 'https://i.pinimg.com/1200x/11/59/c1/1159c13c68d7581c8253d1fdb5b77e99.jpg',
 'desc' => 'Dress wanita dengan desain polos dan kancing depan yang memberikan tampilan rapi dan bersih. Menggunakan bahan katun halus yang nyaman untuk aktivitas sehari-hari.',
 'sizes' => ['S', 'M', 'L', 'XL'],
-'stock' => 5,
+'stock' => [
+    'S' => 1,
+    'M' => 2,
+    'L' => 1,
+    'XL' => 1,
+],
 'price' => '175.000',
 ],
 
@@ -88,7 +118,12 @@ $products = [
 'image' => 'https://img.fantaskycdn.com/6bdf5a35272dcc4348d5b0a5594b3d78_1024x.jpeg',
 'desc' => 'Dress midi wanita dengan motif floral yang memberikan tampilan feminin dan segar. Menggunakan bahan chiffon ringan yang nyaman dipakai untuk aktivitas santai.',
 'sizes' => ['S', 'M', 'L', 'XL'],
-'stock' => 11,
+'stock' => [
+    'S' => 4,
+    'M' => 3,
+    'L' => 2,
+    'XL' => 2,
+],
 'price' => '155.000',
 ],
 
@@ -98,7 +133,12 @@ $products = [
 'image' => 'https://i.pinimg.com/1200x/c0/18/71/c01871e6da2cacfeafe01662046fddda.jpg',
 'desc' => 'Dress dengan motif stripe memberikan tampilan rapi dan stylish, dilengkapi kancing depan serta tali pinggang yang bisa disesuaikan untuk membentuk siluet tubuh. Terbuat dari bahan cotton blend dan cocok untuk tampilan kasual hingga semi-formal.',
 'sizes' => ['S', 'M', 'L', 'XL'],
-'stock' => 8,
+'stock' => [
+    'S' => 2,
+    'M' => 3,
+    'L' => 2,
+    'XL' => 1,
+],
 'price' => '147.000',
 ],
 
@@ -110,7 +150,12 @@ $products = [
 'image' => 'https://i.pinimg.com/736x/78/2a/3d/782a3d260721c8f3d515966337443416.jpg',
 'desc' => 'Cardigan pink dengan desain simpel dan feminin, dilengkapi kancing depan serta detail rib. Terbuat dari bahan rajut cotton blend dan acrylic yang ringan, halus, dan tidak panas, sehingga nyaman digunakan dalam berbagai aktivitas.',
 'sizes' => ['S', 'M', 'L', 'XL'],
-'stock' => 8,
+'stock' => [
+    'S' => 2,
+    'M' => 2,
+    'L' => 3,
+    'XL' => 1,
+],
 'price' => '90.000',
 ],
 
@@ -120,7 +165,12 @@ $products = [
 'image' => 'https://i.pinimg.com/736x/23/2c/97/232c97d74f40e276f4527520494dfc4d.jpg',
 'desc' => 'Cardigan cream dengan desain elegan dilengkapi kantong depan dan kancing aksen yang memberi kesan classy. Terbuat dari bahan knit yang lembut, nyaman dipakai, dan memiliki tekstur rapi sehingga terlihat stylish untuk berbagai aktivitas.',
 'sizes' => ['S', 'M', 'L', 'XL'],
-'stock' => 10,
+'stock' => [
+    'S' => 4,
+    'M' => 2,
+    'L' => 2,
+    'XL' => 2,
+],
 'price' => '112.000',
 ],
 
@@ -130,7 +180,12 @@ $products = [
 'image' => 'https://i.pinimg.com/736x/f1/a3/c8/f1a3c8625b037c52d0afa86c65c54715.jpg',
 'desc' => 'Cardigan dengan detail renda dan pita yang memberikan tampilan feminin dan elegan. Terbuat dari bahan knit ringan yang nyaman digunakan untuk aktivitas santai.',
 'sizes' => ['S', 'M', 'L', 'XL'],
-'stock' => 12,
+'stock' => [
+    'S' => 3,
+    'M' => 4,
+    'L' => 3,
+    'XL' => 2,
+],
 'price' => '95.000',
 ],
 
@@ -140,7 +195,12 @@ $products = [
 'image' => 'https://i.pinimg.com/1200x/9f/d0/5b/9fd05ba93f69906a9875be57f76906ed.jpg',
 'desc' => 'Cardigan bermotif floral dengan desain ringan dan tampilan feminin. Menggunakan bahan knit halus dan memberikan tampilan santai yang tetap menarik dan feminin.',
 'sizes' => ['S', 'M', 'L', 'XL'],
-'stock' => 9,
+'stock' => [
+    'S' => 2,
+    'M' => 3,
+    'L' => 2,
+    'XL' => 2,
+],
 'price' => '118.000',
 ],
 
@@ -152,7 +212,12 @@ $products = [
 'image' => 'https://i.pinimg.com/1200x/93/a8/b8/93a8b826cf1dbc2ed088b009718e5df8.jpg',
 'desc' => 'Rok putih dengan desain layer bertingkat yang memberikan tampilan anggun dan feminin. Detail lace menambah kesan elegan dan flowy saat dipakai. Terbuat dari bahan lace dengan furing halus yang lembut.',
 'sizes' => ['S', 'M', 'L', 'XL'],
-'stock' => 12,
+'stock' => [
+    'S' => 5,
+    'M' => 3,
+    'L' => 2,
+    'XL' => 2,
+],
 'price' => '120.000',
 ],
 
@@ -162,7 +227,12 @@ $products = [
 'image' => 'https://i.pinimg.com/1200x/ce/32/ba/ce32ba61f24f2d19f8c1850586fe348b.jpg',
 'desc' => 'Rok putih dengan motif polkadot hitam yang manis dan playful, dilengkapi pinggang karet yang nyaman dipakai. Menggunakan bahan cotton blend yang adem, ringan, dan nyaman.',
 'sizes' => ['S', 'M', 'L', 'XL'],
-'stock' => 7,
+'stock' => [
+    'S' => 2,
+    'M' => 2,
+    'L' => 2,
+    'XL' => 1,
+],
 'price' => '100.000',
 ],
 
@@ -172,7 +242,12 @@ $products = [
 'image' => 'https://i.pinimg.com/736x/ff/b9/06/ffb9065c829ab35740b27c4f962300bf.jpg',
 'desc' => 'Rok panjang dengan detail pita kecil yang memberikan tampilan manis dan feminin dan terbuat dari bahan katun ringan yang nyaman.',
 'sizes' => ['S', 'M', 'L', 'XL'],
-'stock' => 9,
+'stock' => [
+    'S' => 3,
+    'M' => 2,
+    'L' => 3,
+    'XL' => 1,
+],
 'price' => '115.000',
 ],
 
@@ -182,7 +257,12 @@ $products = [
 'image' => 'https://i.pinimg.com/736x/1a/66/22/1a66221e9292bb9a8c2e7d4fd618db5d.jpg',
 'desc' => 'Rok berbahan denim dengan model wrap dan detail kancing di bagian depan. Memberikan tampilan kasual yang tetap rapi dan nyaman.',
 'sizes' => ['S', 'M', 'L', 'XL'],
-'stock' => 6,
+'stock' => [
+    'S' => 1,
+    'M' => 2,
+    'L' => 2,
+    'XL' => 1,
+],
 'price' => '132.000',
 ],
 ],
@@ -344,6 +424,9 @@ $modalBtnClass = 'rounded-2xl py-3 font-semibold text-white transition';
                         <button type="button" onclick="decreaseQty()" class="h-11 w-11 rounded-xl bg-[#e9ddd0] text-xl font-bold text-[#5c4432] hover:bg-[#dccab5]">-</button>
                         <span id="qtyValue" class="w-10 text-center text-xl font-semibold text-[#5c4432]">1</span>
                         <button type="button" onclick="increaseQty()" class="h-11 w-11 rounded-xl bg-[#e9ddd0] text-xl font-bold text-[#5c4432] hover:bg-[#dccab5]">+</button>
+                        <p id="stockWarning" class="text-red-500 text-sm mt-2 hidden">
+                            Pembelian telah mencapai batas maksimum!
+                        </p>
                     </div>
                 </div>
 
@@ -376,7 +459,7 @@ $modalBtnClass = 'rounded-2xl py-3 font-semibold text-white transition';
 <script>
     const allProducts = @json($products);
     let currentQty = 1;
-    let currentStock = 1;
+    let currentStock = 0;
     let selectedSize = null;
     let currentProduct = null;
     let currentCategory = @json($defaultCategory);
@@ -410,14 +493,16 @@ $modalBtnClass = 'rounded-2xl py-3 font-semibold text-white transition';
         currentProduct = product;
         selectedSize = null;
         currentQty = 1;
-        currentStock = parseInt(product.stock);
+        currentStock = 0;
+
+        document.getElementById('stockWarning').classList.add('hidden');
 
         document.getElementById('modalName').innerText = product.name;
         document.getElementById('modalCategory').innerText = product.category;
         document.getElementById('modalImage').src = product.image;
         document.getElementById('modalDesc').innerText = product.desc;
         document.getElementById('modalPrice').innerText = 'Rp' + product.price;
-        document.getElementById('modalStock').innerText = product.stock + ' pcs tersedia';
+        document.getElementById('modalStock').innerText = 'Pilih ukuran terlebih dahulu';
         document.getElementById('qtyValue').innerText = currentQty;
 
         const sizesContainer = document.getElementById('modalSizes');
@@ -475,12 +560,29 @@ $modalBtnClass = 'rounded-2xl py-3 font-semibold text-white transition';
 
         element.classList.remove('bg-[#fbf7f2]', 'text-[#6d5644]', 'border-[#d8c3af]');
         element.classList.add('bg-[#a78d78]', 'text-white', 'border-[#a78d78]');
+
+        currentStock = parseInt(currentProduct.stock[size]) || 0;
+        currentQty = 1;
+
+        document.getElementById('qtyValue').innerText = currentQty;
+        document.getElementById('modalStock').innerText = currentStock + ' pcs tersedia';
+        document.getElementById('stockWarning').classList.add('hidden');
     }
 
     function increaseQty() {
+        const warning = document.getElementById('stockWarning');
+
+        if (!selectedSize) {
+            alert('Silakan pilih size terlebih dahulu.');
+            return;
+        }
+
         if (currentQty < currentStock) {
             currentQty++;
             document.getElementById('qtyValue').innerText = currentQty;
+            warning.classList.add('hidden');
+        } else {
+            warning.classList.remove('hidden');
         }
     }
 
@@ -503,7 +605,7 @@ $modalBtnClass = 'rounded-2xl py-3 font-semibold text-white transition';
         document.getElementById('cart_price').value = String(currentProduct.price).replace(/\./g, '');
         document.getElementById('cart_size').value = selectedSize;
         document.getElementById('cart_qty').value = currentQty;
-        document.getElementById('cart_stock').value = currentProduct.stock;
+        document.getElementById('cart_stock').value = currentProduct.stock[selectedSize];
 
         document.getElementById('cartForm').submit();
     }
