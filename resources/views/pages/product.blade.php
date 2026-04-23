@@ -291,7 +291,7 @@ $modalBtnClass = 'rounded-2xl py-3 font-semibold text-white transition-all durat
 <section class="mx-auto max-w-7xl px-6 pt-8 [font-family:Poppins,sans-serif]">
     <div class="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
         <div>
-            <p class="mb-2 text-sm font-semibold uppercase tracking-[4px] text-[#b08b68]">Produk Velora</p>
+            
             <h1 id="pageTitle" class="text-3xl font-bold text-[#5c4432] md:text-4xl">
                 {{ $defaultCategory === 'semua' ? 'Semua Produk' : ucfirst($defaultCategory) }}
             </h1>
