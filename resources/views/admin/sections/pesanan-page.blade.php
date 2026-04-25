@@ -1,5 +1,5 @@
 <div class="page" id="page-pesanan">
- <div class="surface data-surface rounded-xl border border-[#e2d4c5] bg-[#fffaf5] shadow-[0_12px_28px_rgba(92,68,50,0.08)]">
+ <div class="surface data-surface pesanan-surface rounded-xl border border-[#e2d4c5] bg-[#fffaf5] shadow-[0_12px_28px_rgba(92,68,50,0.08)]">
 
     {{-- Filter Row --}}
     <div class="flex flex-wrap items-center gap-3 px-5 py-4">
@@ -13,7 +13,7 @@
         <option value="Menunggu Verifikasi">Menunggu Verifikasi</option>
         <option value="Pembayaran Valid">Pembayaran Valid</option>
         <option value="Pembayaran Ditolak">Pembayaran Ditolak</option>
-        <option value="Menunggu Konfirmasi">Konfirmasi Ulang</option>
+        <option value="Konfirmasi Ulang">Konfirmasi Ulang</option>
       </select>
 
       {{-- Dari --}}

@@ -13,13 +13,13 @@
     </div>
     <div class="rounded-xl border border-[#e2d4c5] bg-[#fffaf5] px-6 py-5 shadow-[0_12px_28px_rgba(92,68,50,0.08)]">
       <div class="mb-1 text-[11px] font-semibold uppercase tracking-[0.12em] text-[#7b6858]">Total Kategori</div>
-      <div class="mb-1 text-4xl font-extrabold text-[#5c4432]">4</div>
+      <div class="mb-1 text-4xl font-extrabold text-[#5c4432]" id="s-kategori">4</div>
       <div class="text-sm font-semibold text-[#7b6858]">Kategori</div>
     </div>
   </div>
 
   <div class="surface data-surface overflow-hidden rounded-xl border border-[#e2d4c5] bg-[#fffaf5] shadow-[0_12px_28px_rgba(92,68,50,0.08)]">
-    <div class="flex items-start justify-between px-6 pt-5">
+<div class="flex items-center justify-between px-6 pt-3 pb-3">
       <div>
         <div class="text-[2rem] font-extrabold tracking-[-0.03em] text-[#5c4432]">Pesanan Terbaru</div>
       </div>

@@ -258,15 +258,15 @@ tbody td strong {
 }
 
 .action-cell {
-  text-align: left;
+  text-align: center;
+  vertical-align: middle;
 }
 
 .action-buttons {
-  display: inline-flex;
+  display: flex;
+  justify-content: center;
   align-items: center;
-  justify-content: flex-start;
-  gap: 6px;
-  flex-wrap: wrap;
+  gap: 8px;
 }
 
 .icon-btn {
@@ -316,6 +316,35 @@ tbody td:last-child {
   margin: 0 auto;
   box-shadow: 0 12px 28px rgba(92, 68, 50, 0.08);
   overflow: visible;
+}
+
+.pesanan-surface {
+  display: inline-block;
+  width: 100%;
+  min-height: 520px;
+}
+
+.pesanan-surface .tbl-wrap {
+  padding-bottom: 8px;
+}
+
+.pesanan-surface thead th {
+  padding: 11px 16px;
+}
+
+.pesanan-surface tbody td {
+  padding: 10px 16px;
+}
+
+.pesanan-surface .pagi-row {
+  padding-top: 8px;
+}
+
+.pesanan-surface button[onclick^="openDetailPesanan"] {
+  min-height: 34px;
+  padding: 6px 14px;
+  border-radius: 10px;
+  font-size: 12px;
 }
 
 tbody tr:last-child td {

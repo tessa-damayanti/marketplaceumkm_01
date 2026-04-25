@@ -51,6 +51,20 @@
 
 <body class="min-h-screen bg-[#e6dbcf] flex items-center justify-center px-4 py-8 scale-[0.92] [font-family:'Poppins',sans-serif]">
 
+    <div id="login-toast" class="pointer-events-none fixed right-6 top-6 z-50 translate-y-3 opacity-0 transition-all duration-300">
+        <div class="flex min-w-[320px] max-w-[360px] items-start gap-3 rounded-[24px] border border-white/60 bg-[#fffaf6]/95 px-5 py-4 shadow-[0_24px_60px_rgba(92,68,50,0.18)] backdrop-blur">
+            <div id="login-toast-icon" class="mt-0.5 flex h-10 w-10 items-center justify-center rounded-2xl bg-[#dff1e3] text-[#5e936c]">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+                </svg>
+            </div>
+            <div class="min-w-0 flex-1">
+                <p id="login-toast-title" class="text-sm font-bold text-[#5c4432]">Berhasil</p>
+                <p id="login-toast-message" class="mt-1 text-sm leading-6 text-[#7b6858]">Login berhasil.</p>
+            </div>
+        </div>
+    </div>
+
     <div class="w-full max-w-5xl rounded-[34px] overflow-hidden bg-white shadow-[0_24px_60px_rgba(92,68,50,0.18)]">
         <div class="grid md:grid-cols-2 min-h-[600px]">
 
@@ -266,6 +280,43 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/flowbite.min.js"></script>
 
     <script>
+        let toastTimer = null;
+
+        function showToast(title, message, type = 'success') {
+            const toast = document.getElementById('login-toast');
+            const icon = document.getElementById('login-toast-icon');
+            const titleEl = document.getElementById('login-toast-title');
+            const messageEl = document.getElementById('login-toast-message');
+
+            titleEl.textContent = title;
+            messageEl.textContent = message;
+
+            if (type === 'error') {
+                icon.className = 'mt-0.5 flex h-10 w-10 items-center justify-center rounded-2xl bg-[#f8dede] text-[#c45b5b]';
+                icon.innerHTML = `
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v4m0 4h.01M10.29 3.86l-7.18 12.44A2 2 0 004.82 19h14.36a2 2 0 001.71-2.7L13.71 3.86a2 2 0 00-3.42 0z" />
+                    </svg>
+                `;
+            } else {
+                icon.className = 'mt-0.5 flex h-10 w-10 items-center justify-center rounded-2xl bg-[#dff1e3] text-[#5e936c]';
+                icon.innerHTML = `
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+                    </svg>
+                `;
+            }
+
+            toast.classList.remove('opacity-0', 'translate-y-3');
+            toast.classList.add('opacity-100', 'translate-y-0');
+
+            if (toastTimer) clearTimeout(toastTimer);
+            toastTimer = setTimeout(() => {
+                toast.classList.add('opacity-0', 'translate-y-3');
+                toast.classList.remove('opacity-100', 'translate-y-0');
+            }, 2200);
+        }
+
         function togglePassword(btn) {
             const input = btn.closest('.relative').querySelector('input');
             const icon = btn.querySelector('svg');
@@ -360,7 +411,23 @@
             const isPasswordValid = validatePassword();
 
             if (isUsernameValid && isPasswordValid) {
-                alert('Login berhasil');
+                const username = document.getElementById('username').value.trim();
+                const password = document.getElementById('password').value;
+
+                // Ubah nilai 
+                const adminUsername = 'admin1';
+                const adminPassword = 'admin123';
+
+                if (username === adminUsername && password === adminPassword) {
+                    showToast('Login berhasil', 'Selamat datang, Admin.');
+                    setTimeout(() => {
+                        window.location.href = "{{ route('dashboard') }}";
+                    }, 900);
+                    return;
+                }
+
+                setError('password', 'password-msg', 'Username atau password salah');
+                showToast('Login gagal', 'Username atau password tidak sesuai.', 'error');
             }
         }
 
@@ -427,7 +494,7 @@
             const isConfirmValid = validateForgotMatch();
 
             if (isUsernameValid && isPasswordValid && isConfirmValid) {
-                alert('Password berhasil diubah');
+                showToast('Berhasil', 'Password berhasil diubah.');
             }
         }
     </script>
