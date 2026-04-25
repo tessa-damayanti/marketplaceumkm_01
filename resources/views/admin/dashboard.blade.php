@@ -59,7 +59,7 @@
       </div>
 
       <div class="sidebar-spacer"></div>
-      <a href="{{ route('home') }}" class="sidebar-logout">
+      <a href="{{ route('home') }}" class="sidebar-logout" onclick="confirmLogout(event)">
         <svg class="nav-icon" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
           <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
           <polyline points="16 17 21 12 16 7" />
@@ -139,7 +139,7 @@
   <div class="overlay overlay-top" id="modal-hapus-produk">
     <div class="modal modal-sm">
       <div class="confirm-box">
-        <p>Apakah kamu yakin ingin menghapus produk ini?</p>
+        <p>Apakah Anda yakin ingin menghapus produk ini?</p>
         <div class="confirm-actions">
           <button class="btn" onclick="closeModal('modal-hapus-produk')">Batal</button>
           <button class="btn btn-danger" onclick="confirmHapusProduk()">Hapus</button>
@@ -172,10 +172,23 @@
   <div class="overlay overlay-top" id="modal-hapus-kat">
     <div class="modal modal-sm">
       <div class="confirm-box">
-        <p>Apakah kamu yakin ingin menghapus kategori ini?</p>
+        <p>Apakah Anda yakin ingin menghapus kategori ini?</p>
         <div class="confirm-actions">
           <button class="btn" onclick="closeModal('modal-hapus-kat')">Batal</button>
           <button class="btn btn-danger" onclick="confirmHapusKat()">Hapus</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Konfirmasi Keluar -->
+  <div class="overlay overlay-top" id="modal-logout">
+    <div class="modal modal-sm">
+      <div class="confirm-box">
+        <p>Apakah Anda yakin ingin keluar dari dashboard?</p>
+        <div class="confirm-actions">
+          <button class="btn" onclick="closeModal('modal-logout')">Batal</button>
+          <button class="btn btn-danger" onclick="proceedLogout()">Ya, Keluar</button>
         </div>
       </div>
     </div>
@@ -543,10 +556,19 @@
     }
 
     function statusBadge(s) {
-      if (s === 'Pembayaran Valid') return `<span class="badge badge-berhasil">${s}</span>`;
-      if (s === 'Pembayaran Ditolak') return `<span class="badge badge-gagal">${s}</span>`;
-      if (s === 'Menunggu Konfirmasi') return `<span class="badge badge-konfirmasi">${s}</span>`;
-      return `<span class="badge badge-belum">${s}</span>`;
+      if (s === 'Pembayaran Valid') {
+        return `<span class="inline-flex items-center rounded-full bg-[#dfe8da] px-4 py-1.5 text-sm font-semibold text-[#6f7f67]">${s}</span>`;
+      }
+
+      if (s === 'Pembayaran Ditolak') {
+        return `<span class="inline-flex items-center rounded-full bg-[#eadfd8] px-4 py-1.5 text-sm font-semibold text-[#9a6238]">${s}</span>`;
+      }
+
+      if (s === 'Konfirmasi Ulang') {
+        return `<span class="inline-flex items-center rounded-full bg-[#dfe3f1] px-4 py-1.5 text-sm font-semibold text-[#5870a6]">${s}</span>`;
+      }
+
+      return `<span class="inline-flex items-center rounded-full bg-[#dfe3f1] px-4 py-1.5 text-sm font-semibold text-[#5870a6]">${s}</span>`;
     }
 
     function openModal(id) {
@@ -557,10 +579,22 @@
       document.getElementById(id).classList.remove('open');
     }
 
+    let logoutUrl = "{{ route('home') }}";
+
+    function confirmLogout(event) {
+      event.preventDefault();
+      openModal('modal-logout');
+    }
+
+    function proceedLogout() {
+      window.location.href = logoutUrl;
+    }
+
     // DASHBOARD
     function renderDashboard() {
       document.getElementById('s-pesanan').textContent = pesananList.length;
       document.getElementById('s-produk').textContent = produkList.length;
+      document.getElementById('s-kategori').textContent = kategoriList.length;
 
       const recent = pesananList.slice(0, 5);
       document.getElementById('dash-orders-tbody').innerHTML = recent.map(o => `
@@ -805,8 +839,9 @@
 
         let matchDate = true;
         if (dateFrom || dateTo) {
-          const parts = o.tanggal.split('-');
+          const parts = o.tanggal.split('-'); // dd-mm-yyyy
           const tglISO = parts[2] + '-' + parts[1] + '-' + parts[0];
+
           if (dateFrom && tglISO < dateFrom) matchDate = false;
           if (dateTo && tglISO > dateTo) matchDate = false;
         }
@@ -816,15 +851,32 @@
 
       document.getElementById('pesanan-tbody').innerHTML = list.length ?
         list.map(o => `
-            <tr>
-                <td class="id-cell">${o.id}</td>
-                <td>${o.tanggal}</td>
-                <td><strong>${o.nama}</strong></td>
-                <td>${statusBadge(o.status)}</td>
-                <td>${rp(o.items.reduce((s,i) => s + i.harga * i.qty, 0))}</td>
-                <td><button class="btn btn-sm" onclick="openDetailPesanan('${o.id}')">Detail</button></td>
-            </tr>`).join('') :
-        `<tr><td colspan="6" style="text-align:center;color:#b7a08c;padding:20px;">Tidak ada pesanan ditemukan.</td></tr>`;
+      <tr class="border-t border-[#e2d4c5]">
+        <td class="px-6 py-4 text-center font-semibold text-[#5c4432]">${o.id}</td>
+        <td class="px-6 py-4 text-[#5c4432]">${o.tanggal}</td>
+        <td class="px-6 py-4 text-[#5c4432] font-semibold">${o.nama}</td>
+        <td class="px-6 py-4">${statusBadge(o.status)}</td>
+        <td class="px-6 py-4 text-[#5c4432] font-semibold">
+          ${rp(o.items.reduce((s, i) => s + i.harga * i.qty, 0))}
+        </td>
+        <td class="px-6 py-4 text-center">
+          <button
+            type="button"
+            onclick="openDetailPesanan('${o.id}')"
+            class="inline-flex items-center justify-center rounded-xl border border-[#d8c3af] bg-[#a78d78] px-4 py-2 text-sm font-semibold text-white transition hover:bg-[#8f7561]"
+          >
+            Detail
+          </button>
+        </td>
+      </tr>
+    `).join('') :
+        `
+      <tr>
+        <td colspan="6" class="px-6 py-6 text-center text-[#b7a08c]">
+          Tidak ada pesanan ditemukan.
+        </td>
+      </tr>
+    `;
 
       document.getElementById('pesanan-pagi-info').textContent =
         `${list.length ? 1 : 0} - ${list.length} dari ${pesananList.length}`;
@@ -894,7 +946,7 @@
         <option ${o.status==='Menunggu Verifikasi'       ?'selected':''}>Menunggu Verifikasi</option>
         <option ${o.status==='Pembayaran Valid' ?'selected':''}>Pembayaran Valid</option>
         <option ${o.status==='Pembayaran Ditolak'    ?'selected':''}>Pembayaran Ditolak</option>
-        <option ${o.status==='Konfirmasi Ulang'    ?'selected':''}>Konfirmaasi Ulang</option>
+        <option ${o.status==='Konfirmasi Ulang' ?'selected':''}>Konfirmasi Ulang</option>
       </select>
     </div>`;
 

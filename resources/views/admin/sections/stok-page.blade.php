@@ -6,12 +6,13 @@
       <table>
         <thead>
           <tr>
-            <th>Produk</th>
-            <th style="text-align:center;">S</th>
-            <th style="text-align:center;">M</th>
-            <th style="text-align:center;">L</th>
-            <th style="text-align:center;">XL</th>
-            <th>Aksi</th>
+          <tr class="bg-[#f3ecdf]">
+            <th class="px-6 py-4 text-left text-sm font-bold">Produk</th>
+            <th class="px-4 py-4 text-center text-sm font-bold">S</th>
+            <th class="px-4 py-4 text-center text-sm font-bold">M</th>
+            <th class="px-4 py-4 text-center text-sm font-bold">L</th>
+            <th class="px-4 py-4 text-center text-sm font-bold">XL</th>
+            <th class="px-4 py-4 text-center text-sm font-bold">Aksi</th>
           </tr>
         </thead>
         <tbody id="stok-tbody"></tbody>
