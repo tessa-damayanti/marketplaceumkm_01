@@ -96,18 +96,15 @@
     </style>
 
     <div id="toast"
-         class="fixed top-5 right-5 z-[999] hidden rounded-2xl bg-[#5c4432] px-5 py-3 text-sm font-medium text-white shadow-xl">
+        class="fixed top-5 right-5 z-[999] hidden rounded-2xl bg-[#5c4432] px-5 py-3 text-sm font-medium text-white shadow-xl">
         Ditambahkan ke keranjang
     </div>
 
     <!-- Banner -->
     <section class="mx-auto max-w-7xl px-6 pt-8">
         <div class="relative min-h-[300px] overflow-hidden rounded-[32px] md:min-h-[380px]">
-            <img
-                src="https://images.unsplash.com/photo-1483985988355-763728e1935b?auto=format&fit=crop&w=1400&q=80"
-                alt="Banner Velora"
-                class="absolute inset-0 h-full w-full object-cover"
-            >
+            <img src="https://images.unsplash.com/photo-1483985988355-763728e1935b?auto=format&fit=crop&w=1400&q=80"
+                alt="Banner Velora" class="absolute inset-0 h-full w-full object-cover">
             <div class="absolute inset-0 bg-[#5c4432]/40"></div>
 
             <div class="relative z-10 flex min-h-[300px] items-center justify-center px-8 text-center md:min-h-[380px]">
@@ -130,9 +127,9 @@
         <div class="flex flex-wrap justify-center gap-3" id="categoryTabs">
             <a href="{{ route('product') }}?category=kemeja" class="cat-tab active">
                 <span class="cat-icon">
-                    <svg viewBox="0 0 24 24">
-                        <path d="M19 21H5V8l3-2 2 2h4l2-2 3 2z"></path>
-                        <path d="M9 6V4h6v2"></path>
+                    <svg viewBox="0 0 16 16" fill="none" stroke="#A78D78" stroke-width="1.3" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M1 4l3-2 2 2h4l2-2 3 2-2 3h-2v7H5V7H3L1 4z" />
                     </svg>
                 </span>
                 Kemeja
@@ -140,9 +137,12 @@
 
             <a href="{{ route('product') }}?category=gaun" class="cat-tab">
                 <span class="cat-icon">
-                    <svg viewBox="0 0 24 24">
-                        <path d="M12 4l2 4 4 10H6l4-10 2-4z"></path>
-                        <circle cx="12" cy="3.5" r="1.2" fill="#A78D78" stroke="none"></circle>
+                    <svg viewBox="0 0 16 16" fill="none" stroke="#A78D78" stroke-width="1.3" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M6 1h4" />
+                        <path d="M8 1v3" />
+                        <path d="M5 4L3 15h10L11 4" />
+                        <path d="M5 4Q8 7 11 4" />
                     </svg>
                 </span>
                 Gaun
@@ -150,9 +150,11 @@
 
             <a href="{{ route('product') }}?category=cardigan" class="cat-tab">
                 <span class="cat-icon">
-                    <svg viewBox="0 0 24 24">
-                        <path d="M7 21V8l3-2 2 2 2-2 3 2v13"></path>
-                        <path d="M12 8v13"></path>
+                    <svg viewBox="0 0 16 16" fill="none" stroke="#A78D78" stroke-width="1.3" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M1 4l3-2 2 2 1 1 1-1 2-2 3 2-1 3H10v7H6V7H4L1 4z" />
+                        <path d="M6 7v7" />
+                        <path d="M10 7v7" />
                     </svg>
                 </span>
                 Cardigan
@@ -160,8 +162,10 @@
 
             <a href="{{ route('product') }}?category=rok" class="cat-tab">
                 <span class="cat-icon">
-                    <svg viewBox="0 0 24 24">
-                        <path d="M9 4h6l1 3-1.5 13h-5L8 7z"></path>
+                    <svg viewBox="0 0 16 16" fill="none" stroke="#A78D78" stroke-width="1.3" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <rect x="4" y="1" width="8" height="3" rx="1" />
+                        <path d="M4 4l-2 11h12L12 4" />
                     </svg>
                 </span>
                 Rok
@@ -175,10 +179,8 @@
 
         <div class="grid grid-cols-1 gap-7 sm:grid-cols-2 lg:grid-cols-4">
             @foreach ($products as $product)
-                <div
-                    class="cursor-pointer overflow-hidden rounded-[28px] bg-white shadow-md transition duration-300 hover:-translate-y-1 hover:shadow-xl"
-                    onclick='openModal(@json($product))'
-                >
+                <div class="cursor-pointer overflow-hidden rounded-[28px] bg-white shadow-md transition duration-300 hover:-translate-y-1 hover:shadow-xl"
+                    onclick='openModal(@json($product))'>
                     <img src="{{ $product['image'] }}" alt="{{ $product['name'] }}" class="h-56 w-full object-cover">
 
                     <div class="p-4">
@@ -194,7 +196,8 @@
                             Rp{{ number_format($product['price'], 0, ',', '.') }}
                         </p>
 
-                        <button type="button" class="w-full rounded-xl bg-[#a78d78] py-2.5 font-medium text-white transition hover:bg-[#8f7561]">
+                        <button type="button"
+                            class="w-full rounded-xl bg-[#a78d78] py-2.5 font-medium text-white transition hover:bg-[#8f7561]">
                             Lihat Detail
                         </button>
                     </div>
@@ -262,9 +265,11 @@
                     <div class="mb-6">
                         <h3 class="mb-2 font-semibold text-[#5c4432]">Jumlah</h3>
                         <div class="flex items-center gap-3">
-                            <button onclick="decreaseQty()" class="h-11 w-11 rounded-xl bg-[#e9ddd0] text-xl font-bold text-[#5c4432] hover:bg-[#dccab5]">-</button>
+                            <button onclick="decreaseQty()"
+                                class="h-11 w-11 rounded-xl bg-[#e9ddd0] text-xl font-bold text-[#5c4432] hover:bg-[#dccab5]">-</button>
                             <span id="qtyValue" class="w-10 text-center text-xl font-semibold text-[#5c4432]">1</span>
-                            <button onclick="increaseQty()" class="h-11 w-11 rounded-xl bg-[#e9ddd0] text-xl font-bold text-[#5c4432] hover:bg-[#dccab5]">+</button>
+                            <button onclick="increaseQty()"
+                                class="h-11 w-11 rounded-xl bg-[#e9ddd0] text-xl font-bold text-[#5c4432] hover:bg-[#dccab5]">+</button>
                         </div>
                     </div>
 
@@ -285,112 +290,112 @@
 @endsection
 
 @push('scripts')
-<script>
-    let currentQty = 1;
-    let currentStock = 1;
-    let selectedSize = null;
-    let currentProduct = null;
+    <script>
+        let currentQty = 1;
+        let currentStock = 1;
+        let selectedSize = null;
+        let currentProduct = null;
 
-    function openModal(product) {
-        currentProduct = product;
-        selectedSize = null;
-        currentQty = 1;
-        currentStock = parseInt(product.stock);
+        function openModal(product) {
+            currentProduct = product;
+            selectedSize = null;
+            currentQty = 1;
+            currentStock = parseInt(product.stock);
 
-        document.getElementById('modalName').innerText = product.name;
-        document.getElementById('modalCategory').innerText = product.category;
-        document.getElementById('modalImage').src = product.image;
-        document.getElementById('modalDesc').innerText = product.desc;
-        document.getElementById('modalPrice').innerText = 'Rp' + Number(product.price).toLocaleString('id-ID');
-        document.getElementById('modalStock').innerText = product.stock + ' pcs tersedia';
-        document.getElementById('qtyValue').innerText = currentQty;
-
-        const sizesContainer = document.getElementById('modalSizes');
-        sizesContainer.innerHTML = '';
-
-        product.sizes.forEach(size => {
-            sizesContainer.innerHTML += `
-                <button
-                    type="button"
-                    onclick="selectSize(this, '${size}')"
-                    class="size-btn rounded-2xl border border-[#d8c3af] bg-[#fbf7f2] px-5 py-3 text-[#6d5644] transition hover:border-[#b08b68] hover:bg-[#efe3d5]">
-                    ${size}
-                </button>
-            `;
-        });
-
-        const modal = document.getElementById('productModal');
-        modal.classList.remove('hidden');
-        modal.classList.add('flex');
-    }
-
-    function closeModal() {
-        const modal = document.getElementById('productModal');
-        modal.classList.add('hidden');
-        modal.classList.remove('flex');
-    }
-
-    function selectSize(element, size) {
-        selectedSize = size;
-
-        document.querySelectorAll('.size-btn').forEach(btn => {
-            btn.classList.remove('bg-[#a78d78]', 'text-white', 'border-[#a78d78]');
-            btn.classList.add('bg-[#fbf7f2]', 'text-[#6d5644]', 'border-[#d8c3af]');
-        });
-
-        element.classList.remove('bg-[#fbf7f2]', 'text-[#6d5644]', 'border-[#d8c3af]');
-        element.classList.add('bg-[#a78d78]', 'text-white', 'border-[#a78d78]');
-    }
-
-    function increaseQty() {
-        if (currentQty < currentStock) {
-            currentQty++;
+            document.getElementById('modalName').innerText = product.name;
+            document.getElementById('modalCategory').innerText = product.category;
+            document.getElementById('modalImage').src = product.image;
+            document.getElementById('modalDesc').innerText = product.desc;
+            document.getElementById('modalPrice').innerText = 'Rp' + Number(product.price).toLocaleString('id-ID');
+            document.getElementById('modalStock').innerText = product.stock + ' pcs tersedia';
             document.getElementById('qtyValue').innerText = currentQty;
-        }
-    }
 
-    function decreaseQty() {
-        if (currentQty > 1) {
-            currentQty--;
-            document.getElementById('qtyValue').innerText = currentQty;
-        }
-    }
+            const sizesContainer = document.getElementById('modalSizes');
+            sizesContainer.innerHTML = '';
 
-    function showToast(message) {
-        const toast = document.getElementById('toast');
-        toast.innerText = message;
-        toast.classList.remove('hidden');
+            product.sizes.forEach(size => {
+                sizesContainer.innerHTML += `
+                    <button
+                        type="button"
+                        onclick="selectSize(this, '${size}')"
+                        class="size-btn rounded-2xl border border-[#d8c3af] bg-[#fbf7f2] px-5 py-3 text-[#6d5644] transition hover:border-[#b08b68] hover:bg-[#efe3d5]">
+                        ${size}
+                    </button>
+                `;
+            });
 
-        setTimeout(() => {
-            toast.classList.add('hidden');
-        }, 2000);
-    }
-
-    function addToCart() {
-        if (!selectedSize) {
-            alert('Silakan pilih size terlebih dahulu.');
-            return;
+            const modal = document.getElementById('productModal');
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
         }
 
-        showToast('Ditambahkan ke keranjang');
-        closeModal();
-    }
-
-    function buyNow() {
-        if (!selectedSize) {
-            alert('Silakan pilih size terlebih dahulu.');
-            return;
+        function closeModal() {
+            const modal = document.getElementById('productModal');
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
         }
 
-        const url = `{{ route('checkout') }}?name=${currentProduct.name}&price=${currentProduct.price}&qty=${currentQty}`;
-        window.location.href = url;
-    }
+        function selectSize(element, size) {
+            selectedSize = size;
 
-    window.addEventListener('click', function(event) {
-        const modal = document.getElementById('productModal');
-        if (event.target === modal) {
+            document.querySelectorAll('.size-btn').forEach(btn => {
+                btn.classList.remove('bg-[#a78d78]', 'text-white', 'border-[#a78d78]');
+                btn.classList.add('bg-[#fbf7f2]', 'text-[#6d5644]', 'border-[#d8c3af]');
+            });
+
+            element.classList.remove('bg-[#fbf7f2]', 'text-[#6d5644]', 'border-[#d8c3af]');
+            element.classList.add('bg-[#a78d78]', 'text-white', 'border-[#a78d78]');
+        }
+
+        function increaseQty() {
+            if (currentQty < currentStock) {
+                currentQty++;
+                document.getElementById('qtyValue').innerText = currentQty;
+            }
+        }
+
+        function decreaseQty() {
+            if (currentQty > 1) {
+                currentQty--;
+                document.getElementById('qtyValue').innerText = currentQty;
+            }
+        }
+
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            toast.innerText = message;
+            toast.classList.remove('hidden');
+
+            setTimeout(() => {
+                toast.classList.add('hidden');
+            }, 2000);
+        }
+
+        function addToCart() {
+            if (!selectedSize) {
+                alert('Silakan pilih size terlebih dahulu.');
+                return;
+            }
+
+            showToast('Ditambahkan ke keranjang');
             closeModal();
         }
-    });
-</script>
+
+        function buyNow() {
+            if (!selectedSize) {
+                alert('Silakan pilih size terlebih dahulu.');
+                return;
+            }
+
+            const url = `{{ route('checkout') }}?name=${currentProduct.name}&price=${currentProduct.price}&qty=${currentQty}`;
+            window.location.href = url;
+        }
+
+        window.addEventListener('click', function (event) {
+            const modal = document.getElementById('productModal');
+            if (event.target === modal) {
+                closeModal();
+            }
+        });
+    </script>
 @endpush
