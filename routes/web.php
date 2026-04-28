@@ -20,7 +20,10 @@ Route::get('/register', [LoginController::class, 'showRegister'])->name('registe
 Route::post('/register', [LoginController::class, 'register'])->name('register.post');
 
 Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
-Route::get('/kategori', [KategoriController::class, 'index'])->name('kategori.index');
+Route::get('/produk', [DashboardController::class, 'produk'])->name('admin.produk');
+Route::get('/kategori', [DashboardController::class, 'kategori'])->name('kategori.index');
+Route::get('/stok', [DashboardController::class, 'stok'])->name('admin.stok');
+Route::get('/pesanan', [DashboardController::class, 'pesanan'])->name('admin.pesanan');
 
 Route::get('/cart', [CartController::class, 'index'])->name('cart');
 Route::post('/cart/add', [CartController::class, 'add'])->name('cart.add');
