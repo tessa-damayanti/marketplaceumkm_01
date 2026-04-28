@@ -23,7 +23,10 @@ Route::post('/login', [LoginController::class, 'login'])->name('login.post');
 Route::post('/register', [LoginController::class, 'register'])->name('register.post');
 
 Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
-Route::get('/kategori', [KategoriController::class, 'index'])->name('kategori.index');
+Route::get('/produk', [DashboardController::class, 'produk'])->name('admin.produk');
+Route::get('/kategori', [DashboardController::class, 'kategori'])->name('kategori.index');
+Route::get('/stok', [DashboardController::class, 'stok'])->name('admin.stok');
+Route::get('/pesanan', [DashboardController::class, 'pesanan'])->name('admin.pesanan');
 
 Route::get('/login', [LoginController::class, 'index'])->name('login');
 Route::get('/register', [LoginController::class, 'showRegister'])->name('register');

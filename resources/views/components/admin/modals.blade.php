@@ -1,0 +1,151 @@
+<!-- modal-->
+<!-- tambah dan edit produk -->
+<div class="overlay" id="modal-tambah-produk">
+  <div class="modal">
+    <div class="modal-header">
+      <span class="modal-title" id="prod-modal-title">Tambah Produk</span>
+      <button class="modal-close" onclick="closeModal('modal-tambah-produk')">&times;</button>
+    </div>
+    <div class="modal-body">
+      <div>
+        <label class="field-label">Upload File</label>
+        <div class="upload-zone" onclick="document.getElementById('file-upload').click()">
+          <span class="upload-btn-fake">Pilih File</span>
+          <span class="upload-hint" id="upload-hint">Belum ada file dipilih</span>
+          <input type="file" id="file-upload" accept="image/*" onchange="handleFileChange(this)">
+        </div>
+      </div>
+      <div>
+        <label class="field-label">Nama Produk</label>
+        <input type="text" id="prod-nama" placeholder="Kemeja Stripe" style="width:100%">
+      </div>
+      <div>
+        <label class="field-label">Kategori</label>
+        <select id="prod-kat" style="width:100%">
+          <option>Gaun</option>
+          <option>Kemeja</option>
+          <option>Kardigan</option>
+          <option>Rok</option>
+        </select>
+      </div>
+      <div>
+        <label class="field-label">Harga</label>
+        <input type="text" id="prod-harga" placeholder="Rp 100.000" style="width:100%">
+      </div>
+      <div>
+        <label class="field-label">Deskripsi</label>
+        <textarea id="prod-desk" rows="4" placeholder="Deskripsi produk..." style="width:100%;resize:vertical;"></textarea>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn" onclick="closeModal('modal-tambah-produk')">Batal</button>
+      <button class="btn btn-dark" onclick="saveProduk()">Simpan</button>
+    </div>
+  </div>
+</div>
+
+<!-- Hapus Produk Konfirmasi -->
+<div class="overlay overlay-top" id="modal-hapus-produk">
+  <div class="modal modal-sm">
+    <div class="confirm-box">
+      <p>Apakah Anda yakin ingin menghapus produk ini?</p>
+      <div class="confirm-actions">
+        <button class="btn" onclick="closeModal('modal-hapus-produk')">Batal</button>
+        <button class="btn btn-danger" onclick="confirmHapusProduk()">Hapus</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- tambah dan edit kategori -->
+<div class="overlay" id="modal-tambah-kat">
+  <div class="modal modal-sm">
+    <div class="modal-header">
+      <span class="modal-title" id="kat-modal-title">Tambah Kategori</span>
+      <button class="modal-close" onclick="closeModal('modal-tambah-kat')">&times;</button>
+    </div>
+    <div class="modal-body">
+      <div>
+        <label class="field-label">Nama Kategori</label>
+        <input type="text" id="kat-nama" placeholder="Nama Kategori..." style="width:100%">
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn" onclick="closeModal('modal-tambah-kat')">Batal</button>
+      <button class="btn btn-dark" onclick="saveKategori()">Simpan</button>
+    </div>
+  </div>
+</div>
+
+<!-- Hapus Kategori -->
+<div class="overlay overlay-top" id="modal-hapus-kat">
+  <div class="modal modal-sm">
+    <div class="confirm-box">
+      <p>Apakah Anda yakin ingin menghapus kategori ini?</p>
+      <div class="confirm-actions">
+        <button class="btn" onclick="closeModal('modal-hapus-kat')">Batal</button>
+        <button class="btn btn-danger" onclick="confirmHapusKat()">Hapus</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Konfirmasi Keluar -->
+<div class="overlay overlay-top" id="modal-logout">
+  <div class="modal modal-sm">
+    <div class="confirm-box">
+      <p>Apakah Anda yakin ingin keluar dari dashboard?</p>
+      <div class="confirm-actions">
+        <button class="btn" onclick="closeModal('modal-logout')">Batal</button>
+        <button class="btn btn-danger" onclick="proceedLogout()">Ya, Keluar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Edit Stok -->
+<div class="overlay" id="modal-stok">
+  <div class="modal modal-sm">
+    <div class="modal-header">
+      <span class="modal-title">Edit Stok Produk</span>
+      <button class="modal-close" onclick="closeModal('modal-stok')">&times;</button>
+    </div>
+    <div class="modal-body">
+      <p style="font-size:13.5px;font-weight:700;color:#555;" id="stok-modal-produk-name">Produk: -</p>
+      <div class="stok-row">
+        <label>Ukuran S:</label>
+        <input type="number" id="stok-s" min="0" value="0">
+      </div>
+      <div class="stok-row">
+        <label>Ukuran M:</label>
+        <input type="number" id="stok-m" min="0" value="0">
+      </div>
+      <div class="stok-row">
+        <label>Ukuran L:</label>
+        <input type="number" id="stok-l" min="0" value="0">
+      </div>
+      <div class="stok-row">
+        <label>Ukuran XL:</label>
+        <input type="number" id="stok-xl" min="0" value="0">
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn" onclick="closeModal('modal-stok')">Batal</button>
+      <button class="btn btn-dark" onclick="saveStok()">Simpan</button>
+    </div>
+  </div>
+</div>
+
+<!-- Detail Pesanan -->
+<div class="overlay" id="modal-pesanan">
+  <div class="modal" style="width:520px;">
+    <div class="modal-header">
+      <span class="modal-title" id="pesanan-modal-title">Detail Pesanan - ID</span>
+    </div>
+    <div class="modal-body" id="pesanan-modal-body"></div>
+    <div class="modal-footer">
+      <button class="btn" onclick="closeModal('modal-pesanan')">Batal</button>
+      <button class="btn btn-dark" onclick="saveEditStatus()">Simpan</button>
+    </div>
+  </div>
+</div>

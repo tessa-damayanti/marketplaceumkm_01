@@ -6,7 +6,8 @@
     <title>@yield('title', 'Velora')</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
-<body class="bg-[#f7f2eb] text-[#5c4432] scroll-smooth font-['Poppins',sans-serif]"></body>
+<body class="bg-[#f7f2eb] text-[#5c4432] scroll-smooth font-['Poppins',sans-serif]" 
+data-checkout-url="{{ route('checkout') }}"></body>
 
     @include('partials.navbar')
 
