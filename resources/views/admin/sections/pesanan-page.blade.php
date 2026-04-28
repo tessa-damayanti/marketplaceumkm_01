@@ -1,14 +1,21 @@
 <div class="page" id="page-pesanan">
- <div class="surface data-surface pesanan-surface rounded-xl border border-[#e2d4c5] bg-[#fffaf5] shadow-[0_12px_28px_rgba(92,68,50,0.08)]">
+ <div class="surface data-surface pesanan-surface rounded-xl border border-[#e2d4c5] bg-white shadow-[0_12px_28px_rgba(92,68,50,0.08)]">
 
     {{-- Filter Row --}}
     <div class="flex flex-wrap items-center gap-3 px-5 py-4">
+      {{-- Search --}}
+      <input
+        type="text"
+        id="pesanan-search"
+        placeholder="Cari pesanan..."
+        onkeyup="renderPesananTable()"
+        class="h-10 rounded-full border border-[#e0d2c3] bg-white px-4 text-sm text-[#5c4432] focus:outline-none focus:ring-2 focus:ring-[#a78d78]/20 focus:border-[#a78d78] transition min-w-[280px]">
 
       {{-- Dropdown Status --}}
       <select
         id="pesanan-filter-status"
         onchange="renderPesananTable()"
-        class="h-10 rounded-[10px] border border-[#e0d2c3] bg-[#fbf7f2] px-3 text-sm text-[#5c4432] focus:outline-none focus:ring-2 focus:ring-[#a78d78]/20 focus:border-[#a78d78] transition">
+        class="h-10 rounded-[10px] border border-[#e0d2c3] bg-white px-3 text-sm text-[#5c4432] focus:outline-none focus:ring-2 focus:ring-[#a78d78]/20 focus:border-[#a78d78] transition">
         <option value="">Semua Status</option>
         <option value="Menunggu Verifikasi">Menunggu Verifikasi</option>
         <option value="Pembayaran Valid">Pembayaran Valid</option>
@@ -22,7 +29,7 @@
         type="date"
         id="pesanan-date-from"
         onchange="renderPesananTable()"
-        class="h-10 rounded-[10px] border border-[#e0d2c3] bg-[#fbf7f2] px-3 text-sm text-[#5c4432] focus:outline-none focus:ring-2 focus:ring-[#a78d78]/20 focus:border-[#a78d78] transition">
+        class="h-10 rounded-[10px] border border-[#e0d2c3] bg-white px-3 text-sm text-[#5c4432] focus:outline-none focus:ring-2 focus:ring-[#a78d78]/20 focus:border-[#a78d78] transition">
 
       {{-- Sampai --}}
       <span class="text-xs font-semibold uppercase tracking-wide text-[#a78d78]">Sampai</span>
@@ -30,7 +37,7 @@
         type="date"
         id="pesanan-date-to"
         onchange="renderPesananTable()"
-        class="h-10 rounded-[10px] border border-[#e0d2c3] bg-[#fbf7f2] px-3 text-sm text-[#5c4432] focus:outline-none focus:ring-2 focus:ring-[#a78d78]/20 focus:border-[#a78d78] transition">
+        class="h-10 rounded-[10px] border border-[#e0d2c3] bg-white px-3 text-sm text-[#5c4432] focus:outline-none focus:ring-2 focus:ring-[#a78d78]/20 focus:border-[#a78d78] transition">
 
     </div>
 

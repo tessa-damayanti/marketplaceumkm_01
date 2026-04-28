@@ -5,11 +5,16 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Dashboard</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
+    rel="stylesheet">
   @vite(['resources/css/app.css', 'resources/css/admin-dashboard.css', 'resources/js/app.js'])
 
 </head>
 
-<body class="bg-[#f7f2eb] text-[#5c4432] antialiased">
+<body class="bg-white">
 
   <div class="shell min-h-screen">
 
@@ -27,8 +32,9 @@
       </div>
       <div class="nav-item" onclick="goPage('produk')">
         <svg class="nav-icon" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-          <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" />
-        </svg>
+          <path
+            d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" />
+        </svg>  
         Produk
       </div>
       <div class="nav-item" onclick="goPage('kategori')">
@@ -125,7 +131,8 @@
         </div>
         <div>
           <label class="field-label">Deskripsi</label>
-          <textarea id="prod-desk" rows="4" placeholder="Deskripsi produk..." style="width:100%;resize:vertical;"></textarea>
+          <textarea id="prod-desk" rows="4" placeholder="Deskripsi produk..."
+            style="width:100%;resize:vertical;"></textarea>
         </div>
       </div>
       <div class="modal-footer">
@@ -246,218 +253,218 @@
     // data
 
     let produkList = [{
-        id: 'P001',
-        nama: 'Kemeja Stripe',
-        kategori: 'Kemeja',
-        harga: 100000,
-        deskripsi: 'Kemeja wanita bermotif garis.',
-        stok: {
-          S: 4,
-          M: 4,
-          L: 4,
-          XL: 4
-        }
-      },
-      {
-        id: 'P002',
-        nama: 'Gaun Ivory',
-        kategori: 'Gaun',
-        harga: 175000,
-        deskripsi: 'Gaun wanita elegan warna ivory.',
-        stok: {
-          S: 3,
-          M: 5,
-          L: 2,
-          XL: 1
-        }
-      },
-      {
-        id: 'P003',
-        nama: 'Kardigan Floral',
-        kategori: 'Kardigan',
-        harga: 118000,
-        deskripsi: 'Kardigan motif bunga cantik.',
-        stok: {
-          S: 6,
-          M: 4,
-          L: 3,
-          XL: 2
-        }
-      },
-      {
-        id: 'P004',
-        nama: 'Rok Denim',
-        kategori: 'Rok',
-        harga: 132000,
-        deskripsi: 'Rok denim kasual modern.',
-        stok: {
-          S: 5,
-          M: 5,
-          L: 4,
-          XL: 3
-        }
-      },
-      {
-        id: 'P005',
-        nama: 'Gaun Floral Pastel',
-        kategori: 'Gaun',
-        harga: 210000,
-        deskripsi: 'Gaun pastel bermotif floral.',
-        stok: {
-          S: 2,
-          M: 4,
-          L: 3,
-          XL: 1
-        }
-      },
-      {
-        id: 'P006',
-        nama: 'Kemeja Hitam',
-        kategori: 'Kemeja',
-        harga: 105000,
-        deskripsi: 'Kemeja polos warna hitam.',
-        stok: {
-          S: 4,
-          M: 4,
-          L: 4,
-          XL: 4
-        }
-      },
-      {
-        id: 'P007',
-        nama: 'Kardigan Rajut',
-        kategori: 'Kardigan',
-        harga: 145000,
-        deskripsi: 'Kardigan rajut hangat nyaman.',
-        stok: {
-          S: 3,
-          M: 5,
-          L: 4,
-          XL: 2
-        }
-      },
-      {
-        id: 'P008',
-        nama: 'Rok Plisket',
-        kategori: 'Rok',
-        harga: 98000,
-        deskripsi: 'Rok plisket elegan.',
-        stok: {
-          S: 5,
-          M: 6,
-          L: 4,
-          XL: 3
-        }
-      },
+      id: 'P001',
+      nama: 'Kemeja Stripe',
+      kategori: 'Kemeja',
+      harga: 100000,
+      deskripsi: 'Kemeja wanita bermotif garis.',
+      stok: {
+        S: 4,
+        M: 4,
+        L: 4,
+        XL: 4
+      }
+    },
+    {
+      id: 'P002',
+      nama: 'Gaun Ivory',
+      kategori: 'Gaun',
+      harga: 175000,
+      deskripsi: 'Gaun wanita elegan warna ivory.',
+      stok: {
+        S: 3,
+        M: 5,
+        L: 2,
+        XL: 1
+      }
+    },
+    {
+      id: 'P003',
+      nama: 'Kardigan Floral',
+      kategori: 'Kardigan',
+      harga: 118000,
+      deskripsi: 'Kardigan motif bunga cantik.',
+      stok: {
+        S: 6,
+        M: 4,
+        L: 3,
+        XL: 2
+      }
+    },
+    {
+      id: 'P004',
+      nama: 'Rok Denim',
+      kategori: 'Rok',
+      harga: 132000,
+      deskripsi: 'Rok denim kasual modern.',
+      stok: {
+        S: 5,
+        M: 5,
+        L: 4,
+        XL: 3
+      }
+    },
+    {
+      id: 'P005',
+      nama: 'Gaun Floral Pastel',
+      kategori: 'Gaun',
+      harga: 210000,
+      deskripsi: 'Gaun pastel bermotif floral.',
+      stok: {
+        S: 2,
+        M: 4,
+        L: 3,
+        XL: 1
+      }
+    },
+    {
+      id: 'P006',
+      nama: 'Kemeja Hitam',
+      kategori: 'Kemeja',
+      harga: 105000,
+      deskripsi: 'Kemeja polos warna hitam.',
+      stok: {
+        S: 4,
+        M: 4,
+        L: 4,
+        XL: 4
+      }
+    },
+    {
+      id: 'P007',
+      nama: 'Kardigan Rajut',
+      kategori: 'Kardigan',
+      harga: 145000,
+      deskripsi: 'Kardigan rajut hangat nyaman.',
+      stok: {
+        S: 3,
+        M: 5,
+        L: 4,
+        XL: 2
+      }
+    },
+    {
+      id: 'P008',
+      nama: 'Rok Plisket',
+      kategori: 'Rok',
+      harga: 98000,
+      deskripsi: 'Rok plisket elegan.',
+      stok: {
+        S: 5,
+        M: 6,
+        L: 4,
+        XL: 3
+      }
+    },
     ];
 
     let kategoriList = [{
-        id: 'K001',
-        nama: 'Kemeja'
-      },
-      {
-        id: 'K002',
-        nama: 'Gaun'
-      },
-      {
-        id: 'K003',
-        nama: 'Kardigan'
-      },
-      {
-        id: 'K004',
-        nama: 'Rok'
-      },
+      id: 'K001',
+      nama: 'Kemeja'
+    },
+    {
+      id: 'K002',
+      nama: 'Gaun'
+    },
+    {
+      id: 'K003',
+      nama: 'Kardigan'
+    },
+    {
+      id: 'K004',
+      nama: 'Rok'
+    },
     ];
 
     let pesananList = [{
-        id: 'P001',
-        tanggal: '12-05-2026',
-        nama: 'Citra',
-        hp: '08132244551',
-        alamat: 'Jln. Ahmad Yani No. 22',
-        status: 'Menunggu Verifikasi',
-        items: [{
-          produk: 'Kemeja Hitam',
-          ukuran: 'L',
-          qty: 1,
-          harga: 105000
-        }]
-      },
-      {
-        id: 'P002',
-        tanggal: '12-05-2026',
-        nama: 'Ayu Putri',
-        hp: '08211234567',
-        alamat: 'Jln. Sudirman No. 45',
-        status: 'Pembayaran Valid',
-        items: [{
-          produk: 'Gaun Floral Pastel',
-          ukuran: 'M',
-          qty: 1,
-          harga: 210000
-        }]
-      },
-      {
-        id: 'P003',
-        tanggal: '12-05-2026',
-        nama: 'Dinda',
-        hp: '08567890123',
-        alamat: 'Jln. Merdeka Blok C5',
-        status: 'Pembayaran Ditolak',
-        items: [{
-          produk: 'Rok Plisket',
-          ukuran: 'S',
-          qty: 1,
-          harga: 98000
-        }, {
-          produk: 'Kardigan Rajut',
-          ukuran: 'M',
-          qty: 1,
-          harga: 145000
-        }]
-      },
-      {
-        id: 'P004',
-        tanggal: '11-05-2026',
-        nama: 'Naura',
-        hp: '08129876543',
-        alamat: 'Jln. Pahlawan No. 8',
-        status: 'Menunggu Verifikasi',
-        items: [{
-          produk: 'Gaun Ivory',
-          ukuran: 'S',
-          qty: 1,
-          harga: 175000
-        }]
-      },
-      {
-        id: 'P005',
-        tanggal: '11-05-2026',
-        nama: 'Cahya Yanti',
-        hp: '08561234567',
-        alamat: 'Jln. Diponegoro No. 3',
-        status: 'Konfirmasi Ulang',
-        items: [{
-          produk: 'Kemeja Stripe',
-          ukuran: 'M',
-          qty: 2,
-          harga: 100000
-        }]
-      },
-      {
-        id: 'P006',
-        tanggal: '10-05-2026',
-        nama: 'Merita Anisa',
-        hp: '08781234567',
-        alamat: 'Jln. Kenanga No. 12',
-        status: 'Pembayaran Valid',
-        items: [{
-          produk: 'Kardigan Floral',
-          ukuran: 'L',
-          qty: 1,
-          harga: 118000
-        }]
-      },
+      id: 'P001',
+      tanggal: '12-05-2026',
+      nama: 'Citra',
+      hp: '08132244551',
+      alamat: 'Jln. Ahmad Yani No. 22',
+      status: 'Menunggu Verifikasi',
+      items: [{
+        produk: 'Kemeja Hitam',
+        ukuran: 'L',
+        qty: 1,
+        harga: 105000
+      }]
+    },
+    {
+      id: 'P002',
+      tanggal: '12-05-2026',
+      nama: 'Ayu Putri',
+      hp: '08211234567',
+      alamat: 'Jln. Sudirman No. 45',
+      status: 'Pembayaran Valid',
+      items: [{
+        produk: 'Gaun Floral Pastel',
+        ukuran: 'M',
+        qty: 1,
+        harga: 210000
+      }]
+    },
+    {
+      id: 'P003',
+      tanggal: '12-05-2026',
+      nama: 'Dinda',
+      hp: '08567890123',
+      alamat: 'Jln. Merdeka Blok C5',
+      status: 'Pembayaran Ditolak',
+      items: [{
+        produk: 'Rok Plisket',
+        ukuran: 'S',
+        qty: 1,
+        harga: 98000
+      }, {
+        produk: 'Kardigan Rajut',
+        ukuran: 'M',
+        qty: 1,
+        harga: 145000
+      }]
+    },
+    {
+      id: 'P004',
+      tanggal: '11-05-2026',
+      nama: 'Naura',
+      hp: '08129876543',
+      alamat: 'Jln. Pahlawan No. 8',
+      status: 'Menunggu Verifikasi',
+      items: [{
+        produk: 'Gaun Ivory',
+        ukuran: 'S',
+        qty: 1,
+        harga: 175000
+      }]
+    },
+    {
+      id: 'P005',
+      tanggal: '11-05-2026',
+      nama: 'Cahya Yanti',
+      hp: '08561234567',
+      alamat: 'Jln. Diponegoro No. 3',
+      status: 'Konfirmasi Ulang',
+      items: [{
+        produk: 'Kemeja Stripe',
+        ukuran: 'M',
+        qty: 2,
+        harga: 100000
+      }]
+    },
+    {
+      id: 'P006',
+      tanggal: '10-05-2026',
+      nama: 'Merita Anisa',
+      hp: '08781234567',
+      alamat: 'Jln. Kenanga No. 12',
+      status: 'Pembayaran Valid',
+      items: [{
+        produk: 'Kardigan Floral',
+        ukuran: 'L',
+        qty: 1,
+        harga: 118000
+      }]
+    },
     ];
 
     // STATE
@@ -557,18 +564,18 @@
 
     function statusBadge(s) {
       if (s === 'Pembayaran Valid') {
-        return `<span class="inline-flex items-center rounded-full bg-[#dfe8da] px-4 py-1.5 text-sm font-semibold text-[#6f7f67]">${s}</span>`;
+        return `<span class="inline-flex items-center rounded-full bg-[#dfe8da] px-2.5 py-0.5 text-[12px] font-semibold text-[#6f7f67]">${s}</span>`;
       }
 
       if (s === 'Pembayaran Ditolak') {
-        return `<span class="inline-flex items-center rounded-full bg-[#eadfd8] px-4 py-1.5 text-sm font-semibold text-[#9a6238]">${s}</span>`;
+        return `<span class="inline-flex items-center rounded-full bg-[#eadfd8] px-2.5 py-0.5 text-[12px] font-semibold text-[#9a6238]">${s}</span>`;
       }
 
       if (s === 'Konfirmasi Ulang') {
-        return `<span class="inline-flex items-center rounded-full bg-[#dfe3f1] px-4 py-1.5 text-sm font-semibold text-[#5870a6]">${s}</span>`;
+        return `<span class="inline-flex items-center rounded-full bg-[#dfe3f1] px-2.5 py-0.5 text-[12px] font-semibold text-[#5870a6]">${s}</span>`;
       }
 
-      return `<span class="inline-flex items-center rounded-full bg-[#dfe3f1] px-4 py-1.5 text-sm font-semibold text-[#5870a6]">${s}</span>`;
+      return `<span class="inline-flex items-center rounded-full bg-[#dfe3f1] px-2.5 py-0.5 text-[12px] font-semibold text-[#5870a6]">${s}</span>`;
     }
 
     function openModal(id) {
@@ -596,25 +603,84 @@
       document.getElementById('s-produk').textContent = produkList.length;
       document.getElementById('s-kategori').textContent = kategoriList.length;
 
+      // Calculate sold items and stock items
+      let totalSold = 0;
+      pesananList.forEach(pesanan => {
+        if (pesanan.status !== 'Pembayaran Ditolak') {
+          pesanan.items.forEach(item => {
+            totalSold += item.qty;
+          });
+        }
+      });
+
+      let totalStock = 0;
+      produkList.forEach(produk => {
+        totalStock += produk.stok.S + produk.stok.M + produk.stok.L + produk.stok.XL;
+      });
+
+      let totalItems = totalSold + totalStock;
+      let percentageSold = totalItems > 0 ? Math.round((totalSold / totalItems) * 100) : 0;
+
+      const elPersentase = document.getElementById('s-persentase');
+      if (elPersentase) elPersentase.textContent = totalSold;
+      const elTerjual = document.getElementById('s-terjual');
+      if (elTerjual) elTerjual.textContent = totalSold;
+      const elTotalStok = document.getElementById('s-total-stok');
+      if (elTotalStok) elTotalStok.textContent = totalItems;
+
+      // Update circular progress
+      const circle = document.getElementById('dash-progress-circle');
+      if (circle) {
+        const circumference = 2 * Math.PI * 40; // 251.2
+        const offset = circumference - (percentageSold / 100) * circumference;
+        circle.style.strokeDashoffset = offset;
+      }
+      const progressText = document.getElementById('dash-progress-text');
+      if (progressText) progressText.textContent = totalSold;
+
+      const statStok = document.getElementById('dash-stat-stok');
+      if (statStok) statStok.textContent = totalStock;
+      const statTerjual = document.getElementById('dash-stat-terjual');
+      if (statTerjual) statTerjual.textContent = totalSold;
+
+      const barTerjual = document.getElementById('dash-bar-terjual');
+      if (barTerjual) barTerjual.style.width = percentageSold + '%';
+      const barStok = document.getElementById('dash-bar-stok');
+      if (barStok) barStok.style.width = (100 - percentageSold) + '%';
+
       const recent = pesananList.slice(0, 5);
       document.getElementById('dash-orders-tbody').innerHTML = recent.map(o => `
-    <tr>
-      <td class="id-cell">${o.id}</td>
-      <td><strong>${o.nama}</strong></td>
-      <td>${o.items.map(i => i.produk).join(', ')}</td>
-      <td>${statusBadge(o.status)}</td>
-      <td>${rp(o.items.reduce((s,i) => s + i.harga * i.qty, 0))}</td>
+    <tr class="transition-colors">
+      <td class="px-6 py-4 font-medium text-[#4a3628]">${o.id}</td>
+      <td class="px-6 py-4"><strong>${o.nama}</strong></td>
+      <td class="px-6 py-4">${o.items.map(i => i.produk).join(', ')}</td>
+      <td class="px-6 py-4">${statusBadge(o.status)}</td>
+      <td class="px-6 py-4 text-right font-bold text-[#4a3628]">${rp(o.items.reduce((s, i) => s + i.harga * i.qty, 0))}</td>
     </tr>`).join('');
 
-      document.getElementById('dash-pagi-info').textContent = `1 - ${recent.length} dari ${recent.length}`;
+      const dashPagiInfo = document.getElementById('dash-pagi-info');
+      if (dashPagiInfo) {
+        dashPagiInfo.innerHTML = `<span class="font-bold text-[#5c4432]">1 - ${recent.length}</span> dari <span class="font-bold text-[#5c4432]">${pesananList.length}</span>`;
+      }
     }
 
     // PRODUK
     function renderProdukTable() {
       const filterKat = document.getElementById('produk-filter-kat')?.value || '';
-      const list = filterKat ? produkList.filter(p => p.kategori === filterKat) : produkList;
+      const search = document.getElementById('produk-search')?.value.toLowerCase() || '';
 
-      document.getElementById('produk-tbody').innerHTML = list.map(p => `
+      let list = filterKat ? produkList.filter(p => p.kategori === filterKat) : produkList;
+      if (search) {
+        list = list.filter(p => p.nama.toLowerCase().includes(search) || p.id.toLowerCase().includes(search));
+      }
+
+      const limit = 10;
+      const total = list.length;
+      const start = 0; // Simplified for now, only showing first 10
+      const end = Math.min(start + limit, total);
+      const displayList = list.slice(start, end);
+
+      document.getElementById('produk-tbody').innerHTML = displayList.map(p => `
     <tr>
       <td class="id-cell">${p.id}</td>
       <td>${renderThumb(p.nama, 'foto-cell', p.image || '')}</td>
@@ -629,7 +695,7 @@
       </td>
     </tr>`).join('');
 
-      document.getElementById('produk-pagi-info').textContent = `1 - ${list.length} dari ${list.length}`;
+      document.getElementById('produk-pagi-info').innerHTML = `<span class="font-bold text-[#5c4432]">${total > 0 ? start + 1 : 0} - ${end}</span> dari <span class="font-bold text-[#5c4432]">${total}</span>`;
     }
 
     function setModalMode(mode) {
@@ -728,7 +794,19 @@
 
     // KATEGORI
     function renderKategoriTable() {
-      document.getElementById('kategori-tbody').innerHTML = kategoriList.map(k => `
+      const search = document.getElementById('kategori-search')?.value.toLowerCase() || '';
+      let list = kategoriList;
+      if (search) {
+        list = list.filter(k => k.nama.toLowerCase().includes(search) || k.id.toLowerCase().includes(search));
+      }
+
+      const limit = 10;
+      const total = list.length;
+      const start = 0;
+      const end = Math.min(start + limit, total);
+      const displayList = list.slice(start, end);
+
+      document.getElementById('kategori-tbody').innerHTML = displayList.map(k => `
     <tr>
       <td class="id-cell">${k.id}</td>
       <td><strong>${k.nama}</strong></td>
@@ -739,6 +817,8 @@
         </div>
       </td>
     </tr>`).join('');
+
+      document.getElementById('kategori-pagi-info').innerHTML = `<span class="font-bold text-[#5c4432]">${total > 0 ? start + 1 : 0} - ${end}</span> dari <span class="font-bold text-[#5c4432]">${total}</span>`;
     }
 
     function setKatModalMode(mode) {
@@ -790,7 +870,19 @@
 
     // STOK
     function renderStokTable() {
-      document.getElementById('stok-tbody').innerHTML = produkList.map(p => `
+      const search = document.getElementById('stok-search')?.value.toLowerCase() || '';
+      let list = produkList;
+      if (search) {
+        list = list.filter(p => p.nama.toLowerCase().includes(search) || p.id.toLowerCase().includes(search));
+      }
+
+      const limit = 10;
+      const total = list.length;
+      const start = 0;
+      const end = Math.min(start + limit, total);
+      const displayList = list.slice(start, end);
+
+      document.getElementById('stok-tbody').innerHTML = displayList.map(p => `
     <tr>
       <td><strong>${p.nama}</strong></td>
       <td style="text-align:center;">${p.stok.S}</td>
@@ -803,6 +895,8 @@
         </div>
       </td>
     </tr>`).join('');
+
+      document.getElementById('stok-pagi-info').innerHTML = `<span class="font-bold text-[#5c4432]">${total > 0 ? start + 1 : 0} - ${end}</span> dari <span class="font-bold text-[#5c4432]">${total}</span>`;
     }
 
     function openEditStok(id) {
@@ -833,9 +927,11 @@
       const filterStatus = document.getElementById('pesanan-filter-status')?.value || '';
       const dateFrom = document.getElementById('pesanan-date-from')?.value || '';
       const dateTo = document.getElementById('pesanan-date-to')?.value || '';
+      const search = document.getElementById('pesanan-search')?.value.toLowerCase() || '';
 
-      const list = pesananList.filter(o => {
+      let list = pesananList.filter(o => {
         const matchStatus = !filterStatus || o.status === filterStatus;
+        const matchSearch = !search || o.nama.toLowerCase().includes(search) || o.id.toLowerCase().includes(search);
 
         let matchDate = true;
         if (dateFrom || dateTo) {
@@ -846,11 +942,17 @@
           if (dateTo && tglISO > dateTo) matchDate = false;
         }
 
-        return matchStatus && matchDate;
+        return matchStatus && matchDate && matchSearch;
       });
 
-      document.getElementById('pesanan-tbody').innerHTML = list.length ?
-        list.map(o => `
+      const limit = 10;
+      const total = list.length;
+      const start = 0;
+      const end = Math.min(start + limit, total);
+      const displayList = list.slice(start, end);
+
+      document.getElementById('pesanan-tbody').innerHTML = displayList.length ?
+        displayList.map(o => `
       <tr class="border-t border-[#e2d4c5]">
         <td class="px-6 py-4 text-center font-semibold text-[#5c4432]">${o.id}</td>
         <td class="px-6 py-4 text-[#5c4432]">${o.tanggal}</td>
@@ -878,8 +980,7 @@
       </tr>
     `;
 
-      document.getElementById('pesanan-pagi-info').textContent =
-        `${list.length ? 1 : 0} - ${list.length} dari ${pesananList.length}`;
+      document.getElementById('pesanan-pagi-info').innerHTML = `<span class="font-bold text-[#5c4432]">${total > 0 ? start + 1 : 0} - ${end}</span> dari <span class="font-bold text-[#5c4432]">${total}</span>`;
     }
 
     function openDetailPesanan(id) {
@@ -943,10 +1044,10 @@
     <div class="status-edit-wrap">
       <label class="field-label" for="status-select">Update Status</label>
       <select class="status-edit-sel" id="status-select">
-        <option ${o.status==='Menunggu Verifikasi'       ?'selected':''}>Menunggu Verifikasi</option>
-        <option ${o.status==='Pembayaran Valid' ?'selected':''}>Pembayaran Valid</option>
-        <option ${o.status==='Pembayaran Ditolak'    ?'selected':''}>Pembayaran Ditolak</option>
-        <option ${o.status==='Konfirmasi Ulang' ?'selected':''}>Konfirmasi Ulang</option>
+        <option ${o.status === 'Menunggu Verifikasi' ? 'selected' : ''}>Menunggu Verifikasi</option>
+        <option ${o.status === 'Pembayaran Valid' ? 'selected' : ''}>Pembayaran Valid</option>
+        <option ${o.status === 'Pembayaran Ditolak' ? 'selected' : ''}>Pembayaran Ditolak</option>
+        <option ${o.status === 'Konfirmasi Ulang' ? 'selected' : ''}>Konfirmasi Ulang</option>
       </select>
     </div>`;
 
