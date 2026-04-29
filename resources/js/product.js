@@ -3,6 +3,17 @@ let currentStock = 0;
 let selectedSize = null;
 let currentProduct = null;
 
+function requireBuyerLogin() {
+    const isBuyer = document.body.dataset.isBuyer === 'true';
+
+    if (!isBuyer) {
+        window.location.href = document.body.dataset.loginUrl;
+        return false;
+    }
+
+    return true;
+}
+
 function initCardAnimations() {
     const cards = document.querySelectorAll('#product-grid .product-card');
 
@@ -140,6 +151,8 @@ function decreaseQty() {
 }
 
 function addToCart() {
+    if (!requireBuyerLogin()) return;
+
     if (!selectedSize) {
         showSizeError();
         return;
@@ -157,13 +170,16 @@ function addToCart() {
 }
 
 function buyNow() {
+    if (!requireBuyerLogin()) return;
+
     if (!selectedSize) {
         showSizeError();
         return;
     }
 
     const checkoutUrl = document.body.dataset.checkoutUrl;
-    const url = `${checkoutUrl}?name=${encodeURIComponent(currentProduct.name)}&price=${currentProduct.price}&qty=${currentQty}`;
+    const price = String(currentProduct.price).replace(/\./g, '');
+    const url = `${checkoutUrl}?name=${encodeURIComponent(currentProduct.name)}&price=${price}&qty=${currentQty}&size=${encodeURIComponent(selectedSize)}&image=${encodeURIComponent(currentProduct.image)}`;
 
     window.location.href = url;
 }
@@ -202,14 +218,13 @@ document.addEventListener('DOMContentLoaded', () => {
                 } else if (sortValue === 'price-desc') {
                     cards.sort((a, b) => +b.dataset.price - +a.dataset.price);
                 } else {
-                    // Default / Terbaru: Mengikuti urutan asli dari Controller (sudah dibalik per kategori)
                     cards.sort((a, b) => +a.dataset.originalIndex - +b.dataset.originalIndex);
                 }
 
                 resetProductCards();
 
                 cards.forEach((card, i) => {
-                    card.dataset.index = i; // Update index visual untuk animasi
+                    card.dataset.index = i;
                     grid.appendChild(card);
                 });
 

@@ -18,7 +18,12 @@
     @stack('styles')
 </head>
 
-<body class="bg-[#f7f2eb] text-[#5c4432] scroll-smooth font-['Poppins',sans-serif]" data-checkout-url="{{ route('checkout') }}">
+<body
+    class="bg-[#f7f2eb] text-[#5c4432] scroll-smooth font-['Poppins',sans-serif]"
+    data-checkout-url="{{ route('checkout') }}"
+    data-login-url="{{ route('login') }}"
+    data-is-buyer="{{ session('role') === 'buyer' ? 'true' : 'false' }}"
+>
 
     @include('partials.navbar')
 
