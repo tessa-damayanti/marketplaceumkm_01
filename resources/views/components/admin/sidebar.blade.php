@@ -3,7 +3,7 @@
   <div class="sidebar-logo">Velora</div>
   <div class="sidebar-section-label">Menu Utama</div>
 
-  <div class="nav-item {{ request()->routeIs('dashboard') ? 'active' : '' }}" onclick="location.href='{{ route('dashboard') }}'">
+  <div class="nav-item {{ request()->routeIs('admin.dashboard') ? 'active' : '' }}" onclick="location.href='{{ route('admin.dashboard') }}'">
     <svg class="nav-icon" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
       <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
       <polyline points="9 22 9 12 15 12 15 22" />

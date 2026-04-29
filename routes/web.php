@@ -5,47 +5,50 @@ use App\Http\Controllers\LoginController;
 use App\Http\Controllers\KategoriController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\CartController;
+use App\Http\Controllers\ProductController;
 
-Route::view('/', 'pages.home')->name('home');
-Route::view('/home', 'pages.home');
+/*
+|--------------------------------------------------------------------------
+| Public Routes
+|--------------------------------------------------------------------------
+*/
+
+Route::get('/', [ProductController::class, 'home'])->name('home');
+Route::get('/product', [ProductController::class, 'index'])->name('product');
 
 Route::view('/about', 'pages.about')->name('about');
-Route::view('/product', 'pages.product')->name('product');
+Route::view('/contact', 'pages.contact')->name('contact');
 Route::view('/checkout', 'pages.checkout')->name('checkout');
 
-Route::get('/login', [LoginController::class, 'index'])->name('login');
-Route::post('/login', [LoginController::class, 'login'])->name('login.post');
-
-Route::get('/register', [LoginController::class, 'showRegister'])->name('register');
-Route::post('/register', [LoginController::class, 'register'])->name('register.post');
-
-Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
-Route::get('/produk', [DashboardController::class, 'produk'])->name('admin.produk');
-Route::get('/kategori', [DashboardController::class, 'kategori'])->name('kategori.index');
-Route::get('/stok', [DashboardController::class, 'stok'])->name('admin.stok');
-Route::get('/pesanan', [DashboardController::class, 'pesanan'])->name('admin.pesanan');
-
+// Cart
 Route::get('/cart', [CartController::class, 'index'])->name('cart');
 Route::post('/cart/add', [CartController::class, 'add'])->name('cart.add');
 Route::post('/cart/remove', [CartController::class, 'remove'])->name('cart.remove');
 Route::post('/cart/update', [CartController::class, 'update'])->name('cart.update');
 
-Route::get('/akun.index', function () {
-    return view('buyer.account');
-})->name('akun.index');
+// Profile & Auth Actions
+Route::view('/profile', 'pages.profile')->name('profile');
+Route::post('/login', [LoginController::class, 'loginSubmit'])->name('login.submit');
+Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 
-Route::get('/akun/riwayat', function () {
-    return view('buyer.history');
-})->name('akun.riwayat');
+// Auth Views
+Route::get('/login', [LoginController::class, 'index'])->name('login');
+Route::get('/register', [LoginController::class, 'showRegister'])->name('register');
 
-Route::get('/keluar', function () {
-    $role = session('role');
+/*
+|--------------------------------------------------------------------------
+| Admin Routes
+|--------------------------------------------------------------------------
+*/
 
-    session()->flush();
+Route::prefix('admin')->group(function () {
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('admin.dashboard');
+    Route::get('/produk', [DashboardController::class, 'produk'])->name('admin.produk');
+    Route::get('/kategori', [DashboardController::class, 'kategori'])->name('admin.kategori');
+    Route::get('/stok', [DashboardController::class, 'stok'])->name('admin.stok');
+    Route::get('/pesanan', [DashboardController::class, 'pesanan'])->name('admin.pesanan');
+});
 
-    if ($role === 'admin') {
-        return redirect()->route('login');
-    }
-
-    return redirect()->route('home');
-})->name('akun.logout');
+// Legacy — redirect old routes
+Route::get('/dashboard', fn() => redirect()->route('admin.dashboard'));
+Route::get('/kategori', [KategoriController::class, 'index'])->name('kategori.index');

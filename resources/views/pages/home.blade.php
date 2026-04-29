@@ -3,50 +3,7 @@
 @section('title', 'Beranda')
 
 @section('content')
-    @php
-        $products = [
-            [
-                'id' => 1,
-                'name' => 'Kemeja Stripe',
-                'category' => 'Kemeja',
-                'image' => 'https://i.pinimg.com/1200x/b1/cc/2f/b1cc2fb9a73cb56f46e167b47d4febbf.jpg',
-                'desc' => 'Kemeja wanita bermotif garis dengan desain rapi dan sederhana. Terbuat dari bahan katun ringan yang nyaman dipakai untuk aktivitas sehari-hari.',
-                'sizes' => ['S', 'M', 'L', 'XL'],
-                'stock' => 10,
-                'price' => 100000,
-            ],
-            [
-                'id' => 2,
-                'name' => 'Gaun Biru Wrap',
-                'category' => 'Gaun',
-                'image' => 'https://i.pinimg.com/736x/99/55/47/9955473e19a196b4eaa1533b10922b6a.jpg',
-                'desc' => 'Dress midi wanita dengan model wrap dan pita di pinggang yang memberikan kesan ramping dan elegan. Terbuat dari bahan ringan dan nyaman.',
-                'sizes' => ['S', 'M', 'L', 'XL'],
-                'stock' => 8,
-                'price' => 170000,
-            ],
-            [
-                'id' => 3,
-                'name' => 'Cardigan Rajut Pink',
-                'category' => 'Cardigan',
-                'image' => 'https://i.pinimg.com/736x/78/2a/3d/782a3d260721c8f3d515966337443416.jpg',
-                'desc' => 'Cardigan rajut dengan tekstur lembut dan warna feminin. Cocok untuk tampilan kasual yang tetap manis dan nyaman dipakai.',
-                'sizes' => ['S', 'M', 'L', 'XL'],
-                'stock' => 10,
-                'price' => 112000,
-            ],
-            [
-                'id' => 4,
-                'name' => 'Rok Midi A-line',
-                'category' => 'Rok',
-                'image' => 'https://i.pinimg.com/1200x/93/a8/b8/93a8b826cf1dbc2ed088b009718e5df8.jpg',
-                'desc' => 'Rok midi dengan potongan A-line yang sederhana dan rapi. Nyaman digunakan untuk aktivitas sehari-hari dengan tampilan elegan.',
-                'sizes' => ['S', 'M', 'L', 'XL'],
-                'stock' => 12,
-                'price' => 100000,
-            ],
-        ];
-    @endphp
+    {{-- Data $products disediakan oleh ProductController::home() --}}
 
     <style>
         .cat-tab {
@@ -96,15 +53,18 @@
     </style>
 
     <div id="toast"
-        class="fixed top-5 right-5 z-[999] hidden rounded-2xl bg-[#5c4432] px-5 py-3 text-sm font-medium text-white shadow-xl">
+         class="fixed top-5 right-5 z-[999] hidden rounded-2xl bg-[#5c4432] px-5 py-3 text-sm font-medium text-white shadow-xl">
         Ditambahkan ke keranjang
     </div>
 
     <!-- Banner -->
     <section class="mx-auto max-w-7xl px-6 pt-8">
         <div class="relative min-h-[300px] overflow-hidden rounded-[32px] md:min-h-[380px]">
-            <img src="https://images.unsplash.com/photo-1483985988355-763728e1935b?auto=format&fit=crop&w=1400&q=80"
-                alt="Banner Velora" class="absolute inset-0 h-full w-full object-cover">
+            <img
+                src="https://images.unsplash.com/photo-1483985988355-763728e1935b?auto=format&fit=crop&w=1400&q=80"
+                alt="Banner Velora"
+                class="absolute inset-0 h-full w-full object-cover"
+            >
             <div class="absolute inset-0 bg-[#5c4432]/40"></div>
 
             <div class="relative z-10 flex min-h-[300px] items-center justify-center px-8 text-center md:min-h-[380px]">
@@ -127,9 +87,9 @@
         <div class="flex flex-wrap justify-center gap-3" id="categoryTabs">
             <a href="{{ route('product') }}?category=kemeja" class="cat-tab active">
                 <span class="cat-icon">
-                    <svg viewBox="0 0 16 16" fill="none" stroke="#A78D78" stroke-width="1.3" stroke-linecap="round"
-                        stroke-linejoin="round">
-                        <path d="M1 4l3-2 2 2h4l2-2 3 2-2 3h-2v7H5V7H3L1 4z" />
+                    <svg viewBox="0 0 24 24">
+                        <path d="M19 21H5V8l3-2 2 2h4l2-2 3 2z"></path>
+                        <path d="M9 6V4h6v2"></path>
                     </svg>
                 </span>
                 Kemeja
@@ -137,12 +97,9 @@
 
             <a href="{{ route('product') }}?category=gaun" class="cat-tab">
                 <span class="cat-icon">
-                    <svg viewBox="0 0 16 16" fill="none" stroke="#A78D78" stroke-width="1.3" stroke-linecap="round"
-                        stroke-linejoin="round">
-                        <path d="M6 1h4" />
-                        <path d="M8 1v3" />
-                        <path d="M5 4L3 15h10L11 4" />
-                        <path d="M5 4Q8 7 11 4" />
+                    <svg viewBox="0 0 24 24">
+                        <path d="M12 4l2 4 4 10H6l4-10 2-4z"></path>
+                        <circle cx="12" cy="3.5" r="1.2" fill="#A78D78" stroke="none"></circle>
                     </svg>
                 </span>
                 Gaun
@@ -150,11 +107,9 @@
 
             <a href="{{ route('product') }}?category=cardigan" class="cat-tab">
                 <span class="cat-icon">
-                    <svg viewBox="0 0 16 16" fill="none" stroke="#A78D78" stroke-width="1.3" stroke-linecap="round"
-                        stroke-linejoin="round">
-                        <path d="M1 4l3-2 2 2 1 1 1-1 2-2 3 2-1 3H10v7H6V7H4L1 4z" />
-                        <path d="M6 7v7" />
-                        <path d="M10 7v7" />
+                    <svg viewBox="0 0 24 24">
+                        <path d="M7 21V8l3-2 2 2 2-2 3 2v13"></path>
+                        <path d="M12 8v13"></path>
                     </svg>
                 </span>
                 Cardigan
@@ -162,10 +117,8 @@
 
             <a href="{{ route('product') }}?category=rok" class="cat-tab">
                 <span class="cat-icon">
-                    <svg viewBox="0 0 16 16" fill="none" stroke="#A78D78" stroke-width="1.3" stroke-linecap="round"
-                        stroke-linejoin="round">
-                        <rect x="4" y="1" width="8" height="3" rx="1" />
-                        <path d="M4 4l-2 11h12L12 4" />
+                    <svg viewBox="0 0 24 24">
+                        <path d="M9 4h6l1 3-1.5 13h-5L8 7z"></path>
                     </svg>
                 </span>
                 Rok
@@ -179,8 +132,10 @@
 
         <div class="grid grid-cols-1 gap-7 sm:grid-cols-2 lg:grid-cols-4">
             @foreach ($products as $product)
-                <div class="cursor-pointer overflow-hidden rounded-[28px] bg-white shadow-md transition duration-300 hover:-translate-y-1 hover:shadow-xl"
-                    onclick='openModal(@json($product))'>
+                <div
+                    class="cursor-pointer overflow-hidden rounded-[28px] bg-white shadow-md transition duration-300 hover:-translate-y-1 hover:shadow-xl"
+                    onclick='openModal(@json($product))'
+                >
                     <img src="{{ $product['image'] }}" alt="{{ $product['name'] }}" class="h-56 w-full object-cover">
 
                     <div class="p-4">
@@ -196,8 +151,7 @@
                             Rp{{ number_format($product['price'], 0, ',', '.') }}
                         </p>
 
-                        <button type="button"
-                            class="w-full rounded-xl bg-[#a78d78] py-2.5 font-medium text-white transition hover:bg-[#8f7561]">
+                        <button type="button" class="w-full rounded-xl bg-[#a78d78] py-2.5 font-medium text-white transition hover:bg-[#8f7561]">
                             Lihat Detail
                         </button>
                     </div>
@@ -265,11 +219,9 @@
                     <div class="mb-6">
                         <h3 class="mb-2 font-semibold text-[#5c4432]">Jumlah</h3>
                         <div class="flex items-center gap-3">
-                            <button onclick="decreaseQty()"
-                                class="h-11 w-11 rounded-xl bg-[#e9ddd0] text-xl font-bold text-[#5c4432] hover:bg-[#dccab5]">-</button>
+                            <button onclick="decreaseQty()" class="h-11 w-11 rounded-xl bg-[#e9ddd0] text-xl font-bold text-[#5c4432] hover:bg-[#dccab5]">-</button>
                             <span id="qtyValue" class="w-10 text-center text-xl font-semibold text-[#5c4432]">1</span>
-                            <button onclick="increaseQty()"
-                                class="h-11 w-11 rounded-xl bg-[#e9ddd0] text-xl font-bold text-[#5c4432] hover:bg-[#dccab5]">+</button>
+                            <button onclick="increaseQty()" class="h-11 w-11 rounded-xl bg-[#e9ddd0] text-xl font-bold text-[#5c4432] hover:bg-[#dccab5]">+</button>
                         </div>
                     </div>
 
@@ -290,112 +242,142 @@
 @endsection
 
 @push('scripts')
-    <script>
-        let currentQty = 1;
-        let currentStock = 1;
-        let selectedSize = null;
-        let currentProduct = null;
+<script>
+    let currentQty = 1;
+    let currentStock = 1;
+    let selectedSize = null;
+    let currentProduct = null;
 
-        function openModal(product) {
-            currentProduct = product;
-            selectedSize = null;
-            currentQty = 1;
-            currentStock = parseInt(product.stock);
+    function openModal(product) {
+        currentProduct = product;
+        selectedSize = null;
+        currentQty = 1;
+        currentStock = 0;
 
-            document.getElementById('modalName').innerText = product.name;
-            document.getElementById('modalCategory').innerText = product.category;
-            document.getElementById('modalImage').src = product.image;
-            document.getElementById('modalDesc').innerText = product.desc;
-            document.getElementById('modalPrice').innerText = 'Rp' + Number(product.price).toLocaleString('id-ID');
-            document.getElementById('modalStock').innerText = product.stock + ' pcs tersedia';
+        document.getElementById('modalName').innerText = product.name;
+        document.getElementById('modalCategory').innerText = product.category;
+        document.getElementById('modalImage').src = product.image;
+        document.getElementById('modalDesc').innerText = product.desc;
+        document.getElementById('modalPrice').innerText = 'Rp' + Number(product.price).toLocaleString('id-ID');
+        document.getElementById('modalStock').innerText = 'Pilih ukuran';
+        document.getElementById('qtyValue').innerText = currentQty;
+
+        const sizesContainer = document.getElementById('modalSizes');
+        sizesContainer.innerHTML = '';
+
+        product.sizes.forEach(size => {
+            sizesContainer.innerHTML += `
+                <button
+                    type="button"
+                    onclick="selectSize(this, '${size}')"
+                    class="size-btn rounded-2xl border border-[#d8c3af] bg-[#fbf7f2] px-5 py-3 text-[#6d5644] transition hover:border-[#b08b68] hover:bg-[#efe3d5]">
+                    ${size}
+                </button>
+            `;
+        });
+
+        const modal = document.getElementById('productModal');
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+    }
+
+    function closeModal() {
+        const modal = document.getElementById('productModal');
+        modal.classList.add('hidden');
+        modal.classList.remove('flex');
+    }
+
+    function selectSize(element, size) {
+        selectedSize = size;
+
+        document.querySelectorAll('.size-btn').forEach(btn => {
+            btn.classList.remove('bg-[#a78d78]', 'text-white', 'border-[#a78d78]');
+            btn.classList.add('bg-[#fbf7f2]', 'text-[#6d5644]', 'border-[#d8c3af]');
+        });
+
+        element.classList.remove('bg-[#fbf7f2]', 'text-[#6d5644]', 'border-[#d8c3af]');
+        element.classList.add('bg-[#a78d78]', 'text-white', 'border-[#a78d78]');
+
+        currentStock = parseInt(currentProduct.stock[size]) || 0;
+        currentQty = 1;
+        document.getElementById('modalStock').innerText = currentStock + ' pcs tersedia';
+        document.getElementById('qtyValue').innerText = currentQty;
+    }
+
+    function increaseQty() {
+        if (currentQty < currentStock) {
+            currentQty++;
             document.getElementById('qtyValue').innerText = currentQty;
+        }
+    }
 
-            const sizesContainer = document.getElementById('modalSizes');
-            sizesContainer.innerHTML = '';
+    function decreaseQty() {
+        if (currentQty > 1) {
+            currentQty--;
+            document.getElementById('qtyValue').innerText = currentQty;
+        }
+    }
 
-            product.sizes.forEach(size => {
-                sizesContainer.innerHTML += `
-                    <button
-                        type="button"
-                        onclick="selectSize(this, '${size}')"
-                        class="size-btn rounded-2xl border border-[#d8c3af] bg-[#fbf7f2] px-5 py-3 text-[#6d5644] transition hover:border-[#b08b68] hover:bg-[#efe3d5]">
-                        ${size}
-                    </button>
-                `;
-            });
+    function showToast(message) {
+        const toast = document.getElementById('toast');
+        toast.innerText = message;
+        toast.classList.remove('hidden');
 
-            const modal = document.getElementById('productModal');
-            modal.classList.remove('hidden');
-            modal.classList.add('flex');
+        setTimeout(() => {
+            toast.classList.add('hidden');
+        }, 2000);
+    }
+
+    function addToCart() {
+        if (!selectedSize) {
+            alert('Silakan pilih size terlebih dahulu.');
+            return;
         }
 
-        function closeModal() {
-            const modal = document.getElementById('productModal');
-            modal.classList.add('hidden');
-            modal.classList.remove('flex');
+        // Submit form POST ke CartController
+        const form = document.createElement('form');
+        form.method = 'POST';
+        form.action = '{{ route("cart.add") }}';
+
+        const token = document.createElement('input');
+        token.type = 'hidden'; token.name = '_token'; token.value = '{{ csrf_token() }}';
+        form.appendChild(token);
+
+        const fields = {
+            name: currentProduct.name, 
+            category: currentProduct.category,
+            price: currentProduct.price, 
+            size: selectedSize, 
+            qty: currentQty, 
+            stock: currentProduct.stock[selectedSize],
+            image: currentProduct.image
+        };
+        Object.entries(fields).forEach(([k, v]) => {
+            const input = document.createElement('input');
+            input.type = 'hidden'; input.name = k; input.value = v;
+            form.appendChild(input);
+        });
+
+        document.body.appendChild(form);
+        form.submit();
+    }
+
+    function buyNow() {
+        if (!selectedSize) {
+            alert('Silakan pilih size terlebih dahulu.');
+            return;
         }
 
-        function selectSize(element, size) {
-            selectedSize = size;
+        const url = `{{ route('checkout') }}?name=${currentProduct.name}&price=${currentProduct.price}&qty=${currentQty}`;
+        window.location.href = url;
+    }
 
-            document.querySelectorAll('.size-btn').forEach(btn => {
-                btn.classList.remove('bg-[#a78d78]', 'text-white', 'border-[#a78d78]');
-                btn.classList.add('bg-[#fbf7f2]', 'text-[#6d5644]', 'border-[#d8c3af]');
-            });
-
-            element.classList.remove('bg-[#fbf7f2]', 'text-[#6d5644]', 'border-[#d8c3af]');
-            element.classList.add('bg-[#a78d78]', 'text-white', 'border-[#a78d78]');
-        }
-
-        function increaseQty() {
-            if (currentQty < currentStock) {
-                currentQty++;
-                document.getElementById('qtyValue').innerText = currentQty;
-            }
-        }
-
-        function decreaseQty() {
-            if (currentQty > 1) {
-                currentQty--;
-                document.getElementById('qtyValue').innerText = currentQty;
-            }
-        }
-
-        function showToast(message) {
-            const toast = document.getElementById('toast');
-            toast.innerText = message;
-            toast.classList.remove('hidden');
-
-            setTimeout(() => {
-                toast.classList.add('hidden');
-            }, 2000);
-        }
-
-        function addToCart() {
-            if (!selectedSize) {
-                alert('Silakan pilih size terlebih dahulu.');
-                return;
-            }
-
-            showToast('Ditambahkan ke keranjang');
+    window.addEventListener('click', function(event) {
+        const modal = document.getElementById('productModal');
+        if (event.target === modal) {
             closeModal();
         }
-
-        function buyNow() {
-            if (!selectedSize) {
-                alert('Silakan pilih size terlebih dahulu.');
-                return;
-            }
-
-            const url = `{{ route('checkout') }}?name=${currentProduct.name}&price=${currentProduct.price}&qty=${currentQty}`;
-            window.location.href = url;
-        }
-
-        window.addEventListener('click', function (event) {
-            const modal = document.getElementById('productModal');
-            if (event.target === modal) {
-                closeModal();
-            }
-        });
-    </script>
+    });
+</script>
 @endpush
+
