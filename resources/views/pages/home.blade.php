@@ -6,56 +6,65 @@
     {{-- Data $products disediakan oleh ProductController::home() --}}
 
     <style>
-        .cat-tab {
-            display: inline-flex;
-            align-items: center;
-            gap: 7px;
-            font-size: 0.82rem;
-            font-weight: 500;
-            padding: 0.62rem 1rem;
-            border-radius: 999px;
-            border: none;
-            color: #5B4636;
-            background: #E8DED3;
-            cursor: pointer;
-            transition: all 0.22s ease;
-            white-space: nowrap;
-            text-decoration: none;
+        /* Animasi kartu produk */
+        @keyframes cardFadeUp {
+            from {
+                opacity: 0;
+                transform: translateY(24px) scale(0.97);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
         }
 
-        .cat-tab:hover {
-            background: #DED1C2;
-            transform: translateY(-1px);
+        .product-card {
+            opacity: 0;
+            transform: translateY(24px) scale(0.97);
+            will-change: transform, opacity;
         }
 
-        .cat-tab.active {
-            background: #E8DED3;
-            box-shadow: inset 0 0 0 1px rgba(140, 117, 99, 0.18);
+        .product-card.card-visible {
+            animation: cardFadeUp 0.45s cubic-bezier(0.22, 1, 0.36, 1) forwards;
         }
 
-        .cat-icon {
-            width: 18px;
-            height: 18px;
-            border-radius: 999px;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            flex-shrink: 0;
-            background: #F0E7DD;
-        }
-
-        .cat-tab svg {
-            width: 12px;
-            height: 12px;
-            stroke: #A78D78;
-            fill: #A78D78;
+        html, body {
+            overscroll-behavior: none;
         }
     </style>
 
-    <div id="toast"
-         class="fixed top-5 right-5 z-[999] hidden rounded-2xl bg-[#5c4432] px-5 py-3 text-sm font-medium text-white shadow-xl">
-        Ditambahkan ke keranjang
+    <!-- Toast session success -->
+    @if (session('success'))
+    <div id="cart-toast" class="pointer-events-none fixed right-6 top-6 z-[999] translate-y-3 opacity-0 transition-all duration-500">
+        <div class="flex min-w-[320px] max-w-[360px] items-start gap-3 rounded-[24px] border border-white/60 bg-[#fffaf6]/95 px-5 py-4 shadow-[0_24px_60px_rgba(92,68,50,0.18)] backdrop-blur">
+            <div class="mt-0.5 flex h-10 w-10 items-center justify-center rounded-2xl bg-[#dff1e3] text-[#5e936c]">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+                </svg>
+            </div>
+            <div class="min-w-0 flex-1">
+                <p class="text-sm font-bold text-[#5c4432]">Berhasil</p>
+                <p class="mt-1 text-sm leading-6 text-[#7b6858]">{{ session('success') }}</p>
+            </div>
+        </div>
     </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const toast = document.getElementById('cart-toast');
+            if (toast) {
+                requestAnimationFrame(() => {
+                    toast.classList.remove('opacity-0', 'translate-y-3');
+                    toast.classList.add('opacity-100', 'translate-y-0');
+                });
+                setTimeout(() => {
+                    toast.classList.add('opacity-0', 'translate-y-3');
+                    toast.classList.remove('opacity-100', 'translate-y-0');
+                    setTimeout(() => toast.remove(), 500);
+                }, 3000);
+            }
+        });
+    </script>
+    @endif
 
     <!-- Banner -->
     <section class="mx-auto max-w-7xl px-6 pt-8">
@@ -84,41 +93,91 @@
     <section id="kategori" class="mx-auto max-w-7xl px-6 pb-6 pt-8">
         <h2 class="mb-5 text-center text-2xl font-bold md:text-3xl">Kategori</h2>
 
-        <div class="flex flex-wrap justify-center gap-3" id="categoryTabs">
-            <a href="{{ route('product') }}?category=kemeja" class="cat-tab active">
-                <span class="cat-icon">
-                    <svg viewBox="0 0 24 24">
-                        <path d="M19 21H5V8l3-2 2 2h4l2-2 3 2z"></path>
-                        <path d="M9 6V4h6v2"></path>
+        <div id="categoryTabs"
+            class="flex flex-wrap justify-center gap-[0.45rem] overflow-x-auto scroll-smooth [-ms-overflow-style:none] [scrollbar-width:none] sm:overflow-x-visible [&::-webkit-scrollbar]:hidden">
+
+            <!-- Semua -->
+            <a href="{{ route('product') }}?category=semua"
+                class="group inline-flex shrink-0 cursor-pointer items-center gap-[6px] whitespace-nowrap rounded-full border-[1.5px] border-transparent
+                      px-2.5 py-1.5 text-[0.72rem] font-semibold no-underline transition-all duration-200
+                      sm:px-3.5 sm:py-2 sm:text-[0.78rem] bg-[#EDE4DA] text-[#6B4F3A] hover:bg-[#BFA28C] hover:text-white hover:border-[#BFA28C] hover:shadow-[0_4px_14px_rgba(191,162,140,0.25)] hover:-translate-y-px">
+                <span class="inline-flex h-[20px] w-[20px] shrink-0 items-center justify-center rounded-full bg-[#F0E7DD] group-hover:bg-white/20 transition-all duration-200">
+                    <svg width="11" height="11" viewBox="0 0 11 11" fill="currentColor">
+                        <rect x="0" y="0" width="4.5" height="4.5" rx="1" />
+                        <rect x="6.5" y="0" width="4.5" height="4.5" rx="1" />
+                        <rect x="0" y="6.5" width="4.5" height="4.5" rx="1" />
+                        <rect x="6.5" y="6.5" width="4.5" height="4.5" rx="1" />
+                    </svg>
+                </span>
+                Semua
+            </a>
+
+            <!-- Kemeja -->
+            <a href="{{ route('product') }}?category=kemeja"
+                class="group inline-flex shrink-0 cursor-pointer items-center gap-[6px] whitespace-nowrap rounded-full border-[1.5px] border-transparent
+                      px-2.5 py-1.5 text-[0.72rem] font-semibold no-underline transition-all duration-200
+                      sm:px-3.5 sm:py-2 sm:text-[0.78rem] bg-[#EDE4DA] text-[#6B4F3A] hover:bg-[#BFA28C] hover:text-white hover:border-[#BFA28C] hover:shadow-[0_4px_14px_rgba(191,162,140,0.25)] hover:-translate-y-px">
+                <span class="inline-flex h-[22px] w-[22px] items-center justify-center transition group-hover:scale-110">
+                    <svg viewBox="0 0 64 64" fill="none" class="h-full w-full">
+                        <path d="M18 18L28 10H36L46 18L54 26L48 36L44 33V54H20V33L16 36L10 26L18 18Z"
+                            stroke="currentColor" stroke-width="3.5" stroke-linejoin="round" />
+                        <path d="M28 10L32 18L36 10"
+                            stroke="currentColor" stroke-width="3.5" stroke-linejoin="round" />
+                        <path d="M32 18V54"
+                            stroke="currentColor" stroke-width="2.5" />
+                        <circle cx="32" cy="26" r="1.5" fill="currentColor" />
+                        <circle cx="32" cy="34" r="1.5" fill="currentColor" />
+                        <circle cx="32" cy="42" r="1.5" fill="currentColor" />
+                        <rect x="36" y="30" width="7" height="6" rx="1.2"
+                            stroke="currentColor" stroke-width="2.5" />
                     </svg>
                 </span>
                 Kemeja
             </a>
 
-            <a href="{{ route('product') }}?category=gaun" class="cat-tab">
-                <span class="cat-icon">
-                    <svg viewBox="0 0 24 24">
-                        <path d="M12 4l2 4 4 10H6l4-10 2-4z"></path>
-                        <circle cx="12" cy="3.5" r="1.2" fill="#A78D78" stroke="none"></circle>
+            <!-- Gaun -->
+            <a href="{{ route('product') }}?category=gaun"
+                class="group inline-flex shrink-0 cursor-pointer items-center gap-[6px] whitespace-nowrap rounded-full border-[1.5px] border-transparent
+                      px-2.5 py-1.5 text-[0.72rem] font-semibold no-underline transition-all duration-200
+                      sm:px-3.5 sm:py-2 sm:text-[0.78rem] bg-[#EDE4DA] text-[#6B4F3A] hover:bg-[#BFA28C] hover:text-white hover:border-[#BFA28C] hover:shadow-[0_4px_14px_rgba(191,162,140,0.25)] hover:-translate-y-px">
+                <span class="inline-flex h-[22px] w-[22px] shrink-0 items-center justify-center transition duration-200 group-hover:scale-110">
+                    <svg viewBox="0 0 64 64" fill="none" class="h-full w-full">
+                        <path d="M25 8 C27 11 29 12 32 12 C35 12 37 11 39 8 L41 22 L36 25 L33 19 H31 L28 25 L23 22 L25 8Z"
+                            stroke="currentColor" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round" />
+                        <path d="M25 25H39" stroke="currentColor" stroke-width="4" stroke-linecap="round" />
+                        <path d="M25 27 L15 55 C22 58 42 58 49 55 L39 27 Z" stroke="currentColor" stroke-width="3.8" stroke-linecap="round" stroke-linejoin="round" />
+                        <path d="M27 31L24 55M32 31V57M37 31L40 55" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" />
                     </svg>
                 </span>
                 Gaun
             </a>
 
-            <a href="{{ route('product') }}?category=cardigan" class="cat-tab">
-                <span class="cat-icon">
-                    <svg viewBox="0 0 24 24">
-                        <path d="M7 21V8l3-2 2 2 2-2 3 2v13"></path>
-                        <path d="M12 8v13"></path>
+            <!-- Cardigan -->
+            <a href="{{ route('product') }}?category=cardigan"
+                class="group inline-flex shrink-0 cursor-pointer items-center gap-[6px] whitespace-nowrap rounded-full border-[1.5px] border-transparent
+                      px-2.5 py-1.5 text-[0.72rem] font-semibold no-underline transition-all duration-200
+                      sm:px-3.5 sm:py-2 sm:text-[0.78rem] bg-[#EDE4DA] text-[#6B4F3A] hover:bg-[#BFA28C] hover:text-white hover:border-[#BFA28C] hover:shadow-[0_4px_14px_rgba(191,162,140,0.25)] hover:-translate-y-px">
+                <span class="inline-flex h-[22px] w-[22px] items-center justify-center transition group-hover:scale-110">
+                    <svg viewBox="0 0 64 64" fill="none" class="h-full w-full">
+                        <path d="M20 13L32 19L44 13L54 23L48 36L43 33V54H21V33L16 36L10 23L20 13Z" stroke="currentColor" stroke-width="4" stroke-linejoin="round" />
+                        <path d="M32 19V54" stroke="currentColor" stroke-width="3" />
+                        <path d="M25 30H30M34 30H39M25 39H30M34 39H39" stroke="currentColor" stroke-width="3" stroke-linecap="round" />
+                        <path d="M26 16L32 25L38 16" stroke="currentColor" stroke-width="3" stroke-linejoin="round" />
                     </svg>
                 </span>
                 Cardigan
             </a>
 
-            <a href="{{ route('product') }}?category=rok" class="cat-tab">
-                <span class="cat-icon">
-                    <svg viewBox="0 0 24 24">
-                        <path d="M9 4h6l1 3-1.5 13h-5L8 7z"></path>
+            <!-- Rok -->
+            <a href="{{ route('product') }}?category=rok"
+                class="group inline-flex shrink-0 cursor-pointer items-center gap-[6px] whitespace-nowrap rounded-full border-[1.5px] border-transparent
+                      px-2.5 py-1.5 text-[0.72rem] font-semibold no-underline transition-all duration-200
+                      sm:px-3.5 sm:py-2 sm:text-[0.78rem] bg-[#EDE4DA] text-[#6B4F3A] hover:bg-[#BFA28C] hover:text-white hover:border-[#BFA28C] hover:shadow-[0_4px_14px_rgba(191,162,140,0.25)] hover:-translate-y-px">
+                <span class="inline-flex h-[22px] w-[22px] items-center justify-center transition group-hover:scale-110">
+                    <svg viewBox="0 0 64 64" fill="none" class="h-full w-full">
+                        <path d="M22 10H42L44 18H20L22 10Z" stroke="currentColor" stroke-width="4" stroke-linejoin="round" />
+                        <path d="M20 18L12 54H52L44 18" stroke="currentColor" stroke-width="4" stroke-linejoin="round" />
+                        <path d="M26 18L23 54M32 18V54M38 18L41 54" stroke="currentColor" stroke-width="3" stroke-linecap="round" />
                     </svg>
                 </span>
                 Rok
@@ -130,28 +189,41 @@
     <section class="mx-auto max-w-7xl px-6 pb-12">
         <h2 class="mb-8 text-2xl font-bold md:text-3xl">Produk Terbaru</h2>
 
-        <div class="grid grid-cols-1 gap-7 sm:grid-cols-2 lg:grid-cols-4">
-            @foreach ($products as $product)
+        <div id="product-grid" class="grid grid-cols-1 gap-7 sm:grid-cols-2 lg:grid-cols-4">
+            @foreach ($products as $index => $product)
                 <div
-                    class="cursor-pointer overflow-hidden rounded-[28px] bg-white shadow-md transition duration-300 hover:-translate-y-1 hover:shadow-xl"
-                    onclick='openModal(@json($product))'
+                    class="product-card group cursor-pointer overflow-hidden rounded-[18px] bg-white shadow-[0_2px_14px_rgba(167,141,120,0.10)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_14px_32px_rgba(167,141,120,0.20)]"
+                    data-index="{{ $index }}"
+                    data-original-index="{{ $index }}"
+                    data-price="{{ str_replace('.', '', $product['price']) }}"
+                    data-name="{{ strtolower($product['name']) }}"
+                    data-product='@json($product)'
+                    onclick="openModalFromElement(this)"
                 >
-                    <img src="{{ $product['image'] }}" alt="{{ $product['name'] }}" class="h-56 w-full object-cover">
+                    <div class="card-thumb overflow-hidden">
+                        <img src="{{ $product['image'] }}" alt="{{ $product['name'] }}" 
+                            class="block h-[200px] w-full object-cover transition-transform duration-500 ease-out will-change-transform group-hover:scale-[1.06] md:h-[240px]">
+                    </div>
 
                     <div class="p-4">
-                        <p class="mb-2 text-[11px] font-semibold uppercase tracking-[3px] text-[#b08b68]">
+                        <p class="mb-1 text-[10px] font-bold uppercase tracking-[3px] text-[#b08b68]">
                             {{ $product['category'] }}
                         </p>
 
-                        <h3 class="mb-2 text-xl font-semibold leading-snug text-[#5c4432]">
+                        <h3 class="mb-1.5 text-[0.94rem] font-semibold leading-snug text-[#5c4432]">
                             {{ $product['name'] }}
                         </h3>
 
-                        <p class="mb-3 text-2xl font-bold text-[#7a5a43]">
-                            Rp{{ number_format($product['price'], 0, ',', '.') }}
-                        </p>
+                        <div class="mb-3 flex items-center justify-between gap-1">
+                            <p class="text-[1.05rem] font-bold text-[#7a5a43]">
+                                Rp{{ number_format((int)str_replace('.', '', $product['price']), 0, ',', '.') }}
+                            </p>
+                            <p class="text-[12px] font-semibold text-[#b08b68]">
+                                {{ $product['sold'] ?? 0 }} terjual
+                            </p>
+                        </div>
 
-                        <button type="button" class="w-full rounded-xl bg-[#a78d78] py-2.5 font-medium text-white transition hover:bg-[#8f7561]">
+                        <button type="button" class="w-full rounded-2xl bg-[#BFA28C] py-2.5 text-sm font-semibold text-white transition-all duration-200 hover:bg-[#A88A72] hover:shadow-[0_5px_14px_rgba(191,162,140,0.2)]">
                             Lihat Detail
                         </button>
                     </div>
@@ -184,200 +256,9 @@
         </div>
     </section>
 
-    <!-- Modal Detail Produk -->
-    <div id="productModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/50 px-4">
-        <div class="relative w-full max-w-5xl overflow-hidden rounded-3xl bg-white shadow-2xl">
-            <button onclick="closeModal()" class="absolute right-5 top-4 z-10 text-3xl text-gray-500 hover:text-black">
-                &times;
-            </button>
-
-            <div class="grid md:grid-cols-2">
-                <div class="flex items-center justify-center bg-[#f4ede5] p-6">
-                    <img id="modalImage" src="" alt="Produk" class="max-h-[500px] w-full rounded-2xl object-cover">
-                </div>
-
-                <div class="p-8">
-                    <p id="modalCategory" class="mb-2 text-xs font-semibold uppercase tracking-[3px] text-[#b08b68]"></p>
-                    <h2 id="modalName" class="mb-3 text-3xl font-bold text-[#5c4432]"></h2>
-                    <p id="modalPrice" class="mb-5 text-3xl font-bold text-[#7a5a43]"></p>
-
-                    <div class="mb-5">
-                        <h3 class="mb-2 font-semibold text-[#5c4432]">Deskripsi Produk</h3>
-                        <p id="modalDesc" class="leading-7 text-[#7b6858]"></p>
-                    </div>
-
-                    <div class="mb-5">
-                        <h3 class="mb-2 font-semibold text-[#5c4432]">Pilih Ukuran</h3>
-                        <div id="modalSizes" class="flex flex-wrap gap-3"></div>
-                    </div>
-
-                    <div class="mb-5">
-                        <h3 class="mb-2 font-semibold text-[#5c4432]">Stok</h3>
-                        <p id="modalStock" class="text-[#7b6858]"></p>
-                    </div>
-
-                    <div class="mb-6">
-                        <h3 class="mb-2 font-semibold text-[#5c4432]">Jumlah</h3>
-                        <div class="flex items-center gap-3">
-                            <button onclick="decreaseQty()" class="h-11 w-11 rounded-xl bg-[#e9ddd0] text-xl font-bold text-[#5c4432] hover:bg-[#dccab5]">-</button>
-                            <span id="qtyValue" class="w-10 text-center text-xl font-semibold text-[#5c4432]">1</span>
-                            <button onclick="increaseQty()" class="h-11 w-11 rounded-xl bg-[#e9ddd0] text-xl font-bold text-[#5c4432] hover:bg-[#dccab5]">+</button>
-                        </div>
-                    </div>
-
-                    <div class="grid grid-cols-1 gap-3 sm:grid-cols-2">
-                        <button onclick="addToCart()"
-                            class="rounded-2xl bg-[#a78d78] py-3 font-semibold text-white transition hover:bg-[#8f7561]">
-                            Tambah ke Keranjang
-                        </button>
-                        <button onclick="buyNow()"
-                            class="rounded-2xl bg-[#5c4432] py-3 font-semibold text-white transition hover:bg-[#4b3728]">
-                            Beli Sekarang
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-@endsection
-
+    <x-product-modal />
 @push('scripts')
-<script>
-    let currentQty = 1;
-    let currentStock = 1;
-    let selectedSize = null;
-    let currentProduct = null;
-
-    function openModal(product) {
-        currentProduct = product;
-        selectedSize = null;
-        currentQty = 1;
-        currentStock = 0;
-
-        document.getElementById('modalName').innerText = product.name;
-        document.getElementById('modalCategory').innerText = product.category;
-        document.getElementById('modalImage').src = product.image;
-        document.getElementById('modalDesc').innerText = product.desc;
-        document.getElementById('modalPrice').innerText = 'Rp' + Number(product.price).toLocaleString('id-ID');
-        document.getElementById('modalStock').innerText = 'Pilih ukuran';
-        document.getElementById('qtyValue').innerText = currentQty;
-
-        const sizesContainer = document.getElementById('modalSizes');
-        sizesContainer.innerHTML = '';
-
-        product.sizes.forEach(size => {
-            sizesContainer.innerHTML += `
-                <button
-                    type="button"
-                    onclick="selectSize(this, '${size}')"
-                    class="size-btn rounded-2xl border border-[#d8c3af] bg-[#fbf7f2] px-5 py-3 text-[#6d5644] transition hover:border-[#b08b68] hover:bg-[#efe3d5]">
-                    ${size}
-                </button>
-            `;
-        });
-
-        const modal = document.getElementById('productModal');
-        modal.classList.remove('hidden');
-        modal.classList.add('flex');
-    }
-
-    function closeModal() {
-        const modal = document.getElementById('productModal');
-        modal.classList.add('hidden');
-        modal.classList.remove('flex');
-    }
-
-    function selectSize(element, size) {
-        selectedSize = size;
-
-        document.querySelectorAll('.size-btn').forEach(btn => {
-            btn.classList.remove('bg-[#a78d78]', 'text-white', 'border-[#a78d78]');
-            btn.classList.add('bg-[#fbf7f2]', 'text-[#6d5644]', 'border-[#d8c3af]');
-        });
-
-        element.classList.remove('bg-[#fbf7f2]', 'text-[#6d5644]', 'border-[#d8c3af]');
-        element.classList.add('bg-[#a78d78]', 'text-white', 'border-[#a78d78]');
-
-        currentStock = parseInt(currentProduct.stock[size]) || 0;
-        currentQty = 1;
-        document.getElementById('modalStock').innerText = currentStock + ' pcs tersedia';
-        document.getElementById('qtyValue').innerText = currentQty;
-    }
-
-    function increaseQty() {
-        if (currentQty < currentStock) {
-            currentQty++;
-            document.getElementById('qtyValue').innerText = currentQty;
-        }
-    }
-
-    function decreaseQty() {
-        if (currentQty > 1) {
-            currentQty--;
-            document.getElementById('qtyValue').innerText = currentQty;
-        }
-    }
-
-    function showToast(message) {
-        const toast = document.getElementById('toast');
-        toast.innerText = message;
-        toast.classList.remove('hidden');
-
-        setTimeout(() => {
-            toast.classList.add('hidden');
-        }, 2000);
-    }
-
-    function addToCart() {
-        if (!selectedSize) {
-            alert('Silakan pilih size terlebih dahulu.');
-            return;
-        }
-
-        // Submit form POST ke CartController
-        const form = document.createElement('form');
-        form.method = 'POST';
-        form.action = '{{ route("cart.add") }}';
-
-        const token = document.createElement('input');
-        token.type = 'hidden'; token.name = '_token'; token.value = '{{ csrf_token() }}';
-        form.appendChild(token);
-
-        const fields = {
-            name: currentProduct.name, 
-            category: currentProduct.category,
-            price: currentProduct.price, 
-            size: selectedSize, 
-            qty: currentQty, 
-            stock: currentProduct.stock[selectedSize],
-            image: currentProduct.image
-        };
-        Object.entries(fields).forEach(([k, v]) => {
-            const input = document.createElement('input');
-            input.type = 'hidden'; input.name = k; input.value = v;
-            form.appendChild(input);
-        });
-
-        document.body.appendChild(form);
-        form.submit();
-    }
-
-    function buyNow() {
-        if (!selectedSize) {
-            alert('Silakan pilih size terlebih dahulu.');
-            return;
-        }
-
-        const url = `{{ route('checkout') }}?name=${currentProduct.name}&price=${currentProduct.price}&qty=${currentQty}`;
-        window.location.href = url;
-    }
-
-    window.addEventListener('click', function(event) {
-        const modal = document.getElementById('productModal');
-        if (event.target === modal) {
-            closeModal();
-        }
-    });
-</script>
+    <script src="{{ asset('js/product.js') }}"></script>
 @endpush
+@endsection
 

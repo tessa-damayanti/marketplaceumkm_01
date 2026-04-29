@@ -9,7 +9,7 @@ class CartController extends Controller
     public function index()
     {
         $cartItems = session()->get('cart', []);
-        return view('pages.keranjang', compact('cartItems'));
+        return view('pages.cart', compact('cartItems'));
     }
 
     public function add(Request $request)
@@ -71,6 +71,8 @@ class CartController extends Controller
             if ($request->action === 'plus') {
                 if ($cart[$request->key]['qty'] < $cart[$request->key]['stock']) {
                     $cart[$request->key]['qty']++;
+                } else {
+                    return back()->with('limit_reached', $request->key);
                 }
             }
 

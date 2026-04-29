@@ -12,10 +12,14 @@
 
     <style>
         body { font-family: 'Poppins', sans-serif; }
+        html, body {
+    overscroll-behavior: none;
+}
     </style>
 </head>
 
 <body class="bg-[#f5ede4]">
+
 
     @php
     $total = collect($cartItems)->sum(fn($item) => $item['price'] * $item['qty']);
@@ -25,7 +29,7 @@
 
         <!-- Back Button -->
         <div class="mb-4">
-            <a href="{{ route('product') }}" class="inline-flex items-center gap-2 text-sm text-[#8c7563] transition hover:text-[#5c4432]">
+            <a href="{{ route('product') }}" class="inline-flex items-center gap-2 text-sm text-[#8c7563] transition hover:text-[#A98B76]">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
                 </svg>
@@ -47,7 +51,7 @@
                     <input
                         id="check-all"
                         type="checkbox"
-                        class="w-4 h-4 rounded border-[#c4ab96] bg-[#f4ede5] text-[#6b4d37] focus:ring-[#6b4d37] focus:ring-2">
+                        class="w-4 h-4 rounded border-[#c4ab96] bg-[#f4ede5] text-[#BFA28C] focus:ring-[#BFA28C] focus:ring-2">
                     <label for="check-all" class="text-base font-semibold text-[#5c4432] cursor-pointer">
                         Pilih Semua
                     </label>
@@ -60,16 +64,17 @@
                 <div class="mb-4 rounded-[20px] bg-[#f4ede5] px-3 sm:px-4 py-4 sm:py-5 last:mb-0">
                     <div class="flex flex-col gap-4">
 
-                        <!-- Baris 1: Checkbox + Gambar + Info -->
+                        <!-- Checkbox, Gambar, Info -->
                         <div class="flex items-start gap-3 sm:gap-4">
 
                             <div class="pt-1">
                                 <input
                                     type="checkbox"
-                                    class="item-check w-4 h-4 rounded border-[#c4ab96] bg-white text-[#6b4d37] focus:ring-[#6b4d37] focus:ring-2"
+                                    id="check-{{ $key }}"
+                                    class="item-check w-4 h-4 rounded border-[#c4ab96] bg-white text-[#BFA28C] focus:ring-[#BFA28C] focus:ring-2"
                                     data-price="{{ $item['price'] }}"
                                     data-qty="{{ $item['qty'] }}"
-                                    checked>
+                                    data-key="{{ $key }}">
                             </div>
 
                             <!-- Gambar -->
@@ -94,37 +99,46 @@
                         </div>
 
                         <!-- Kuantitas dan Hapus -->
-                        <div class="flex items-center justify-between pl-[calc(0.75rem+72px)] sm:pl-[calc(1rem+82px)]">
+                        <div class="flex items-end justify-between pl-[calc(0.75rem+72px)] sm:pl-[calc(1rem+82px)]">
+                            
+                            <!-- Qty & Warning Stack -->
+                            <div class="flex flex-col">
+                                <!-- Qty Counter -->
+                                <div class="flex items-center gap-3">
+                                    <!-- Tombol Kurang -->
+                                    <form action="{{ route('cart.update') }}" method="POST">
+                                        @csrf
+                                        <input type="hidden" name="key" value="{{ $key }}">
+                                        <input type="hidden" name="action" value="minus">
+                                        <button
+                                            type="submit"
+                                            class="flex h-8 w-8 sm:h-9 sm:w-9 items-center justify-center rounded-[10px] bg-[#ded1c2] text-base font-bold text-[#6b5848] transition hover:bg-[#d2c2b0] focus:outline-none focus:ring-2 focus:ring-[#c4ab96]">
+                                            -
+                                        </button>
+                                    </form>
 
-                            <!-- Qty Counter -->
-                            <div class="flex items-center gap-3">
-                                <!-- Tombol Kurang -->
-                                <form action="{{ route('cart.update') }}" method="POST">
-                                    @csrf
-                                    <input type="hidden" name="key" value="{{ $key }}">
-                                    <input type="hidden" name="action" value="minus">
-                                    <button
-                                        type="submit"
-                                        class="flex h-8 w-8 sm:h-9 sm:w-9 items-center justify-center rounded-[10px] bg-[#ded1c2] text-base font-bold text-[#6b5848] transition hover:bg-[#d2c2b0] focus:outline-none focus:ring-2 focus:ring-[#c4ab96]">
-                                        -
-                                    </button>
-                                </form>
+                                    <span class="w-6 text-center text-sm font-semibold text-[#5c4432] qty-value">
+                                        {{ $item['qty'] }}
+                                    </span>
 
-                                <span class="w-6 text-center text-sm font-semibold text-[#5c4432] qty-value">
-                                    {{ $item['qty'] }}
-                                </span>
+                                    <!-- Tombol Tambah -->
+                                    <form action="{{ route('cart.update') }}" method="POST">
+                                        @csrf
+                                        <input type="hidden" name="key" value="{{ $key }}">
+                                        <input type="hidden" name="action" value="plus">
+                                        <button
+                                            type="submit"
+                                            class="flex h-8 w-8 sm:h-9 sm:w-9 items-center justify-center rounded-[10px] bg-[#BFA28C] text-base font-bold text-white transition hover:bg-[#A88A72] focus:outline-none focus:ring-2 focus:ring-[#BFA28C]">
+                                            +
+                                        </button>
+                                    </form>
+                                </div>
 
-                                <!-- Tombol Tambah -->
-                                <form action="{{ route('cart.update') }}" method="POST">
-                                    @csrf
-                                    <input type="hidden" name="key" value="{{ $key }}">
-                                    <input type="hidden" name="action" value="plus">
-                                    <button
-                                        type="submit"
-                                        class="flex h-8 w-8 sm:h-9 sm:w-9 items-center justify-center rounded-[10px] bg-[#ded1c2] text-base font-bold text-[#6b5848] transition hover:bg-[#d2c2b0] focus:outline-none focus:ring-2 focus:ring-[#c4ab96]">
-                                        +
-                                    </button>
-                                </form>
+                                @if(session('limit_reached') == $key)
+                                <p class="mt-1.5 text-[11px] sm:text-[12px] font-semibold text-red-400">
+                                    Pembelian mencapai batas stok maksimum!
+                                </p>
+                                @endif
                             </div>
 
                             <!-- Tombol Hapus -->
@@ -133,19 +147,18 @@
                                 <input type="hidden" name="key" value="{{ $key }}">
                                 <button
                                     type="submit"
-                                    class="rounded-[12px] bg-[#ded1c2] px-4 sm:px-6 py-1.5 sm:py-2 text-xs sm:text-sm font-medium text-[#6b5848] transition hover:bg-[#d2c2b0] focus:outline-none focus:ring-2 focus:ring-[#c4ab96]">
+                                    class="rounded-[12px] bg-[#BFA28C] px-4 sm:px-6 py-1.5 sm:py-2 text-xs sm:text-sm font-medium text-white transition hover:bg-[#A88A72] focus:outline-none focus:ring-2 focus:ring-[#BFA28C]">
                                     Hapus
                                 </button>
                             </form>
                         </div>
-
                     </div>
                 </div>
                 @empty
                 <div class="py-10 text-center">
                     <p class="text-lg font-medium text-[#7b6858]">Keranjang masih kosong</p>
                     <a href="{{ route('product') }}"
-                        class="mt-4 inline-flex rounded-[12px] bg-[#a78d78] px-6 py-3 text-white transition hover:bg-[#8f7561] focus:outline-none focus:ring-2 focus:ring-[#c4ab96]">
+                        class="mt-4 inline-flex rounded-[12px] bg-[#BFA28C] px-6 py-3 text-white transition hover:bg-[#A88A72] focus:outline-none focus:ring-2 focus:ring-[#c4ab96]">
                         Belanja Sekarang
                     </a>
                 </div>
@@ -162,7 +175,7 @@
                 </div>
 
                 <a href="{{ route('checkout') }}"
-                    class="inline-flex h-[42px] sm:h-[46px] w-full sm:w-[120px] items-center justify-center rounded-[14px] bg-[#6b4d37] text-sm font-semibold text-white transition hover:bg-[#5a3f2e] focus:outline-none focus:ring-2 focus:ring-[#c4ab96]">
+                    class="inline-flex h-[42px] sm:h-[46px] w-full sm:w-[120px] items-center justify-center rounded-[14px] bg-[#A98B76] text-sm font-semibold text-white transition hover:bg-[#967A66] focus:outline-none focus:ring-2 focus:ring-[#c4ab96]">
                     Beli
                 </a>
             </div>
@@ -190,11 +203,37 @@
         document.addEventListener('DOMContentLoaded', function() {
             const checkAll = document.getElementById('check-all');
             const itemChecks = document.querySelectorAll('.item-check');
+            
+            // Restore Checkbox States
+            const savedStates = JSON.parse(localStorage.getItem('cartCheckedStates')) || {};
+            
+            itemChecks.forEach((item) => {
+                const key = item.dataset.key;
+                // Default to true if never saved, otherwise use saved state
+                if (savedStates[key] === undefined) {
+                    item.checked = true;
+                } else {
+                    item.checked = savedStates[key];
+                }
+            });
+
+            // Sync checkAll initial state
+            const allChecked = [...itemChecks].every((cb) => cb.checked);
+            checkAll.checked = allChecked;
 
             updateCartTotal();
 
+            function saveStates() {
+                const states = {};
+                itemChecks.forEach((item) => {
+                    states[item.dataset.key] = item.checked;
+                });
+                localStorage.setItem('cartCheckedStates', JSON.stringify(states));
+            }
+
             checkAll.addEventListener('change', function() {
                 itemChecks.forEach((item) => { item.checked = checkAll.checked; });
+                saveStates();
                 updateCartTotal();
             });
 
@@ -202,12 +241,28 @@
                 item.addEventListener('change', function() {
                     const allChecked = [...itemChecks].every((cb) => cb.checked);
                     checkAll.checked = allChecked;
+                    saveStates();
                     updateCartTotal();
                 });
             });
         });
     </script>
 
+    <script>
+        // Simpan posisi scroll sebelum halaman direfresh/form disubmit
+        document.addEventListener('submit', function() {
+            localStorage.setItem('scrollPos', window.scrollY);
+        });
+
+        // Kembalikan posisi scroll setelah halaman dimuat ulang
+        window.addEventListener('load', function() {
+            const scrollPos = localStorage.getItem('scrollPos');
+            if (scrollPos) {
+                window.scrollTo(0, parseInt(scrollPos));
+                localStorage.removeItem('scrollPos');
+            }
+        });
+    </script>
 </body>
 
 </html>

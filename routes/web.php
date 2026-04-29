@@ -7,12 +7,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\ProductController;
 
-/*
-|--------------------------------------------------------------------------
-| Public Routes
-|--------------------------------------------------------------------------
-*/
-
+// Public routes
 Route::get('/', [ProductController::class, 'home'])->name('home');
 Route::get('/product', [ProductController::class, 'index'])->name('product');
 
