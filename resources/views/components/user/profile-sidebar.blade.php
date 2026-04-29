@@ -4,11 +4,15 @@
     <div class="mb-6 flex items-center gap-4 border-b border-[#f4ece3] pb-6">
 
         <div class="h-14 w-14 overflow-hidden rounded-full ring-4 ring-[#f4ece3] shadow-sm">
-            <img src="{{ asset('images/1.png') }}"
-                class="h-full w-full object-cover">
+            <img
+                id="sidebarProfileImage"
+                src="{{ asset('images/1.png') }}"
+                class="h-full w-full object-cover"
+                alt="Foto Profil"
+            >
         </div>
 
-        <h3 class="text-base font-bold text-[#3e2c1e]">
+        <h3 id="sidebarProfileName" class="text-base font-bold text-[#3e2c1e]">
             Halo, Nikita Willy
         </h3>
 
@@ -39,7 +43,7 @@
         {{-- Riwayat --}}
         <button onclick="switchTab('riwayat')"
             id="btn-tab-riwayat"
-            class="flex w-full items-center gap-4 rounded-2xl px-6 py-4 bg-[#f4ece3] font-bold text-[#5c4432]">
+            class="flex w-full items-center gap-4 rounded-2xl bg-[#f4ece3] px-6 py-4 text-left font-bold text-[#5c4432]">
 
             <svg xmlns="http://www.w3.org/2000/svg"
                 class="h-6 w-6"

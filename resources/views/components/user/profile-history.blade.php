@@ -137,17 +137,27 @@
             </tbody>
         </table>
 
-        <div class="flex justify-center gap-3 border-t border-[#eee5dc] py-6">
-            <button
-                class="flex h-10 w-10 items-center justify-center rounded-lg border border-[#f1e8df] text-sm text-[#8b6f58] hover:bg-[#fcfaf8]">‹</button>
-            <button
-                class="flex h-10 w-10 items-center justify-center rounded-lg bg-[#6b422b] text-sm font-bold text-white">1</button>
-            <button
-                class="flex h-10 w-10 items-center justify-center rounded-lg text-sm text-[#6b5a4a] hover:bg-[#fcfaf8]">2</button>
-            <button
-                class="flex h-10 w-10 items-center justify-center rounded-lg text-sm text-[#6b5a4a] hover:bg-[#fcfaf8]">3</button>
-            <button
-                class="flex h-10 w-10 items-center justify-center rounded-lg border border-[#f1e8df] text-sm text-[#8b6f58] hover:bg-[#fcfaf8]">›</button>
+        <div class="flex items-center justify-between border-t border-[#eee5dc] px-6 py-5">
+            <p class="text-sm text-[#8b6f58]">
+                1 - 3 dari 3
+            </p>
+
+            <div class="flex items-center gap-2">
+                <button
+                    class="flex h-9 w-9 items-center justify-center rounded-lg border border-[#f1e8df] text-sm text-[#8b6f58] hover:bg-[#fcfaf8]">
+                    ‹
+                </button>
+
+                <button
+                    class="flex h-9 w-9 items-center justify-center rounded-lg bg-[#6b422b] text-sm font-bold text-white">
+                    1
+                </button>
+
+                <button
+                    class="flex h-9 w-9 items-center justify-center rounded-lg border border-[#f1e8df] text-sm text-[#8b6f58] hover:bg-[#fcfaf8]">
+                    ›
+                </button>
+            </div>
         </div>
     </div>
 </div>

@@ -26,3 +26,25 @@
 
     </div>
 </div>
+
+<script>
+function showToast(title, message) {
+    const toast = document.getElementById('demo-toast');
+    const titleEl = document.getElementById('demo-toast-title');
+    const messageEl = document.getElementById('demo-toast-message');
+
+    // set isi
+    titleEl.innerText = title;
+    messageEl.innerText = message;
+
+    // tampilkan (animasi masuk)
+    toast.classList.remove('opacity-0', 'translate-y-3');
+    toast.classList.add('opacity-100', 'translate-y-0');
+
+    // sembunyikan lagi setelah 2 detik
+    setTimeout(() => {
+        toast.classList.add('opacity-0', 'translate-y-3');
+        toast.classList.remove('opacity-100', 'translate-y-0');
+    }, 2000);
+}
+</script>

@@ -262,3 +262,152 @@
 @endpush
 @endsection
 
+@push('scripts')
+<script>
+    let currentQty = 1;
+    let currentStock = 1;
+    let selectedSize = null;
+    let currentProduct = null;
+
+    const isBuyerLoggedIn = @json(session('role') === 'buyer');
+
+    function requireBuyerLogin() {
+        if (!isBuyerLoggedIn) {
+            window.location.href = "{{ route('login') }}";
+            return false;
+        }
+
+        return true;
+    }
+
+    function openModal(product) {
+        currentProduct = product;
+        selectedSize = null;
+        currentQty = 1;
+        currentStock = 0;
+
+        document.getElementById('modalName').innerText = product.name;
+        document.getElementById('modalCategory').innerText = product.category;
+        document.getElementById('modalImage').src = product.image;
+        document.getElementById('modalDesc').innerText = product.desc;
+        document.getElementById('modalPrice').innerText = 'Rp' + Number(product.price).toLocaleString('id-ID');
+        document.getElementById('modalStock').innerText = 'Pilih ukuran';
+        document.getElementById('qtyValue').innerText = currentQty;
+
+        const sizesContainer = document.getElementById('modalSizes');
+        sizesContainer.innerHTML = '';
+
+        product.sizes.forEach(size => {
+            sizesContainer.innerHTML += `
+                <button
+                    type="button"
+                    onclick="selectSize(this, '${size}')"
+                    class="size-btn rounded-2xl border border-[#d8c3af] bg-[#fbf7f2] px-5 py-3 text-[#6d5644] transition hover:border-[#b08b68] hover:bg-[#efe3d5]">
+                    ${size}
+                </button>
+            `;
+        });
+
+        const modal = document.getElementById('productModal');
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+    }
+
+    function closeModal() {
+        const modal = document.getElementById('productModal');
+        modal.classList.add('hidden');
+        modal.classList.remove('flex');
+    }
+
+    function selectSize(element, size) {
+        selectedSize = size;
+
+        document.querySelectorAll('.size-btn').forEach(btn => {
+            btn.classList.remove('bg-[#a78d78]', 'text-white', 'border-[#a78d78]');
+            btn.classList.add('bg-[#fbf7f2]', 'text-[#6d5644]', 'border-[#d8c3af]');
+        });
+
+        element.classList.remove('bg-[#fbf7f2]', 'text-[#6d5644]', 'border-[#d8c3af]');
+        element.classList.add('bg-[#a78d78]', 'text-white', 'border-[#a78d78]');
+
+        currentStock = parseInt(currentProduct.stock[size]) || 0;
+        currentQty = 1;
+        document.getElementById('modalStock').innerText = currentStock + ' pcs tersedia';
+        document.getElementById('qtyValue').innerText = currentQty;
+    }
+
+    function increaseQty() {
+        if (currentQty < currentStock) {
+            currentQty++;
+            document.getElementById('qtyValue').innerText = currentQty;
+        }
+    }
+
+    function decreaseQty() {
+        if (currentQty > 1) {
+            currentQty--;
+            document.getElementById('qtyValue').innerText = currentQty;
+        }
+    }
+
+    function addToCart() {
+        if (!requireBuyerLogin()) return;
+
+        if (!selectedSize) {
+            alert('Silakan pilih size terlebih dahulu.');
+            return;
+        }
+
+        const form = document.createElement('form');
+        form.method = 'POST';
+        form.action = '{{ route("cart.add") }}';
+
+        const token = document.createElement('input');
+        token.type = 'hidden';
+        token.name = '_token';
+        token.value = '{{ csrf_token() }}';
+        form.appendChild(token);
+
+        const fields = {
+            name: currentProduct.name,
+            category: currentProduct.category,
+            price: currentProduct.price,
+            size: selectedSize,
+            qty: currentQty,
+            stock: currentProduct.stock[selectedSize],
+            image: currentProduct.image
+        };
+
+        Object.entries(fields).forEach(([k, v]) => {
+            const input = document.createElement('input');
+            input.type = 'hidden';
+            input.name = k;
+            input.value = v;
+            form.appendChild(input);
+        });
+
+        document.body.appendChild(form);
+        form.submit();
+    }
+
+    function buyNow() {
+        if (!requireBuyerLogin()) return;
+
+        if (!selectedSize) {
+            alert('Silakan pilih size terlebih dahulu.');
+            return;
+        }
+
+        const url = `{{ route('checkout') }}?name=${encodeURIComponent(currentProduct.name)}&price=${currentProduct.price}&qty=${currentQty}&size=${encodeURIComponent(selectedSize)}`;
+        window.location.href = url;
+    }
+
+    window.addEventListener('click', function(event) {
+        const modal = document.getElementById('productModal');
+        if (event.target === modal) {
+            closeModal();
+        }
+    });
+</script>
+@endpush
+
