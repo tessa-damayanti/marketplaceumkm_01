@@ -4,7 +4,6 @@
   <div class="modal">
     <div class="modal-header">
       <span class="modal-title" id="prod-modal-title">Tambah Produk</span>
-      <button class="modal-close" onclick="closeModal('modal-tambah-produk')">&times;</button>
     </div>
     <div class="modal-body">
       <div>
@@ -34,12 +33,13 @@
       </div>
       <div>
         <label class="field-label">Deskripsi</label>
-        <textarea id="prod-desk" rows="4" placeholder="Deskripsi produk..." style="width:100%;resize:vertical;"></textarea>
+        <textarea id="prod-desk" rows="4" placeholder="Deskripsi produk..."
+          style="width:100%;resize:vertical;"></textarea>
       </div>
     </div>
     <div class="modal-footer">
-      <button class="btn" onclick="closeModal('modal-tambah-produk')">Batal</button>
-      <button class="btn btn-dark" onclick="saveProduk()">Simpan</button>
+      <button class="btn-modal-cancel" onclick="closeAdminModal('modal-tambah-produk')">Batal</button>
+      <button class="btn-modal-save" onclick="saveProduk()">Simpan</button>
     </div>
   </div>
 </div>
@@ -50,8 +50,8 @@
     <div class="confirm-box">
       <p>Apakah Anda yakin ingin menghapus produk ini?</p>
       <div class="confirm-actions">
-        <button class="btn" onclick="closeModal('modal-hapus-produk')">Batal</button>
-        <button class="btn btn-danger" onclick="confirmHapusProduk()">Hapus</button>
+        <button class="btn-modal-cancel" onclick="closeAdminModal('modal-hapus-produk')">Batal</button>
+        <button class="btn-modal-save" style="background: #ef4444;" onclick="confirmHapusProduk()">Hapus</button>
       </div>
     </div>
   </div>
@@ -62,7 +62,6 @@
   <div class="modal modal-sm">
     <div class="modal-header">
       <span class="modal-title" id="kat-modal-title">Tambah Kategori</span>
-      <button class="modal-close" onclick="closeModal('modal-tambah-kat')">&times;</button>
     </div>
     <div class="modal-body">
       <div>
@@ -71,8 +70,8 @@
       </div>
     </div>
     <div class="modal-footer">
-      <button class="btn" onclick="closeModal('modal-tambah-kat')">Batal</button>
-      <button class="btn btn-dark" onclick="saveKategori()">Simpan</button>
+      <button class="btn-modal-cancel" onclick="closeAdminModal('modal-tambah-kat')">Batal</button>
+      <button class="btn-modal-save" onclick="saveKategori()">Simpan</button>
     </div>
   </div>
 </div>
@@ -83,8 +82,8 @@
     <div class="confirm-box">
       <p>Apakah Anda yakin ingin menghapus kategori ini?</p>
       <div class="confirm-actions">
-        <button class="btn" onclick="closeModal('modal-hapus-kat')">Batal</button>
-        <button class="btn btn-danger" onclick="confirmHapusKat()">Hapus</button>
+        <button class="btn-modal-cancel" onclick="closeAdminModal('modal-hapus-kat')">Batal</button>
+        <button class="btn-modal-save" style="background: #ef4444;" onclick="confirmHapusKat()">Hapus</button>
       </div>
     </div>
   </div>
@@ -96,8 +95,8 @@
     <div class="confirm-box">
       <p>Apakah Anda yakin ingin keluar dari dashboard?</p>
       <div class="confirm-actions">
-        <button class="btn" onclick="closeModal('modal-logout')">Batal</button>
-        <button class="btn btn-danger" onclick="proceedLogout()">Ya, Keluar</button>
+        <button class="btn-modal-cancel" onclick="closeAdminModal('modal-logout')">Batal</button>
+        <button class="btn-modal-save" style="background: #ef4444;" onclick="proceedLogout()">Ya, Keluar</button>
       </div>
     </div>
   </div>
@@ -108,7 +107,6 @@
   <div class="modal modal-sm">
     <div class="modal-header">
       <span class="modal-title">Edit Stok Produk</span>
-      <button class="modal-close" onclick="closeModal('modal-stok')">&times;</button>
     </div>
     <div class="modal-body">
       <p style="font-size:13.5px;font-weight:700;color:#555;" id="stok-modal-produk-name">Produk: -</p>
@@ -130,22 +128,30 @@
       </div>
     </div>
     <div class="modal-footer">
-      <button class="btn" onclick="closeModal('modal-stok')">Batal</button>
-      <button class="btn btn-dark" onclick="saveStok()">Simpan</button>
+      <button class="btn-modal-cancel" onclick="closeAdminModal('modal-stok')">Batal</button>
+      <button class="btn-modal-save" onclick="saveStok()">Simpan</button>
     </div>
   </div>
 </div>
 
 <!-- Detail Pesanan -->
 <div class="overlay" id="modal-pesanan">
-  <div class="modal" style="width:520px;">
-    <div class="modal-header">
-      <span class="modal-title" id="pesanan-modal-title">Detail Pesanan - ID</span>
+  <div class="modal" style="width:520px;" id="pesanan-modal-content">
+
+  </div>
+</div>
+
+<!-- Lihat Bukti Pembayaran -->
+<div class="overlay z-[9999]" id="modal-bukti">
+  <div class="modal max-w-2xl bg-transparent shadow-none border-0 overflow-hidden flex flex-col items-center">
+    <div class="w-full flex justify-end mb-2">
+      <button onclick="closeAdminModal('modal-bukti')"
+        class="text-white bg-black/50 hover:bg-black/80 rounded-full p-2 backdrop-blur-sm transition-colors">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+        </svg>
+      </button>
     </div>
-    <div class="modal-body" id="pesanan-modal-body"></div>
-    <div class="modal-footer">
-      <button class="btn" onclick="closeModal('modal-pesanan')">Batal</button>
-      <button class="btn btn-dark" onclick="saveEditStatus()">Simpan</button>
-    </div>
+    <img id="bukti-image-full" src="" class="max-w-full max-h-[80vh] object-contain rounded-xl shadow-2xl">
   </div>
 </div>

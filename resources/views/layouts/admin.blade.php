@@ -5,10 +5,14 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>@yield('title', 'Admin Dashboard')</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap"
+    rel="stylesheet">
   @vite(['resources/css/app.css', 'resources/css/admin-dashboard.css', 'resources/js/app.js'])
 </head>
 
-<body class="bg-[#f7f2eb] text-[#5c4432] antialiased">
+<body class="bg-white text-[#5c4432] antialiased">
 
   <div class="shell">
     <!-- sidebar -->
@@ -16,6 +20,7 @@
 
     <!-- MAIN WRAP -->
     <div class="main-wrap">
+      <div id="sidebar-overlay" class="sidebar-overlay" onclick="toggleMobileSidebar()"></div>
       <!-- topbar -->
       <x-admin.topbar :title="$__env->yieldContent('page_title', 'Dashboard')" />
 
@@ -25,87 +30,51 @@
     </div>
   </div>
 
-  <!-- all modals -->
+  <!-- modals -->
   <x-admin.modals />
+  <!-- admin toast -->
+  <x-admin.toast />
+
+  <div id="admin-json-data" data-produk="{{ json_encode($produk ?? []) }}"
+    data-kategori="{{ json_encode($kategori ?? []) }}" data-pesanan="{{ json_encode($pesanan ?? []) }}" hidden></div>
 
   <script>
-    // data
-    let produkList = [{
-        id: 'P001',
-        nama: 'Kemeja Stripe',
-        kategori: 'Kemeja',
-        harga: 100000,
-        deskripsi: 'Kemeja wanita bermotif garis.',
-        stok: { S: 4, M: 4, L: 4, XL: 4 }
-      },
-      {
-        id: 'P002',
-        nama: 'Gaun Ivory',
-        kategori: 'Gaun',
-        harga: 175000,
-        deskripsi: 'Gaun wanita elegan warna ivory.',
-        stok: { S: 3, M: 5, L: 2, XL: 1 }
-      },
-      {
-        id: 'P003',
-        nama: 'Kardigan Floral',
-        kategori: 'Kardigan',
-        harga: 118000,
-        deskripsi: 'Kardigan motif bunga cantik.',
-        stok: { S: 6, M: 4, L: 3, XL: 2 }
-      },
-      {
-        id: 'P004',
-        nama: 'Rok Denim',
-        kategori: 'Rok',
-        harga: 132000,
-        deskripsi: 'Rok denim kasual modern.',
-        stok: { S: 5, M: 5, L: 4, XL: 3 }
-      },
-      {
-        id: 'P005',
-        nama: 'Gaun Floral Pastel',
-        kategori: 'Gaun',
-        harga: 210000,
-        deskripsi: 'Gaun pastel bermotif floral.',
-        stok: { S: 2, M: 4, L: 3, XL: 1 }
-      },
-      {
-        id: 'P006',
-        nama: 'Kemeja Hitam',
-        kategori: 'Kemeja',
-        harga: 105000,
-        deskripsi: 'Kemeja polos warna hitam.',
-        stok: { S: 4, M: 4, L: 4, XL: 4 }
-      },
-      {
-        id: 'P007',
-        nama: 'Kardigan Rajut',
-        kategori: 'Kardigan',
-        harga: 145000,
-        deskripsi: 'Kardigan rajut hangat nyaman.',
-        stok: { S: 3, M: 5, L: 4, XL: 2 }
-      },
-      {
-        id: 'P008',
-        nama: 'Rok Plisket',
-        kategori: 'Rok',
-        harga: 98000,
-        deskripsi: 'Rok plisket elegan.',
-        stok: { S: 5, M: 6, L: 4, XL: 3 }
-      },
-    ];
+    // ADMIN TOAST
+    let adminToastTimer = null;
+    function showAdminToast(title, message, type = 'success') {
+      const toast = document.getElementById('admin-toast');
+      const icon = document.getElementById('admin-toast-icon');
+      const iconSuccess = document.getElementById('admin-toast-icon-success');
+      const iconError = document.getElementById('admin-toast-icon-error');
+      const titleEl = document.getElementById('admin-toast-title');
+      const messageEl = document.getElementById('admin-toast-message');
 
-    let kategoriList = [{ id: 'K001', nama: 'Kemeja' }, { id: 'K002', nama: 'Gaun' }, { id: 'K003', nama: 'Kardigan' }, { id: 'K004', nama: 'Rok' }];
+      titleEl.innerText = title;
+      messageEl.innerText = message;
 
-    let pesananList = [
-      { id: 'P001', tanggal: '12-05-2026', nama: 'Citra', hp: '08132244551', alamat: 'Jln. Ahmad Yani No. 22', status: 'Menunggu Verifikasi', items: [{ produk: 'Kemeja Hitam', ukuran: 'L', qty: 1, harga: 105000 }] },
-      { id: 'P002', tanggal: '12-05-2026', nama: 'Ayu Putri', hp: '08211234567', alamat: 'Jln. Sudirman No. 45', status: 'Pembayaran Valid', items: [{ produk: 'Gaun Floral Pastel', ukuran: 'M', qty: 1, harga: 210000 }] },
-      { id: 'P003', tanggal: '12-05-2026', nama: 'Dinda', hp: '08567890123', alamat: 'Jln. Merdeka Blok C5', status: 'Pembayaran Ditolak', items: [{ produk: 'Rok Plisket', ukuran: 'S', qty: 1, harga: 98000 }, { produk: 'Kardigan Rajut', ukuran: 'M', qty: 1, harga: 145000 }] },
-      { id: 'P004', tanggal: '11-05-2026', nama: 'Naura', hp: '08129876543', alamat: 'Jln. Pahlawan No. 8', status: 'Menunggu Verifikasi', items: [{ produk: 'Gaun Ivory', ukuran: 'S', qty: 1, harga: 175000 }] },
-      { id: 'P005', tanggal: '11-05-2026', nama: 'Cahya Yanti', hp: '08561234567', alamat: 'Jln. Diponegoro No. 3', status: 'Konfirmasi Ulang', items: [{ produk: 'Kemeja Stripe', ukuran: 'M', qty: 2, harga: 100000 }] },
-      { id: 'P006', tanggal: '10-05-2026', nama: 'Merita Anisa', hp: '08781234567', alamat: 'Jln. Kenanga No. 12', status: 'Pembayaran Valid', items: [{ produk: 'Kardigan Floral', ukuran: 'L', qty: 1, harga: 118000 }] },
-    ];
+      if (type === 'error') {
+        icon.className = 'flex h-10 w-10 items-center justify-center rounded-full bg-[#fde8e8]';
+        iconSuccess.classList.add('hidden');
+        iconError.classList.remove('hidden');
+      } else {
+        icon.className = 'flex h-10 w-10 items-center justify-center rounded-full bg-[#d9f8df]';
+        iconSuccess.classList.remove('hidden');
+        iconError.classList.add('hidden');
+      }
+
+      toast.classList.remove('opacity-0', 'translate-y-3');
+      toast.classList.add('opacity-100', 'translate-y-0', 'pointer-events-auto');
+
+      if (adminToastTimer) clearTimeout(adminToastTimer);
+      adminToastTimer = setTimeout(() => {
+        toast.classList.add('opacity-0', 'translate-y-3');
+        toast.classList.remove('opacity-100', 'translate-y-0', 'pointer-events-auto');
+      }, 2500);
+    }
+    const adminJsonData = document.getElementById('admin-json-data');
+    let produkList = JSON.parse(adminJsonData?.dataset.produk || '[]');
+    let kategoriList = JSON.parse(adminJsonData?.dataset.kategori || '[]');
+    let pesananList = JSON.parse(adminJsonData?.dataset.pesanan || '[]');
 
     // STATE
     let editingProdukId = null;
@@ -145,19 +114,29 @@
 
     function statusBadge(s) {
       const colors = {
-        'Pembayaran Valid': 'bg-[#dfe8da] text-[#6f7f67]',
-        'Pembayaran Ditolak': 'bg-[#eadfd8] text-[#9a6238]',
-        'Konfirmasi Ulang': 'bg-[#dfe3f1] text-[#5870a6]',
-        'Menunggu Verifikasi': 'bg-[#dfe3f1] text-[#5870a6]'
+        'Pembayaran Valid': 'bg-[#dcfce7] text-[#15803d]',
+        'Pembayaran Ditolak': 'bg-[#fee2e2] text-[#dc2626]',
+        'Konfirmasi Ulang': 'bg-[#e0e7ff] text-[#4338ca]',
+        'Menunggu Verifikasi': 'bg-[#fff1bd] text-[#b45a00]'
       };
-      return `<span class="inline-flex items-center rounded-full ${colors[s] || colors['Menunggu Verifikasi']} px-4 py-1.5 text-sm font-semibold">${s}</span>`;
+      return `<span class="inline-flex items-center rounded-full ${colors[s] || colors['Menunggu Verifikasi']} px-3 py-1 text-sm font-medium">${s}</span>`;
     }
 
-    function openModal(id) { document.getElementById(id).classList.add('open'); }
-    function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+    function openAdminModal(id) { document.getElementById(id).classList.add('open'); }
+    function closeAdminModal(id) { document.getElementById(id).classList.remove('open'); }
 
-    function confirmLogout(event) { event.preventDefault(); openModal('modal-logout'); }
+    window.openModal = openAdminModal;
+    window.closeModal = closeAdminModal;
+
+    function confirmLogout(event) { event.preventDefault(); openAdminModal('modal-logout'); }
     function proceedLogout() { window.location.href = "{{ route('home') }}"; }
+
+    function toggleMobileSidebar() {
+      const sidebar = document.getElementById('admin-sidebar');
+      const overlay = document.getElementById('sidebar-overlay');
+      sidebar.classList.toggle('mobile-open');
+      overlay.classList.toggle('show');
+    }
 
     // DASHBOARD
     function renderDashboard() {
@@ -170,10 +149,17 @@
       document.getElementById('dash-orders-tbody').innerHTML = recent.map(o => `
         <tr>
           <td class="id-cell">${o.id}</td>
-          <td><strong>${o.nama}</strong></td>
+          <td>
+            <div class="flex items-center gap-3">
+              <div class="h-8 w-8 rounded-full border border-[#e2d4c5] bg-[#fbf8f5] flex items-center justify-center overflow-hidden shrink-0">
+                <img src="${o.avatar ? o.avatar : `https://ui-avatars.com/api/?name=${encodeURIComponent(o.nama)}&background=f3e6db&color=5c4432&bold=true&size=64`}" alt="${o.nama}" class="h-full w-full object-cover">
+              </div>
+              <span class="font-medium text-[#5c4432]">${o.nama}</span>
+            </div>
+          </td>
           <td>${o.items.map(i => i.produk).join(', ')}</td>
           <td>${statusBadge(o.status)}</td>
-          <td>${rp(o.items.reduce((s,i) => s + i.harga * i.qty, 0))}</td>
+          <td>${rp(o.items.reduce((s, i) => s + i.harga * i.qty, 0))}</td>
         </tr>`).join('');
     }
 
@@ -190,14 +176,14 @@
       document.getElementById('produk-tbody').innerHTML = list.map(p => `
         <tr>
           <td class="id-cell">${p.id}</td>
-          <td>${renderThumb(p.nama, 'foto-cell', p.image || '')}</td>
-          <td><strong>${p.nama}</strong></td>
+          <td class="action-cell">${renderThumb(p.nama, 'foto-cell', p.image || '')}</td>
+          <td>${p.nama}</td>
           <td>${p.kategori}</td>
           <td>${rp(p.harga)}</td>
           <td class="action-cell">
             <div class="action-buttons">
-              <button class="icon-btn icon-btn-edit" type="button" onclick="openEditProduk('${p.id}')">${editIcon}</button>
-              <button class="icon-btn icon-btn-delete" type="button" onclick="openHapusProduk('${p.id}')">${deleteIcon}</button>
+              <button class="icon-btn icon-btn-edit" data-tooltip="Edit" type="button" onclick="openEditProduk('${p.id}')">${editIcon}</button>
+              <button class="icon-btn icon-btn-delete" data-tooltip="Hapus" type="button" onclick="openHapusProduk('${p.id}')">${deleteIcon}</button>
             </div>
           </td>
         </tr>`).join('');
@@ -223,10 +209,10 @@
       document.getElementById('prod-desk').value = p.deskripsi;
       selectedProdukImage = p.image || '';
       document.getElementById('upload-hint').textContent = 'Foto tersimpan';
-      openModal('modal-tambah-produk');
+      openAdminModal('modal-tambah-produk');
     }
 
-    function openHapusProduk(id) { deletingProdukId = id; openModal('modal-hapus-produk'); }
+    function openHapusProduk(id) { deletingProdukId = id; openAdminModal('modal-hapus-produk'); }
 
     function saveProduk() {
       const nama = document.getElementById('prod-nama').value.trim();
@@ -235,6 +221,8 @@
       const desk = document.getElementById('prod-desk').value.trim();
 
       if (!nama) return alert('Nama produk wajib diisi.');
+      if (!harga || harga <= 0) return alert('Harga produk wajib diisi dengan benar.');
+      if (!desk) return alert('Keterangan/Deskripsi produk wajib diisi.');
 
       if (editingProdukId) {
         const p = produkList.find(x => x.id === editingProdukId);
@@ -242,11 +230,17 @@
       } else {
         produkList.push({ id: 'P' + String(produkIdCounter++).padStart(3, '0'), nama, kategori: kat, harga, deskripsi: desk, image: selectedProdukImage, stok: { S: 0, M: 0, L: 0, XL: 0 } });
       }
-      closeModal('modal-tambah-produk');
+      closeAdminModal('modal-tambah-produk');
       renderProdukTable();
+      showAdminToast('Berhasil', editingProdukId ? 'Produk berhasil diperbarui.' : 'Produk baru berhasil ditambahkan.');
     }
 
-    function confirmHapusProduk() { produkList = produkList.filter(x => x.id !== deletingProdukId); closeModal('modal-hapus-produk'); renderProdukTable(); }
+    function confirmHapusProduk() {
+      produkList = produkList.filter(x => x.id !== deletingProdukId);
+      closeAdminModal('modal-hapus-produk');
+      renderProdukTable();
+      showAdminToast('Berhasil Dihapus', 'Produk telah dihapus dari daftar.', 'error');
+    }
 
     function handleFileChange(input) {
       const file = input.files[0];
@@ -267,11 +261,11 @@
       document.getElementById('kategori-tbody').innerHTML = list.map(k => `
         <tr>
           <td class="id-cell">${k.id}</td>
-          <td><strong>${k.nama}</strong></td>
+          <td>${k.nama}</td>
           <td class="action-cell">
             <div class="action-buttons">
-              <button class="icon-btn icon-btn-edit" onclick="openEditKat('${k.id}')">${editIcon}</button>
-              <button class="icon-btn icon-btn-delete" onclick="openHapusKat('${k.id}')">${deleteIcon}</button>
+              <button class="icon-btn icon-btn-edit" data-tooltip="Edit" onclick="openEditKat('${k.id}')">${editIcon}</button>
+              <button class="icon-btn icon-btn-delete" data-tooltip="Hapus" onclick="openHapusKat('${k.id}')">${deleteIcon}</button>
             </div>
           </td>
         </tr>`).join('');
@@ -284,18 +278,28 @@
       editingKatId = id;
       document.getElementById('kat-modal-title').textContent = 'Edit Kategori';
       document.getElementById('kat-nama').value = k.nama;
-      openModal('modal-tambah-kat');
+      openAdminModal('modal-tambah-kat');
     }
-    function openHapusKat(id) { deletingKatId = id; openModal('modal-hapus-kat'); }
+    function openHapusKat(id) { deletingKatId = id; openAdminModal('modal-hapus-kat'); }
     function saveKategori() {
       const nama = document.getElementById('kat-nama').value.trim();
       if (!nama) return alert('Nama kategori wajib diisi.');
-      if (editingKatId) { const k = kategoriList.find(x => x.id === editingKatId); if (k) k.nama = nama; }
-      else { kategoriList.push({ id: 'K' + String(katIdCounter++).padStart(3, '0'), nama }); }
-      closeModal('modal-tambah-kat');
+      if (editingKatId) {
+        const k = kategoriList.find(x => x.id === editingKatId);
+        if (k) k.nama = nama;
+      } else {
+        kategoriList.push({ id: 'K' + String(katIdCounter++).padStart(3, '0'), nama });
+      }
+      closeAdminModal('modal-tambah-kat');
       renderKategoriTable();
+      showAdminToast('Berhasil', editingKatId ? 'Kategori berhasil diperbarui.' : 'Kategori baru berhasil ditambahkan.');
     }
-    function confirmHapusKat() { kategoriList = kategoriList.filter(x => x.id !== deletingKatId); closeModal('modal-hapus-kat'); renderKategoriTable(); }
+    function confirmHapusKat() {
+      kategoriList = kategoriList.filter(x => x.id !== deletingKatId);
+      closeAdminModal('modal-hapus-kat');
+      renderKategoriTable();
+      showAdminToast('Berhasil Dihapus', 'Kategori telah dihapus.', 'error');
+    }
 
     // STOK
     function renderStokTable() {
@@ -306,12 +310,12 @@
 
       document.getElementById('stok-tbody').innerHTML = list.map(p => `
         <tr>
-          <td><strong>${p.nama}</strong></td>
+          <td>${p.nama}</td>
           <td style="text-align:center;">${p.stok.S}</td>
           <td style="text-align:center;">${p.stok.M}</td>
           <td style="text-align:center;">${p.stok.L}</td>
           <td style="text-align:center;">${p.stok.XL}</td>
-          <td class="action-cell"><button class="icon-btn icon-btn-edit" onclick="openEditStok('${p.id}')">${editIcon}</button></td>
+          <td class="action-cell"><button class="icon-btn icon-btn-edit" data-tooltip="Edit Stok" onclick="openEditStok('${p.id}')">${editIcon}</button></td>
         </tr>`).join('');
     }
 
@@ -320,16 +324,17 @@
       if (!p) return;
       editingStokId = id;
       document.getElementById('stok-modal-produk-name').textContent = 'Produk: ' + p.nama;
-      ['s', 'm', 'l', 'xl'].forEach(sz => document.getElementById('stok-'+sz).value = p.stok[sz.toUpperCase()]);
-      openModal('modal-stok');
+      ['s', 'm', 'l', 'xl'].forEach(sz => document.getElementById('stok-' + sz).value = p.stok[sz.toUpperCase()]);
+      openAdminModal('modal-stok');
     }
 
     function saveStok() {
       const p = produkList.find(x => x.id === editingStokId);
       if (!p) return;
-      ['s', 'm', 'l', 'xl'].forEach(sz => p.stok[sz.toUpperCase()] = parseInt(document.getElementById('stok-'+sz).value) || 0);
-      closeModal('modal-stok');
+      ['s', 'm', 'l', 'xl'].forEach(sz => p.stok[sz.toUpperCase()] = parseInt(document.getElementById('stok-' + sz).value) || 0);
+      closeAdminModal('modal-stok');
       renderStokTable();
+      showAdminToast('Berhasil', 'Stok produk berhasil diperbarui.');
     }
 
     // PESANAN
@@ -353,38 +358,213 @@
       });
 
       document.getElementById('pesanan-tbody').innerHTML = list.length ? list.map(o => `
-        <tr class="border-t border-[#e2d4c5]">
-          <td class="px-6 py-4 text-center font-semibold">${o.id}</td>
+        <tr>
+          <td class="px-6 py-4 text-center">${o.id}</td>
           <td class="px-6 py-4">${o.tanggal}</td>
-          <td class="px-6 py-4 font-semibold">${o.nama}</td>
+          <td class="px-6 py-4">
+            <div class="flex items-center gap-3">
+              <div class="h-8 w-8 rounded-full border border-[#e2d4c5] bg-[#fbf8f5] flex items-center justify-center overflow-hidden shrink-0">
+                <img src="${o.avatar ? o.avatar : `https://ui-avatars.com/api/?name=${encodeURIComponent(o.nama)}&background=f3e6db&color=5c4432&bold=true&size=64`}" alt="${o.nama}" class="h-full w-full object-cover">
+              </div>
+              <span class="font-medium text-[#5c4432]">${o.nama}</span>
+            </div>
+          </td>
           <td class="px-6 py-4">${statusBadge(o.status)}</td>
-          <td class="px-6 py-4 font-semibold">${rp(o.items.reduce((s, i) => s + i.harga * i.qty, 0))}</td>
-          <td class="px-6 py-4 text-center"><button onclick="openDetailPesanan('${o.id}')" class="inline-flex items-center justify-center rounded-xl border border-[#d8c3af] bg-[#a78d78] px-4 py-2 text-sm font-semibold text-white transition hover:bg-[#8f7561]">Detail</button></td>
+          <td class="px-6 py-4">${rp(o.items.reduce((s, i) => s + i.harga * i.qty, 0))}</td>
+          <td class="px-6 py-4 text-center"><button onclick="openDetailPesanan('${o.id}')" class="inline-flex items-center justify-center rounded-xl border border-[#d8c3af] bg-[#a78d78] px-4 py-2 text-sm font-normal text-white transition hover:bg-[#8f7561]">Detail</button></td>
         </tr>`).join('') : `<tr><td colspan="6" class="px-6 py-6 text-center text-[#b7a08c]">Tidak ada pesanan ditemukan.</td></tr>`;
     }
 
     function openDetailPesanan(id) {
-      const o = pesananList.find(x => x.id === id); if (!o) return; viewingPesananId = id;
+      const o = pesananList.find(x => x.id === id);
+      if (!o) return;
+
+      viewingPesananId = id;
       const total = o.items.reduce((s, i) => s + i.harga * i.qty, 0);
-      document.getElementById('pesanan-modal-title').textContent = `Detail Pesanan - ${o.id}`;
-      document.getElementById('pesanan-modal-body').innerHTML = `
-        <div class="detail-grid">
-          <div class="detail-field"><div class="detail-field-label">Nama Pembeli</div><div class="detail-field-value">${o.nama}</div></div>
-          <div class="detail-field"><div class="detail-field-label">No HP</div><div class="detail-field-value">${o.hp}</div></div>
-          <div class="detail-field"><div class="detail-field-label">Tanggal Pesanan</div><div class="detail-field-value">${o.tanggal}</div></div>
-          <div class="detail-field"><div class="detail-field-label">Alamat</div><div class="detail-field-value">${o.alamat}</div></div>
-          <div class="detail-field"><div class="detail-field-label">Status Pembayaran</div><div class="detail-field-value">${o.status}</div></div>
+      const statusOptions = ['Menunggu Verifikasi', 'Pembayaran Valid', 'Pembayaran Ditolak', 'Konfirmasi Ulang'];
+
+      document.getElementById('pesanan-modal-content').innerHTML = `
+        <div class="modal-header">
+          <h2 class="modal-title">Detail Pesanan - ${o.id}</h2>
         </div>
-        <div class="status-edit-wrap">
-          <label class="field-label" for="status-select">Update Status</label>
-          <select class="status-edit-sel" id="status-select">
-            ${['Menunggu Verifikasi', 'Pembayaran Valid', 'Pembayaran Ditolak', 'Konfirmasi Ulang'].map(st => `<option ${o.status===st?'selected':''}>${st}</option>`).join('')}
-          </select>
-        </div>`;
-      openModal('modal-pesanan');
+
+        <div class="modal-body">
+          <div class="detail-grid">
+            <div class="detail-field">
+              <div class="detail-field-label">Nama Pembeli</div>
+              <div class="detail-field-value flex items-center gap-2 mt-1">
+                <div class="h-6 w-6 rounded-full border border-[#e2d4c5] bg-[#fbf8f5] flex items-center justify-center overflow-hidden shrink-0">
+                  <img src="${o.avatar ? o.avatar : `https://ui-avatars.com/api/?name=${encodeURIComponent(o.nama)}&background=f3e6db&color=5c4432&bold=true&size=64`}" alt="${o.nama}" class="h-full w-full object-cover">
+                </div>
+                ${o.nama}
+              </div>
+            </div>
+            <div class="detail-field">
+              <div class="detail-field-label">No HP</div>
+              <div class="detail-field-value">${o.hp}</div>
+            </div>
+            <div class="detail-field">
+              <div class="detail-field-label">Tanggal Pesanan</div>
+              <div class="detail-field-value">${o.tanggal}</div>
+            </div>
+            <div class="detail-field">
+              <div class="detail-field-label">Alamat</div>
+              <div class="detail-field-value">${o.alamat}</div>
+            </div>
+            <div class="detail-field detail-field-full">
+              <div class="detail-field-label">Status Pembayaran</div>
+              <div class="detail-field-value">${o.status}</div>
+            </div>
+          </div>
+
+          <div class="detail-section-title">Bukti Pembayaran</div>
+          <div class="payment-proof-card">
+            <img src="https://images.unsplash.com/photo-1591047139829-d91aecb6caea?q=80&w=100&auto=format&fit=crop" class="proof-thumb cursor-pointer hover:opacity-80 transition" 
+            onclick="viewBukti('https://images.unsplash.com/photo-1591047139829-d91aecb6caea?q=80&w=1000&auto=format&fit=crop')">
+            <button type="button" class="btn-lihat-bukti" onclick="viewBukti('https://images.unsplash.com/photo-1591047139829-d91aecb6caea?q=80&w=1000&auto=format&fit=crop')">Lihat Bukti</button>
+          </div>
+
+          <div class="detail-section-title">Item Pesanan</div>
+          <div class="space-y-3">
+            ${o.items.map(item => {
+        const p = produkList.find(x => x.nama === item.produk);
+        return `
+                <div class="flex items-center gap-4 rounded-xl bg-[#fbf8f5] p-3 border border-[#f0e7dd]">
+                  <div class="h-16 w-16 shrink-0 overflow-hidden rounded-lg border border-[#f0e7dd] bg-white">
+                    <img src="${getProdukImage(item.produk, p?.image)}" class="h-full w-full object-cover">
+                  </div>
+                  <div class="flex-1 min-w-0">
+                    <div class="font-medium text-[#5c4432] text-sm truncate">${item.produk}</div>
+                    <div class="text-[12px] text-[#9a8575] mt-0.5">Ukuran: ${item.ukuran}</div>
+                  </div>
+                  <div class="text-right">
+                    <div class="text-sm font-medium text-[#5c4432]">${rp(item.harga)}</div>
+                    <div class="text-[12px] text-[#9a8575] mt-0.5">x${item.qty}</div>
+                  </div>
+                </div>`;
+      }).join('')}
+          </div>
+
+          <div class="mt-4 flex items-center justify-between rounded-xl bg-[#fbf8f5] px-4 py-3 border border-[#f0e7dd]">
+            <div class="text-sm font-medium text-[#5c4432]">Total Pembayaran</div>
+            <div class="text-lg font-semibold text-[#5c4432]">${rp(total)}</div>
+          </div>
+
+          <div class="update-status-section">
+            <div class="update-status-label">Update Status</div>
+            <div class="relative flex-1">
+              <button type="button" onclick="toggleStatusDropdown(event)" id="status-dropdown-btn" class="flex w-full items-center justify-between gap-2 rounded-2xl border border-[#d8c3af] bg-white px-4 py-2.5 text-[14px] font-medium text-[#5c4432] outline-none transition-all duration-200 hover:border-[#BFA28C]">
+                <span id="current-status-label">${o.status}</span>
+                <svg id="status-dropdown-icon" width="10" height="6" viewBox="0 0 14 8" fill="none" class="transition-transform duration-200">
+                    <path d="M2 2l5 4 5-4" stroke="#5c4432" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+              </button>
+               <ul id="status-dropdown-menu" class="absolute left-0 top-[calc(100%+6px)] z-[100] hidden w-full overflow-hidden border border-[#d8c3af] bg-white shadow-xl">
+                ${statusOptions.map(st => `
+                  <li onclick="selectStatus('${st}')" class="status-option-item cursor-pointer px-4 py-2 text-[14px] font-medium transition-colors border-b border-[#f0e7dd] last:border-0 ${st === o.status ? 'bg-[#fbf8f5] text-[#BFA28C]' : 'text-[#5c4432]'} hover:bg-[#BFA28C] hover:text-white">
+                    ${st}
+                  </li>
+                `).join('')}
+              </ul>
+              <input type="hidden" id="status-select" value="${o.status}">
+            </div>
+          </div>
+        </div>
+
+        <div class="modal-action-footer">
+          <button type="button" onclick="closeAdminModal('modal-pesanan')" class="btn-modal-cancel">Batal</button>
+          <button type="button" onclick="saveEditStatus()" class="btn-modal-save">Simpan</button>
+        </div>
+      `;
+
+      openAdminModal('modal-pesanan');
     }
 
-    function saveEditStatus() { const o = pesananList.find(x => x.id === viewingPesananId); if (o) o.status = document.getElementById('status-select').value; closeModal('modal-pesanan'); renderPesananTable(); }
+    function toggleStatusDropdown(e) {
+      e.stopPropagation();
+      const menu = document.getElementById('status-dropdown-menu');
+      const icon = document.getElementById('status-dropdown-icon');
+      menu.classList.toggle('hidden');
+      icon.classList.toggle('rotate-180');
+    }
+
+    function selectStatus(val) {
+      document.getElementById('status-select').value = val;
+      document.getElementById('current-status-label').innerText = val;
+
+      const items = document.querySelectorAll('.status-option-item');
+      items.forEach(item => {
+        if (item.innerText.trim() === val) {
+          item.classList.add('bg-[#fbf8f5]', 'text-[#BFA28C]');
+          item.classList.remove('text-[#5c4432]');
+        } else {
+          item.classList.remove('bg-[#fbf8f5]', 'text-[#BFA28C]');
+          item.classList.add('text-[#5c4432]');
+        }
+      });
+
+      document.getElementById('status-dropdown-menu').classList.add('hidden');
+      document.getElementById('status-dropdown-icon').classList.remove('rotate-180');
+    }
+
+    function viewBukti(url) {
+      document.getElementById('bukti-image-full').src = url;
+      openAdminModal('modal-bukti');
+    }
+
+    // PESANAN FILTER
+    function togglePesananStatusFilter(e) {
+      e.stopPropagation();
+      const menu = document.getElementById('pesanan-status-filter-menu');
+      const icon = document.getElementById('pesanan-status-filter-icon');
+      if (menu) menu.classList.toggle('hidden');
+      if (icon) icon.classList.toggle('rotate-180');
+    }
+
+    function selectPesananStatusFilter(val) {
+      const input = document.getElementById('pesanan-filter-status');
+      const label = document.getElementById('pesanan-status-filter-label');
+      if (input) input.value = val;
+      if (label) label.innerText = val || 'Semua Status';
+
+      const options = document.querySelectorAll('.pesanan-status-option');
+      options.forEach(opt => {
+        if (opt.innerText.trim() === (val || 'Semua Status')) {
+          opt.classList.add('bg-[#fbf8f5]', 'text-[#BFA28C]');
+          opt.classList.remove('text-[#5c4432]');
+        } else {
+          opt.classList.remove('bg-[#fbf8f5]', 'text-[#BFA28C]');
+          opt.classList.add('text-[#5c4432]');
+        }
+      });
+
+      const menu = document.getElementById('pesanan-status-filter-menu');
+      const icon = document.getElementById('pesanan-status-filter-icon');
+      if (menu) menu.classList.add('hidden');
+      if (icon) icon.classList.remove('rotate-180');
+
+      renderPesananTable();
+    }
+
+    // Close dropdown on click outside
+    document.addEventListener('click', (e) => {
+      const btn = document.getElementById('status-dropdown-btn');
+      const menu = document.getElementById('status-dropdown-menu');
+      const icon = document.getElementById('status-dropdown-icon');
+      if (btn && !btn.contains(e.target)) {
+        menu?.classList.add('hidden');
+        icon?.classList.remove('rotate-180');
+      }
+    });
+
+    function saveEditStatus() {
+      const o = pesananList.find(x => x.id === viewingPesananId);
+      if (o) o.status = document.getElementById('status-select').value;
+      closeAdminModal('modal-pesanan');
+      renderPesananTable();
+      renderDashboard();
+      showAdminToast('Status Diperbarui', 'Status pesanan berhasil disimpan.');
+    }
 
     document.addEventListener('DOMContentLoaded', () => { renderDashboard(); renderProdukTable(); renderKategoriTable(); renderStokTable(); renderPesananTable(); });
   </script>
