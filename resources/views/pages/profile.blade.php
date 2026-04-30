@@ -115,24 +115,51 @@
                     {
                         name: 'Cardigan Rajut Pink',
                         size: 'All Size',
-                        qty: '1 x Rp332.000',
-                        subtotal: 'Rp332.000',
+                        qty: '1 x Rp112.000',
+                        subtotal: 'Rp112.000',
                         img: 'https://i.pinimg.com/736x/78/2a/3d/782a3d260721c8f3d515966337443416.jpg'
                     }
                 ]
             }
         };
 
+        function lockScroll() {
+            const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
+            document.body.style.overflow = 'hidden';
+            document.body.style.paddingRight = scrollbarWidth + 'px';
+        }
+
+        function unlockScroll() {
+            document.body.style.overflow = '';
+            document.body.style.paddingRight = '';
+        }
+
         function openModal() {
             const modal = document.getElementById('orderModal');
             modal.classList.remove('hidden');
             modal.classList.add('flex');
+
+            lockScroll();
         }
 
-        function closeModal() {
+        function closeOrderModal() {
             const modal = document.getElementById('orderModal');
             modal.classList.add('hidden');
             modal.classList.remove('flex');
+
+            unlockScroll();
+        }
+
+        function rupiahToNumber(value) {
+            return Number(String(value).replace(/[^0-9]/g, ''));
+        }
+
+        function getQty(item) {
+            return Number(String(item.qty).split('x')[0].trim()) || 1;
+        }
+
+        function getPrice(item) {
+            return rupiahToNumber(item.subtotal) / getQty(item);
         }
 
         function openOrderDetail(orderId) {
@@ -150,27 +177,39 @@
 
             order.items.forEach(item => {
                 itemsWrapper.innerHTML += `
-                    <div class="flex items-center justify-between rounded-xl bg-[#fbf8f5] p-4">
-                        <div class="flex items-center gap-4">
-                            <div class="h-20 w-20 shrink-0 overflow-hidden rounded-xl border border-[#f1e8df] bg-white">
-                                <img src="${item.img}" class="h-full w-full object-cover" alt="${item.name}">
-                            </div>
+                            <div class="flex items-center justify-between rounded-xl bg-[#fbf8f5] p-4">
+                                <div class="flex items-center gap-4">
+                                    <div class="h-20 w-20 shrink-0 overflow-hidden rounded-xl border border-[#f1e8df] bg-white">
+                                        <img src="${item.img}" class="h-full w-full object-cover" alt="${item.name}">
+                                    </div>
 
-                            <div>
-                                <p class="font-bold text-[#2f1f16]">${item.name}</p>
-                                <p class="mt-1 text-sm text-[#8b7a6d]">Ukuran: ${item.size}</p>
-                                <p class="text-sm text-[#8b7a6d]">Qty: ${item.qty}</p>
-                                <p class="mt-1 text-sm font-bold text-[#2f1f16]">Subtotal: ${item.subtotal}</p>
-                            </div>
-                        </div>
+                                    <div>
+                                        <p class="font-bold text-[#2f1f16]">${item.name}</p>
+                                        <p class="mt-1 text-sm text-[#8b7a6d]">Ukuran: ${item.size}</p>
+                                        <p class="text-sm text-[#8b7a6d]">Qty: ${item.qty}</p>
+                                        <p class="mt-1 text-sm font-bold text-[#2f1f16]">Subtotal: ${item.subtotal}</p>
+                                    </div>
+                                </div>
 
-                        <a href="{{ route('cart') }}"
-                        class="rounded-lg border border-[#6b422b] px-5 py-2 text-sm font-semibold text-[#6b422b] transition hover:bg-[#6b422b] hover:text-white">
-                        Beli Lagi
-                        </a>
-                        
-                    </div>
-                `;
+                                <form method="POST" action="{{ route('cart.add') }}">
+        @csrf
+
+        <input type="hidden" name="name" value="${item.name}">
+        <input type="hidden" name="category" value="Riwayat Pesanan">
+        <input type="hidden" name="image" value="${item.img}">
+        <input type="hidden" name="price" value="${getPrice(item)}">
+        <input type="hidden" name="size" value="${item.size}">
+        <input type="hidden" name="qty" value="${getQty(item)}">
+        <input type="hidden" name="stock" value="99">
+
+        <button type="submit"
+            class="rounded-lg border border-[#BFA28C] px-5 py-2 text-sm font-semibold text-[#6b422b] transition hover:bg-[#A88A72] hover:text-white">
+            Beli Lagi
+        </button>
+    </form>
+
+                            </div>
+                        `;
             });
 
             document.getElementById('modal-total').textContent = order.total;

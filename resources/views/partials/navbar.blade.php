@@ -52,7 +52,7 @@
                 </a>
             @else
                 {{-- Login (If not logged in) --}}
-                <a href="{{ route('login') }}" class="flex items-center justify-center rounded-full bg-white px-8 py-2.5 text-sm font-bold text-[#5c4432] transition hover:bg-[#fbf7f2] hover:shadow-md active:scale-95" title="Login">
+                <a href="{{ route('login') }}" class="flex items-center justify-center rounded-full bg-white px-8 py-2.5 text-sm font-bold text-[#5c4432] transition hover:bg-[#BFA28C] hover:shadow-md active:scale-95" title="Login">
                     Login
                 </a>
             @endif

@@ -1,8 +1,6 @@
-<div id="orderModal"
-    class="fixed inset-0 z-50 hidden items-center justify-center bg-black/55 p-4">
+<div id="orderModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/55 p-4">
 
-    <div
-        class="flex max-h-[88vh] w-full max-w-3xl flex-col overflow-hidden rounded-2xl bg-white shadow-2xl">
+    <div class="flex max-h-[88vh] w-full max-w-3xl flex-col overflow-hidden rounded-2xl bg-white shadow-2xl">
 
         <!-- HEADER -->
         <div class="relative border-b border-[#f1e8df] px-7 py-5">
@@ -12,9 +10,10 @@
 
             <p id="modal-order-id" class="mt-1 text-sm text-[#8b7a6d]"></p>
 
-            <button onclick="closeModal()"
-                class="absolute right-6 top-6 text-2xl leading-none text-[#3e2c1e] transition hover:text-black">
-                ×
+            <button onclick="closeOrderModal()"
+                class="absolute right-3 top-3 z-10 flex h-8 w-8 items-center justify-center rounded-full bg-white/90 text-base leading-none text-[#5c4432] shadow-md transition-all duration-150 hover:scale-110 hover:bg-white sm:right-4 sm:top-4"
+                aria-label="Tutup modal">
+                &#x2715;
             </button>
         </div>
 
@@ -30,8 +29,7 @@
 
                 <div>
                     <p class="text-sm text-[#9b8a7c]">Status Pembayaran</p>
-                    <span id="modal-status-badge"
-                        class="mt-2 inline-flex rounded-full px-5 py-2 text-sm font-semibold">
+                    <span id="modal-status-badge" class="mt-2 inline-flex rounded-full px-5 py-2 text-sm font-semibold">
                     </span>
                 </div>
             </div>
@@ -40,7 +38,7 @@
 
             <!-- BUYER INFO -->
             <h4 class="mb-4 text-lg font-extrabold text-[#2f1f16]">
-                Informasi 
+                Informasi
             </h4>
 
             <div class="rounded-xl bg-[#fbf8f5] p-5">

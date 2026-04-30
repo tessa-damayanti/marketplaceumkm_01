@@ -5,8 +5,7 @@
         Perbarui informasi diri Anda agar pengiriman pesanan lebih akurat.
     </p>
 
-    <form action="#" method="POST" enctype="multipart/form-data"
-        class="grid grid-cols-1 md:grid-cols-3 gap-8"
+    <form action="#" method="POST" enctype="multipart/form-data" class="grid grid-cols-1 md:grid-cols-3 gap-8"
         onsubmit="saveProfile(event)">
 
         @csrf
@@ -17,12 +16,8 @@
             </label>
 
             <div class="relative inline-block mt-2">
-                <img
-                    id="profilePreview"
-                    src="{{ asset('images/1.png') }}"
-                    class="h-36 w-36 rounded-full object-cover shadow-sm ring-4 ring-[#f4ece3]"
-                    alt="Foto Profil"
-                >
+                <img id="profilePreview" src="{{ asset('images/1.png') }}"
+                    class="h-36 w-36 rounded-full object-cover shadow-sm ring-4 ring-[#f4ece3]" alt="Foto Profil">
 
                 <label for="profilePhoto"
                     class="absolute bottom-1 right-1 flex h-10 w-10 cursor-pointer items-center justify-center rounded-full bg-[#a16223] text-white shadow-md transition hover:bg-[#86511b]">
@@ -34,14 +29,8 @@
                     </svg>
                 </label>
 
-                <input
-                    id="profilePhoto"
-                    name="profile_photo"
-                    type="file"
-                    accept="image/*"
-                    class="hidden"
-                    onchange="previewProfilePhoto(event)"
-                >
+                <input id="profilePhoto" name="profile_photo" type="file" accept="image/*" class="hidden"
+                    onchange="previewProfilePhoto(event)">
             </div>
         </div>
 
@@ -51,43 +40,29 @@
                 <label class="mb-2 block text-sm font-bold text-[#3e2c1e]">
                     Nama Lengkap
                 </label>
-                <input
-                    id="profileName"
-                    name="name"
-                    type="text"
-                    value="Nikita Willy"
-                    class="w-full rounded-2xl border border-[#f2e4d8] px-5 py-3.5 focus:outline-none focus:border-[#a16223]"
-                >
+                <input id="profileName" name="name" type="text" value="Nikita Willy"
+                    class="w-full rounded-2xl border border-[#f2e4d8] px-5 py-3.5 focus:outline-none focus:border-[#a16223]">
             </div>
 
             <div>
                 <label class="mb-2 block text-sm font-bold text-[#3e2c1e]">
                     No WhatsApp
                 </label>
-                <input
-                    id="profilePhone"
-                    name="phone"
-                    type="text"
-                    value="0812-3456-7890"
-                    class="w-full rounded-2xl border border-[#f2e4d8] px-5 py-3.5 focus:outline-none focus:border-[#a16223]"
-                >
+                <input id="profilePhone" name="phone" type="text" value="0812-3456-7890"
+                    class="w-full rounded-2xl border border-[#f2e4d8] px-5 py-3.5 focus:outline-none focus:border-[#a16223]">
             </div>
 
             <div>
                 <label class="mb-2 block text-sm font-bold text-[#3e2c1e]">
                     Alamat
                 </label>
-                <textarea
-                    id="profileAddress"
-                    name="address"
-                    rows="4"
-                    class="w-full rounded-2xl border border-[#f2e4d8] px-5 py-3.5 focus:outline-none focus:border-[#a16223]"
-                >Jl. Melati No. 12, Bandung</textarea>
+                <textarea id="profileAddress" name="address" rows="4"
+                    class="w-full rounded-2xl border border-[#f2e4d8] px-5 py-3.5 focus:outline-none focus:border-[#a16223]">Jl. Melati No. 12, Bandung</textarea>
             </div>
 
             <div class="flex justify-end">
                 <button type="submit"
-                    class="rounded-xl bg-[#a16223] px-10 py-3.5 font-bold text-white transition hover:bg-[#86511b]">
+                    class="relative z-10 rounded-xl bg-[#BFA28C] px-10 py-4 font-bold text-white transition hover:bg-[#A88A72]">
                     Simpan
                 </button>
             </div>

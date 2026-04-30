@@ -3,16 +3,17 @@
     $buyerPhone = session('buyer_phone', '0812-3456-7890');
     $buyerAddress = session('buyer_address', 'Jl. Melati No. 12, Bandung');
 
-    $cartItems = session('cart', []);
-
-    if (empty($cartItems) && request('name')) {
-        $cartItems[] = [
+    if (request('name')) {
+        $cartItems = [[
             'name' => request('name'),
             'price' => (int) request('price'),
             'qty' => (int) request('qty', 1),
-            'size' => request('size', '-'),
-            'image' => request('image', ''),
-        ];
+            'size' => request('size') ?: 'M',
+            'image' => request('image') ?: 'https://i.pinimg.com/736x/78/2a/3d/782a3d260721c8f3d515966337443416.jpg',
+        ]];
+    } else {
+
+        $cartItems = session('cart', []);
     }
 
     $grandTotal = collect($cartItems)->sum(fn ($item) => (int) $item['price'] * (int) $item['qty']);

@@ -49,7 +49,7 @@
                     <td class="px-6 py-6">
                         <div class="flex justify-center">
                             <button onclick="openOrderDetail('VL-250212-001')"
-                                class="whitespace-nowrap rounded-lg bg-[#6b422b] px-5 py-2.5 text-sm font-bold text-white transition hover:bg-[#4b2f1f]">
+                                class="whitespace-nowrap rounded-xl border-0 bg-[#BFA28C] px-5 py-2.5 text-sm font-semibold text-white transition-all hover:bg-[#A88A72] hover:shadow-[0_5px_14px_rgba(191,162,140,0.2)]">
                                 Detail
                             </button>
                         </div>
@@ -70,7 +70,6 @@
 
                             <div class="min-w-0">
                                 <p class="text-base font-bold text-[#2f1f16]">Gaun Biru Wrap</p>
-                                <p class="mt-1 text-sm text-[#8b7a6d]">+1 produk lainnya</p>
                             </div>
                         </div>
                     </td>
@@ -89,7 +88,7 @@
                     <td class="px-6 py-6">
                         <div class="flex justify-center">
                             <button onclick="openOrderDetail('VL-250209-002')"
-                                class="whitespace-nowrap rounded-lg bg-[#6b422b] px-5 py-2.5 text-sm font-bold text-white transition hover:bg-[#4b2f1f]">
+                                class="whitespace-nowrap rounded-xl border-0 bg-[#BFA28C] px-5 py-2.5 text-sm font-semibold text-white transition-all hover:bg-[#A88A72] hover:shadow-[0_5px_14px_rgba(191,162,140,0.2)]">
                                 Detail
                             </button>
                         </div>
@@ -122,13 +121,13 @@
                     </td>
 
                     <td class="px-6 py-6 text-base font-bold whitespace-nowrap text-[#2f1f16]">
-                        Rp332.000
+                        Rp112.000
                     </td>
 
                     <td class="px-6 py-6">
                         <div class="flex justify-center">
                             <button onclick="openOrderDetail('VL-250206-003')"
-                                class="whitespace-nowrap rounded-lg bg-[#6b422b] px-5 py-2.5 text-sm font-bold text-white transition hover:bg-[#4b2f1f]">
+                                class="whitespace-nowrap rounded-xl border-0 bg-[#BFA28C] px-5 py-2.5 text-sm font-semibold text-white transition-all hover:bg-[#A88A72] hover:shadow-[0_5px_14px_rgba(191,162,140,0.2)]">
                                 Detail
                             </button>
                         </div>
@@ -149,7 +148,7 @@
                 </button>
 
                 <button
-                    class="flex h-9 w-9 items-center justify-center rounded-lg bg-[#6b422b] text-sm font-bold text-white">
+                    class="flex h-9 w-9 items-center justify-center rounded-lg bg-[#BFA28C] text-sm font-bold text-white">
                     1
                 </button>
 

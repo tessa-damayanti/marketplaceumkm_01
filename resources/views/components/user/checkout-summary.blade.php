@@ -1,6 +1,6 @@
 <h2 class="mb-7 text-2xl font-bold text-[#2f241d]">Ringkasan Pesanan</h2>
 
-<div class="mb-7 rounded-3xl border border-[#e5d8ca] bg-[#faf6f1] p-5">
+<div class="mb-7 rounded-3xl border border-[#e5d8ca] bg-[#faf7f4] p-5">
     <p class="mb-3 text-sm font-bold uppercase tracking-[3px] text-[#b08b68]">
         Metode Pembayaran
     </p>
@@ -55,10 +55,10 @@
     </div>
 </div>
 
-<div class="mb-7 rounded-3xl bg-[#e9ddd0] p-5">
+<div class="mb-7 rounded-3xl bg-[#efe4d8] p-5">
     <div class="flex items-center justify-between gap-4">
         <p class="text-xl font-bold text-[#2f241d]">Total Pembayaran</p>
-        <p class="text-3xl font-bold text-[#5c4432]">
+        <p class="text-2xl font-bold text-[#2f241d]">
             Rp{{ number_format($grandTotal, 0, ',', '.') }}
         </p>
     </div>
@@ -68,7 +68,7 @@
     <p class="mb-3 text-xl font-bold text-[#2f241d]">Bukti Pembayaran</p>
 
     <label for="bukti-transfer" class="block cursor-pointer">
-        <div id="uploadBox" class="flex h-[170px] items-center justify-center overflow-hidden rounded-3xl border-2 border-dashed border-[#d8c3af] bg-[#faf7f4] transition hover:border-[#a78d78] hover:bg-[#f1e8df]">
+        <div id="uploadBox" class="flex h-[170px] items-center justify-center overflow-hidden rounded-3xl border-2 border-dashed border-[#d8c3af] bg-[#faf7f4] transition hover:border-[#a78d78] hover:bg-[#efe4d8]">
             <div id="uploadPlaceholder" class="text-center">
                 <svg xmlns="http://www.w3.org/2000/svg" class="mx-auto mb-3 h-14 w-14 text-[#7b6858]" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.6">
                     <rect x="4" y="4" width="16" height="16" rx="2"></rect>
@@ -88,7 +88,8 @@
 
 <button
     type="submit"
-    class="w-full rounded-2xl bg-[#a78d78] py-4 text-lg font-bold text-white shadow-md transition hover:bg-[#8f7561]"
+    class="w-full rounded-2xl bg-[#BFA28C] py-4 text-lg font-bold text-white shadow-md transition hover:bg-[#A88A72]"
 >
     Buat Pesanan
+
 </button>

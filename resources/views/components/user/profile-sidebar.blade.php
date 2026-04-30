@@ -43,7 +43,7 @@
         {{-- Riwayat --}}
         <button onclick="switchTab('riwayat')"
             id="btn-tab-riwayat"
-            class="flex w-full items-center gap-4 rounded-2xl bg-[#f4ece3] px-6 py-4 text-left font-bold text-[#5c4432]">
+            class="flex w-full items-center gap-4 rounded-2xl px-6 py-4 text-left font-medium text-[#8b6f58] hover:bg-[#fbf7f2]">
 
             <svg xmlns="http://www.w3.org/2000/svg"
                 class="h-6 w-6"
@@ -63,7 +63,7 @@
         <form action="{{ route('logout') }}" method="POST" class="m-0 p-0">
             @csrf
             <button type="submit"
-                class="flex w-full items-center gap-4 rounded-2xl px-6 py-4 text-left font-medium text-[#8b6f58] hover:bg-[#fbf7f2]">
+            class="flex w-full items-center gap-4 rounded-2xl px-6 py-4 text-left font-medium text-[#8b6f58] hover:bg-[#fbf7f2]">
 
                 <svg xmlns="http://www.w3.org/2000/svg"
                     class="h-6 w-6"
