@@ -367,13 +367,38 @@
       showAdminToast('Berhasil', 'Stok produk berhasil diperbarui.');
     }
 
+    function normalizePesananFilterDate(value = '') {
+      const date = String(value).trim();
+      if (/^\d{4}-\d{2}-\d{2}$/.test(date)) return date;
+
+      const match = date.match(/^(\d{1,2})[/-](\d{1,2})[/-](\d{4})$/);
+      if (!match) return '';
+
+      const day = match[1].padStart(2, '0');
+      const month = match[2].padStart(2, '0');
+      return `${match[3]}-${month}-${day}`;
+    }
+
+    function setupPesananDateInputs() {
+      const isMobile = window.matchMedia('(max-width: 640px)').matches;
+      ['pesanan-date-from', 'pesanan-date-to'].forEach(id => {
+        const input = document.getElementById(id);
+        if (!input) return;
+
+        input.type = isMobile ? 'text' : 'date';
+        input.placeholder = isMobile ? 'yyyy-mm-dd' : '';
+        input.inputMode = isMobile ? 'numeric' : '';
+        input.autocomplete = 'off';
+      });
+    }
+
     // PESANAN
     function renderPesananTable() {
       if (!document.getElementById('pesanan-tbody')) return;
       const filterStatus = document.getElementById('pesanan-filter-status')?.value || '';
       const searchQuery = document.getElementById('pesanan-search')?.value.toLowerCase() || '';
-      const dateFrom = document.getElementById('pesanan-date-from')?.value || '';
-      const dateTo = document.getElementById('pesanan-date-to')?.value || '';
+      const dateFrom = normalizePesananFilterDate(document.getElementById('pesanan-date-from')?.value || '');
+      const dateTo = normalizePesananFilterDate(document.getElementById('pesanan-date-to')?.value || '');
 
       const list = pesananList.filter(o => {
         const matchStatus = !filterStatus || o.status === filterStatus;
@@ -593,6 +618,14 @@
         produkMenu?.classList.add('hidden');
         produkIcon?.classList.remove('rotate-180');
       }
+
+      const pesananBtn = document.getElementById('pesanan-status-filter-btn');
+      const pesananMenu = document.getElementById('pesanan-status-filter-menu');
+      const pesananIcon = document.getElementById('pesanan-status-filter-icon');
+      if (pesananBtn && !pesananBtn.contains(e.target) && !pesananMenu?.contains(e.target)) {
+        pesananMenu?.classList.add('hidden');
+        pesananIcon?.classList.remove('rotate-180');
+      }
     });
 
     function saveEditStatus() {
@@ -604,7 +637,8 @@
       showAdminToast('Status Diperbarui', 'Status pesanan berhasil disimpan.');
     }
 
-    document.addEventListener('DOMContentLoaded', () => { renderDashboard(); renderProdukTable(); renderKategoriTable(); renderStokTable(); renderPesananTable(); });
+    window.addEventListener('resize', setupPesananDateInputs);
+    document.addEventListener('DOMContentLoaded', () => { setupPesananDateInputs(); renderDashboard(); renderProdukTable(); renderKategoriTable(); renderStokTable(); renderPesananTable(); });
   </script>
 </body>
 

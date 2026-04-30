@@ -3,6 +3,8 @@
 @section('title', 'Login')
 
 @section('content')
+<div id="login-config" data-login-url="{{ route('login.submit') }}" hidden></div>
+
 <div id="login-toast" class="pointer-events-none fixed right-6 top-6 z-50 translate-y-3 opacity-0 transition-all duration-300">
     <div class="flex min-w-[320px] max-w-[360px] items-start gap-3 rounded-[24px] border border-white/60 bg-[#fffaf6]/95 px-5 py-4 shadow-[0_24px_60px_rgba(92,68,50,0.18)] backdrop-blur">
         <div id="login-toast-icon" class="mt-0.5 flex h-10 w-10 items-center justify-center rounded-2xl bg-[#dff1e3] text-[#5e936c]">
@@ -98,7 +100,7 @@
 
                         <div class="text-right -mt-1">
                             <button type="button" onclick="showForgotPassword()" class="text-[#fff4eb] hover:text-white text-xs font-medium transition">
-                                Ubah Password?
+                                Lupa Password?
                             </button>
                         </div>
 
@@ -119,95 +121,51 @@
                     </form>
                 </div>
 
-                <!-- FORGOT PASSWORD VIEW -->
+                <!-- FORGOT PASSWORD -->
                 <div id="forgot-view" class="hidden">
                     <div class="w-full max-w-md fade-up-soft">
 
                         <div class="text-center mb-9">
-                            <h2 class="text-4xl font-bold text-[#fffaf6]">Ubah Password</h2>
+                            <div class="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-[#e6dbcf] text-[#5c4432] shadow-[0_12px_28px_rgba(92,68,50,0.18)]">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7" fill="none" viewBox="0 0 24 24"
+                                    stroke="currentColor" stroke-width="1.8">
+                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                        d="M16.5 10.5V7.875a4.5 4.5 0 00-9 0V10.5m-.75 0h10.5A1.75 1.75 0 0119 12.25v6A1.75 1.75 0 0117.25 20H6.75A1.75 1.75 0 015 18.25v-6A1.75 1.75 0 016.75 10.5z" />
+                                </svg>
+                            </div>
+                            <h2 class="text-4xl font-bold text-[#fffaf6]">Lupa Password?</h2>
                             <p class="mt-4 text-[#f2e4d8] text-base leading-relaxed">
-                                Masukkan Username dan password baru Anda.
-                            </p>
+                                Masukkan email Anda
                         </div>
 
                         <form class="space-y-5" onsubmit="return false;">
 
                             <div>
                                 <label class="block text-sm font-semibold text-[#fff4eb] mb-2">
-                                    Username
+                                    Alamat email
                                 </label>
                                 <div class="relative">
                                     <input
-                                        id="forgot-username"
-                                        type="text"
-                                        placeholder="Masukkan Username"
-                                        oninput="validateForgotUsername()"
+                                        id="forgot-email"
+                                        type="email"
+                                        placeholder="nama@email.com"
+                                        oninput="validateForgotEmail()"
                                         class="w-full h-14 rounded-2xl border border-[#d8c7ba] bg-[#fbf7f2] px-6 text-[#5c4432] placeholder:text-[#b79f8a] transition-[border-color,box-shadow,background-color] duration-200 focus:border-[#8f7561] focus:shadow-[0_0_0_3px_rgba(143,117,97,0.18)] focus:outline-none focus:bg-[#fffdfb]">
                                 </div>
-                                <p id="forgot-username-msg" class="hidden mt-[10px] text-[15px] leading-[1.5] font-semibold text-[#dc2626]"></p>
+                                <p id="forgot-email-msg" class="hidden mt-[10px] text-[15px] leading-[1.5] font-semibold text-[#dc2626]"></p>
                             </div>
 
-                            <div>
-                                <label class="block text-sm font-semibold text-[#fff4eb] mb-2">
-                                    Password Baru
-                                </label>
-                                <div class="relative">
-                                    <input
-                                        id="forgot-password"
-                                        type="password"
-                                        placeholder="Password Baru"
-                                        oninput="validateForgotPassword(); validateForgotMatch();"
-                                        class="w-full h-14 rounded-2xl border border-[#d8c7ba] bg-[#fbf7f2] pl-6 pr-14 text-[#5c4432] placeholder:text-[#b79f8a] transition-[border-color,box-shadow,background-color] duration-200 focus:border-[#8f7561] focus:shadow-[0_0_0_3px_rgba(143,117,97,0.18)] focus:outline-none focus:bg-[#fffdfb]">
-                                    <button
-                                        type="button"
-                                        onclick="toggleForgotPassword('forgot-password', this)"
-                                        class="absolute right-4 top-1/2 -translate-y-1/2 text-[#b8967b] transition hover:text-[#5c4432]">
-                                        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
-                                            <path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z" />
-                                            <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                                        </svg>
-                                    </button>
-                                </div>
-                                <p id="forgot-password-msg" class="hidden mt-[10px] text-[15px] leading-[1.5] font-semibold text-[#dc2626]"></p>
-                            </div>
+                            <button
+                                type="button"
+                                onclick="validateForgotForm()"
+                                class="w-full h-14 rounded-2xl bg-[#e6dbcf] text-[#5c4432] text-base font-semibold shadow-[0_14px_28px_rgba(92,68,50,0.22)] transition-[background,box-shadow,transform] duration-200 hover:bg-[#d9cec1] hover:shadow-[0_16px_32px_rgba(92,68,50,0.25)] active:translate-y-0 hover:-translate-y-[1px]">
+                                Kirim
+                            </button>
 
-                            <div>
-                                <label class="block text-sm font-semibold text-[#fff4eb] mb-2">
-                                    Ulangi Password
-                                </label>
-                                <div class="relative">
-                                    <input
-                                        id="forgot-confirm-password"
-                                        type="password"
-                                        placeholder="Ulangi Password"
-                                        oninput="validateForgotMatch()"
-                                        class="w-full h-14 rounded-2xl border border-[#d8c7ba] bg-[#fbf7f2] pl-6 pr-14 text-[#5c4432] placeholder:text-[#b79f8a] transition-[border-color,box-shadow,background-color] duration-200 focus:border-[#8f7561] focus:shadow-[0_0_0_3px_rgba(143,117,97,0.18)] focus:outline-none focus:bg-[#fffdfb]">
-                                    <button
-                                        type="button"
-                                        onclick="toggleForgotPassword('forgot-confirm-password', this)"
-                                        class="absolute right-4 top-1/2 -translate-y-1/2 text-[#b8967b] transition hover:text-[#5c4432]">
-                                        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
-                                            <path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z" />
-                                            <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                                        </svg>
-                                    </button>
-                                </div>
-                                <p id="forgot-confirm-msg" class="hidden mt-[10px] text-[15px] leading-[1.5] font-semibold text-[#dc2626]"></p>
-                            </div>
-
-                            <div class="grid grid-cols-2 gap-5 pt-2">
-                                <button
-                                    type="button"
-                                    onclick="showLogin()"
-                                    class="h-14 rounded-2xl bg-[#e6dbcf] text-[#8f8f8f] text-base font-semibold shadow-[0_14px_28px_rgba(92,68,50,0.22)] transition-[background,box-shadow,transform] duration-200 hover:bg-[#d9cec1] hover:shadow-[0_16px_32px_rgba(92,68,50,0.25)] hover:-translate-y-[1px] active:translate-y-0">
-                                    Batal
-                                </button>
-
-                                <button
-                                    type="button"
-                                    onclick="validateForgotForm()"
-                                    class="h-14 rounded-2xl bg-[#5c4432] text-white text-base font-semibold shadow-[0_14px_28px_rgba(92,68,50,0.22)] transition-all duration-200 ease-in-out hover:bg-[#4a3628] hover:shadow-[0_16px_32px_rgba(92,68,50,0.25)] hover:-translate-y-[1px] active:bg-[#3e2c1e] active:translate-y-0">
-                                    Simpan
+                            <div class="pt-2 text-center">
+                                <button type="button" onclick="showLogin()"
+                                    class="text-sm font-semibold text-[#fff4eb] transition hover:text-white">
+                                    Kembali ke halaman login
                                 </button>
                             </div>
 
@@ -225,6 +183,9 @@
 @push('scripts')
 <script>
     let toastTimer = null;
+    const loginConfig = document.getElementById('login-config');
+    const loginUrl = loginConfig?.dataset.loginUrl || '';
+    const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '';
 
     function showToast(title, message, type = 'success') {
         const toast = document.getElementById('login-toast');
@@ -274,10 +235,6 @@
         }
     }
 
-    function toggleForgotPassword(inputId, btn) {
-        togglePassword(btn);
-    }
-
     function setError(inputId, msgId, message) {
         const input = document.getElementById(inputId);
         const msg = document.getElementById(msgId);
@@ -298,14 +255,22 @@
 
     function validateUsername() {
         const username = document.getElementById('username').value.trim();
-        if (!username) { setError('username', 'username-msg', 'Username wajib diisi'); return false; }
-        clearError('username', 'username-msg'); return true;
+        if (!username) {
+            setError('username', 'username-msg', 'Username wajib diisi');
+            return false;
+        }
+        clearError('username', 'username-msg');
+        return true;
     }
 
     function validatePassword() {
         const password = document.getElementById('password').value;
-        if (!password.trim()) { setError('password', 'password-msg', 'Password wajib diisi'); return false; }
-        clearError('password', 'password-msg'); return true;
+        if (!password.trim()) {
+            setError('password', 'password-msg', 'Password wajib diisi');
+            return false;
+        }
+        clearError('password', 'password-msg');
+        return true;
     }
 
     async function validateForm() {
@@ -317,20 +282,25 @@
             const password = document.getElementById('password').value;
 
             try {
-                const response = await fetch('{{ route('login.submit') }}', {
+                const response = await fetch(loginUrl, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
-                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                        'X-CSRF-TOKEN': csrfToken
                     },
-                    body: JSON.stringify({ username, password })
+                    body: JSON.stringify({
+                        username,
+                        password
+                    })
                 });
 
                 const data = await response.json();
 
                 if (data.success) {
                     showToast('Login berhasil', username === 'admin1' ? 'Selamat datang, Admin.' : 'Selamat datang, User.');
-                    setTimeout(() => { window.location.href = data.redirect; }, 900);
+                    setTimeout(() => {
+                        window.location.href = data.redirect;
+                    }, 900);
                 } else {
                     setError('password', 'password-msg', data.message);
                     showToast('Login gagal', data.message, 'error');
@@ -351,31 +321,24 @@
         document.getElementById('login-view').classList.remove('hidden');
     }
 
-    function validateForgotUsername() {
-        const username = document.getElementById('forgot-username').value.trim();
-        if (!username) { setError('forgot-username', 'forgot-username-msg', 'Username wajib diisi'); return false; }
-        clearError('forgot-username', 'forgot-username-msg'); return true;
-    }
-
-    function validateForgotPassword() {
-        const password = document.getElementById('forgot-password').value;
-        if (!password.trim()) { setError('forgot-password', 'forgot-password-msg', 'Password baru wajib diisi'); return false; }
-        if (password.length < 6) { setError('forgot-password', 'forgot-password-msg', 'Password minimal 6 karakter'); return false; }
-        clearError('forgot-password', 'forgot-password-msg'); return true;
-    }
-
-    function validateForgotMatch() {
-        const password = document.getElementById('forgot-password').value;
-        const confirm = document.getElementById('forgot-confirm-password').value;
-        if (!confirm.trim()) { setError('forgot-confirm-password', 'forgot-confirm-msg', 'Ulangi password wajib diisi'); return false; }
-        if (password !== confirm) { setError('forgot-confirm-password', 'forgot-confirm-msg', 'Password tidak cocok'); return false; }
-        clearError('forgot-confirm-password', 'forgot-confirm-msg'); return true;
+    function validateForgotEmail() {
+        const email = document.getElementById('forgot-email').value.trim();
+        const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!email) {
+            setError('forgot-email', 'forgot-email-msg', 'Email wajib diisi');
+            return false;
+        }
+        if (!emailPattern.test(email)) {
+            setError('forgot-email', 'forgot-email-msg', 'Format email tidak valid');
+            return false;
+        }
+        clearError('forgot-email', 'forgot-email-msg');
+        return true;
     }
 
     function validateForgotForm() {
-        if (validateForgotUsername() && validateForgotPassword() && validateForgotMatch()) {
-            showToast('Berhasil', 'Password berhasil diubah.');
-            setTimeout(() => { showLogin(); }, 1500);
+        if (validateForgotEmail()) {
+            showToast('Tautan reset dikirim', 'Silakan cek email untuk melanjutkan reset password.');
         }
     }
 </script>
