@@ -12,29 +12,42 @@
             'image' => request('image') ?: 'https://i.pinimg.com/736x/78/2a/3d/782a3d260721c8f3d515966337443416.jpg',
         ]];
     } else {
-
-        $cartItems = session('cart', []);
+        $allCartItems = session('cart', []);
+        $selected = request('selected');
+        
+        if (is_array($selected) && count($selected) > 0) {
+            $cartItems = collect($allCartItems)->filter(function ($item, $key) use ($selected) {
+                return in_array($key, $selected);
+            })->all();
+        } else {
+            $cartItems = $allCartItems;
+        }
     }
 
     $grandTotal = collect($cartItems)->sum(fn ($item) => (int) $item['price'] * (int) $item['qty']);
 @endphp
 
-<!DOCTYPE html>
-<html lang="id">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Checkout</title>
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
-</head>
+@extends('layouts.app')
+@section('title', 'Checkout')
 
-<body class="bg-[#f7f2eb] text-[#2f241d]">
+@push('styles')
+    <style>
+        html, body {
+            overscroll-behavior: none;
+        }
+        body {
+            background-color: #f7f2eb;
+            color: #2f241d;
+        }
+    </style>
+@endpush
 
+@section('content')
 <div class="min-h-screen px-5 py-8 md:px-10">
     <div class="mx-auto max-w-6xl overflow-hidden rounded-[28px] border border-[#e5d8ca] bg-white shadow-[0_14px_45px_rgba(92,68,50,0.10)]">
 
-        <div class="border-b border-[#e5d8ca] bg-[#efe4d8] px-8 py-6">
-            <h1 class="text-3xl font-bold text-[#5c4432]">Beli Sekarang</h1>
+        <div class="border-b border-[#e5d8ca] bg-[#efe4d8] px-5 py-4 sm:px-8 sm:py-6">
+            <h1 class="text-xl font-bold text-[#5c4432] sm:text-3xl">Beli Sekarang</h1>
         </div>
 
         <form action="#" method="POST" enctype="multipart/form-data" onsubmit="showOrderToast(event)">
@@ -43,7 +56,7 @@
             <div class="grid md:grid-cols-[1fr_1.05fr]">
                 @include('components.user.checkout-buyer')
 
-                <div class="p-8">
+                <div class="p-5 sm:p-8">
                     @include('components.user.checkout-summary')
                 </div>
             </div>
@@ -52,6 +65,4 @@
 </div>
 
 @include('components.user.checkout-toast')
-
-</body>
-</html>
+@endsection

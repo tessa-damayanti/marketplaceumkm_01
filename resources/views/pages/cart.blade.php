@@ -1,31 +1,25 @@
-<!DOCTYPE html>
-<html lang="id">
+@extends('layouts.app')
+@section('title', 'Keranjang')
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Keranjang</title>
-
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+@push('styles')
     <link href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/flowbite.min.css" rel="stylesheet" />
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
-
     <style>
-        body { font-family: 'Poppins', sans-serif; }
         html, body {
-    overscroll-behavior: none;
-}
+            overscroll-behavior: none;
+        }
+        body {
+            background-color: #f5ede4;
+        }
     </style>
-</head>
+@endpush
 
-<body class="bg-[#f5ede4]">
-
-
+@section('content')
     @php
     $total = collect($cartItems)->sum(fn($item) => $item['price'] * $item['qty']);
     @endphp
 
-    <section class="mx-auto max-w-6xl px-4 sm:px-6 py-6 sm:py-8">
+    <div class="min-h-screen px-5 py-8 md:px-10">
+        <section class="mx-auto max-w-6xl">
 
         <!-- Back Button -->
         <div class="mb-4">
@@ -37,13 +31,13 @@
             </a>
         </div>
 
-        <!-- Header Card -->
-        <div class="mb-4 rounded-[24px] bg-white px-5 sm:px-7 py-4 sm:py-5 shadow-[0_4px_18px_rgba(167,141,120,0.12)]">
-            <h1 class="text-xl sm:text-2xl font-bold text-[#5c4432]">Keranjang Saya</h1>
-        </div>
-
         <!-- Main Card -->
-        <div class="overflow-hidden rounded-[24px] bg-white shadow-[0_4px_18px_rgba(167,141,120,0.12)]">
+        <div class="overflow-hidden rounded-[28px] border border-[#e5d8ca] bg-white shadow-[0_14px_45px_rgba(92,68,50,0.10)]">
+
+            <!-- Header Card (Combined) -->
+            <div class="border-b border-[#e5d8ca] bg-[#efe4d8] px-5 sm:px-8 py-4 sm:py-6">
+                <h1 class="text-xl sm:text-3xl font-bold text-[#5c4432]">Keranjang Saya</h1>
+            </div>
 
             <!-- Pilih Semua -->
             <div class="border-b border-[#eee3d8] px-5 sm:px-7 py-4">
@@ -174,14 +168,16 @@
                     </p>
                 </div>
 
-                <a href="{{ route('checkout') }}"
+                <a href="{{ route('checkout') }}" id="btn-checkout"
                     class="inline-flex h-[42px] sm:h-[46px] w-full sm:w-[120px] items-center justify-center rounded-[14px] bg-[#A98B76] text-sm font-semibold text-white transition hover:bg-[#967A66] focus:outline-none focus:ring-2 focus:ring-[#c4ab96]">
                     Beli
                 </a>
             </div>
         </div>
-    </section>
+        </section>
+    </div>
 
+@push('scripts')
     <script>
         function formatRupiah(number) {
             return 'Rp' + number.toLocaleString('id-ID');
@@ -245,6 +241,30 @@
                     updateCartTotal();
                 });
             });
+
+            const btnCheckout = document.getElementById('btn-checkout');
+            if (btnCheckout) {
+                btnCheckout.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    let selectedKeys = [];
+                    itemChecks.forEach((item) => {
+                        if (item.checked) {
+                            selectedKeys.push(item.dataset.key);
+                        }
+                    });
+
+                    if (selectedKeys.length === 0) {
+                        alert('Silakan pilih minimal 1 produk untuk dibeli.');
+                        return;
+                    }
+
+                    let url = new URL(this.href);
+                    selectedKeys.forEach(key => {
+                        url.searchParams.append('selected[]', key);
+                    });
+                    window.location.href = url.toString();
+                });
+            }
         });
     </script>
 
@@ -263,6 +283,5 @@
             }
         });
     </script>
-</body>
-
-</html>
+@endpush
+@endsection

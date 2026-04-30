@@ -1,22 +1,21 @@
-<!DOCTYPE html>
-<html lang="id">
+@extends('layouts.auth')
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Registrasi</title>
+@section('title', 'Registrasi')
 
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-</head>
+@push('styles')
+    <style>
+        html,
+        body {
+            overscroll-behavior: none;
+        }
+    </style>
+@endpush
 
-<body class="min-h-screen bg-[#e6dbcf] flex items-center justify-center px-4 py-8 scale-[0.92] font-['Poppins',sans-serif]">
-
-    <div class="w-full max-w-5xl rounded-[34px] overflow-hidden bg-white shadow-[0_24px_60px_rgba(92,68,50,0.18)] animate-fade-up">
+@section('content')
+    <div class="w-full max-w-5xl rounded-[34px] overflow-hidden bg-white shadow-[0_24px_60px_rgba(92,68,50,0.18)] animate-fade-up scale-[0.92]">
         <div class="grid md:grid-cols-2 min-h-[600px]">
 
-            <!-- LEFT SIDE -->
+            <!-- Left side -->
             <div class="relative min-h-[600px] overflow-hidden">
                 <img src="{{ asset('images/logo.png') }}"
                     alt="Logo Velora"
@@ -29,17 +28,17 @@
                 <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 rounded-full bg-white/5"></div>
             </div>
 
-            <!-- RIGHT SIDE -->
-            <div class="bg-[#a78d78] flex items-center justify-center px-8 py-10 md:px-14">
+            <!-- Right side -->
+            <div class="bg-[#a78d78] flex items-center justify-center px-8 py-8 md:px-14">
                 <div class="w-full max-w-md">
 
-                    <div class="text-center mb-9">
+                    <div class="text-center mb-6">
                         <h2 class="text-4xl font-bold text-[#fffaf6]">Registrasi</h2>
                     </div>
 
                     <form class="space-y-5" onsubmit="return false;">
 
-                        <!-- USERNAME -->
+                        <!-- Username -->
                         <div>
                             <label class="block text-sm font-semibold text-[#fff4eb] mb-2">Username</label>
                             <div class="relative">
@@ -59,74 +58,99 @@
                             <p class="hidden mt-[10px] text-[15px] leading-[1.5] font-semibold text-[#dc2626]" id="username-msg"></p>
                         </div>
 
-                        <!-- PASSWORD -->
+                        <!-- Email -->
                         <div>
-                            <label class="block text-sm font-semibold text-[#fff4eb] mb-2">Password</label>
+                            <label class="block text-sm font-semibold text-[#fff4eb] mb-2">Email</label>
                             <div class="relative">
                                 <span class="absolute left-4 top-1/2 -translate-y-1/2 text-[#cdb6a3]">
                                     <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
-                                        <path stroke-linecap="round" stroke-linejoin="round" d="M16.5 10.5V7.875a4.125 4.125 0 10-8.25 0V10.5M5.25 10.5h13.5v8.25a2.25 2.25 0 01-2.25 2.25H7.5a2.25 2.25 0 01-2.25-2.25V10.5z" />
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.909A2.25 2.25 0 012.25 6.993V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25" />
                                     </svg>
                                 </span>
                                 <input
-                                    id="password"
-                                    name="password"
-                                    type="password"
-                                    placeholder="Masukkan password"
-                                    oninput="validatePassword(); checkMatch();"
-                                    class="w-full h-14 rounded-2xl border border-[#d8c7ba] bg-[#fbf7f2] pl-12 pr-14 text-[#5c4432] placeholder:text-[#b79f8a] transition-[border-color,box-shadow,background-color] duration-200 focus:border-[#8f7561] focus:shadow-[0_0_0_3px_rgba(143,117,97,0.18)] focus:outline-none focus:bg-[#fffdfb] [appearance:textfield] [&::-ms-reveal]:hidden [&::-ms-clear]:hidden [&::-webkit-credentials-auto-fill-button]:hidden [&::-webkit-textfield-decoration-container]:hidden">
-                                <button
-                                    type="button"
-                                    onclick="togglePassword(this)"
-                                    class="absolute right-4 top-1/2 -translate-y-1/2 text-[#b8967b] transition hover:text-[#5c4432]">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
-                                        <path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z" />
-                                        <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                                    </svg>
-                                </button>
+                                    id="email"
+                                    name="email"
+                                    type="email"
+                                    placeholder="Masukkan email"
+                                    oninput="validateEmail()"
+                                    class="w-full h-14 rounded-2xl border border-[#d8c7ba] bg-[#fbf7f2] pl-12 pr-4 text-[#5c4432] placeholder:text-[#b79f8a] transition-[border-color,box-shadow,background-color] duration-200 focus:border-[#8f7561] focus:shadow-[0_0_0_3px_rgba(143,117,97,0.18)] focus:outline-none focus:bg-[#fffdfb]">
                             </div>
-                            <p class="hidden mt-[10px] text-[15px] leading-[1.5] font-semibold text-[#dc2626]" id="password-msg"></p>
+                            <p class="hidden mt-[10px] text-[15px] leading-[1.5] font-semibold text-[#dc2626]" id="email-msg"></p>
                         </div>
 
-                        <!-- KONFIRMASI SANDI -->
-                        <div>
-                            <label class="block text-sm font-semibold text-[#fff4eb] mb-2">Konfirmasi sandi</label>
-                            <div class="relative">
-                                <span class="absolute left-4 top-1/2 -translate-y-1/2 text-[#cdb6a3]">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
-                                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z" />
-                                    </svg>
-                                </span>
-                                <input
-                                    id="confirm-password"
-                                    name="confirm_password"
-                                    type="password"
-                                    placeholder="Ulangi sandi"
-                                    oninput="checkMatch()"
-                                    class="w-full h-14 rounded-2xl border border-[#d8c7ba] bg-[#fbf7f2] pl-12 pr-14 text-[#5c4432] placeholder:text-[#b79f8a] transition-[border-color,box-shadow,background-color] duration-200 focus:border-[#8f7561] focus:shadow-[0_0_0_3px_rgba(143,117,97,0.18)] focus:outline-none focus:bg-[#fffdfb] [appearance:textfield] [&::-ms-reveal]:hidden [&::-ms-clear]:hidden [&::-webkit-credentials-auto-fill-button]:hidden [&::-webkit-textfield-decoration-container]:hidden">
-                                <button
-                                    type="button"
-                                    onclick="togglePassword(this)"
-                                    class="absolute right-4 top-1/2 -translate-y-1/2 text-[#b8967b] transition hover:text-[#5c4432]">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
-                                        <path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z" />
-                                        <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                                    </svg>
-                                </button>
+                        <!-- Password dan Konfirmasi password -->
+                        <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                            <!-- Password -->
+                            <div>
+                                <label class="mb-2 block text-sm font-semibold text-[#fff4eb] sm:min-h-[42px] lg:min-h-0">Password</label>
+                                <div class="relative">
+                                    <span class="absolute left-3 top-1/2 -translate-y-1/2 text-[#cdb6a3]">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="w-[18px] h-[18px]" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M16.5 10.5V7.875a4.125 4.125 0 10-8.25 0V10.5M5.25 10.5h13.5v8.25a2.25 2.25 0 01-2.25 2.25H7.5a2.25 2.25 0 01-2.25-2.25V10.5z" />
+                                        </svg>
+                                    </span>
+                                    <input
+                                        id="password"
+                                        name="password"
+                                        type="password"
+                                        placeholder="Masukkan password"
+                                        oninput="validatePassword(); checkMatch();"
+                                        class="w-full h-14 rounded-2xl border border-[#d8c7ba] bg-[#fbf7f2] pl-9 pr-9 text-[#5c4432] placeholder:text-[#b79f8a] transition-[border-color,box-shadow,background-color] duration-200 focus:border-[#8f7561] focus:shadow-[0_0_0_3px_rgba(143,117,97,0.18)] focus:outline-none focus:bg-[#fffdfb] [appearance:textfield] [&::-ms-reveal]:hidden [&::-ms-clear]:hidden [&::-webkit-credentials-auto-fill-button]:hidden [&::-webkit-textfield-decoration-container]:hidden text-sm">
+                                    <button
+                                        type="button"
+                                        onclick="togglePassword(this)"
+                                        class="absolute right-3 top-1/2 -translate-y-1/2 text-[#b8967b] transition hover:text-[#5c4432]">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="w-[18px] h-[18px]" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z" />
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                        </svg>
+                                    </button>
+                                </div>
+                                <p class="hidden mt-[10px] text-[15px] leading-[1.5] font-semibold text-[#dc2626]" id="password-msg"></p>
                             </div>
-                            <p class="hidden mt-[10px] text-[15px] leading-[1.5] font-semibold text-[#dc2626]" id="match-msg"></p>
+
+                            <!-- Konfirmasi Password -->
+                            <div>
+                                <label class="mb-2 block text-sm font-semibold text-[#fff4eb] sm:min-h-[42px] lg:min-h-0">Konfirmasi password</label>
+                                <div class="relative">
+                                    <span class="absolute left-3 top-1/2 -translate-y-1/2 text-[#cdb6a3]">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="w-[18px] h-[18px]" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z" />
+                                        </svg>
+                                    </span>
+                                    <input
+                                        id="confirm-password"
+                                        name="confirm_password"
+                                        type="password"
+                                        placeholder="Ulangi password"
+                                        oninput="checkMatch()"
+                                        class="w-full h-14 rounded-2xl border border-[#d8c7ba] bg-[#fbf7f2] pl-9 pr-9 text-[#5c4432] placeholder:text-[#b79f8a] transition-[border-color,box-shadow,background-color] duration-200 focus:border-[#8f7561] focus:shadow-[0_0_0_3px_rgba(143,117,97,0.18)] focus:outline-none focus:bg-[#fffdfb] [appearance:textfield] [&::-ms-reveal]:hidden [&::-ms-clear]:hidden [&::-webkit-credentials-auto-fill-button]:hidden [&::-webkit-textfield-decoration-container]:hidden text-sm">
+                                    <button
+                                        type="button"
+                                        onclick="togglePassword(this)"
+                                        class="absolute right-3 top-1/2 -translate-y-1/2 text-[#b8967b] transition hover:text-[#5c4432]">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="w-[18px] h-[18px]" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z" />
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                        </svg>
+                                    </button>
+                                </div>
+                                <p class="hidden mt-[10px] text-[15px] leading-[1.5] font-semibold text-[#dc2626]" id="match-msg"></p>
+                            </div>
                         </div>
 
-                        <!-- REGISTER BUTTON -->
-                        <button
-                            type="button"
-                            onclick="validateForm()"
-                            class="w-full h-14 rounded-2xl bg-[#e6dbcf] text-white text-base font-semibold shadow-[0_14px_28px_rgba(92,68,50,0.22)] transition-[background,box-shadow,transform] duration-200 hover:bg-[#8f7561] hover:shadow-[0_16px_32px_rgba(92,68,50,0.25)] hover:-translate-y-[1px] active:translate-y-0">
-                            Daftar Sekarang
-                        </button>
+                        <!-- Register button -->
+                        <div class="pt-2">
+                            <button
+                                type="button"
+                                onclick="validateForm()"
+                                class="w-full h-14 rounded-2xl bg-[#e6dbcf] text-[#5c4432] text-base font-semibold shadow-[0_14px_28px_rgba(92,68,50,0.22)] transition-[background,box-shadow,transform] duration-200 hover:bg-[#d8c3af] hover:shadow-[0_16px_32px_rgba(92,68,50,0.25)] hover:-translate-y-[1px] active:translate-y-0">
+                                Daftar Sekarang
+                            </button>
+                        </div>
 
-                        <!-- LINK LOGIN -->
-                        <p class="text-center text-sm text-[#f2e4d8] pt-1">
+                        <!-- Link login-->
+                        <p class="text-center text-sm text-[#f2e4d8] mt-2">
                             Sudah punya akun?
                             <a href="{{ route('login') }}" class="text-[#fffaf6] font-semibold ml-1 transition-colors duration-200 hover:text-white">
                                 Masuk disini
@@ -139,7 +163,9 @@
 
         </div>
     </div>
+@endsection
 
+@push('scripts')
     <script>
         function togglePassword(btn) {
             const input = btn.closest('.relative').querySelector('input');
@@ -195,6 +221,24 @@
             return true;
         }
 
+        function validateEmail() {
+            const email = document.getElementById('email').value.trim();
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+            if (!email) {
+                setError('email', 'email-msg', 'Email wajib diisi');
+                return false;
+            }
+
+            if (!emailRegex.test(email)) {
+                setError('email', 'email-msg', 'Email tidak valid');
+                return false;
+            }
+
+            clearError('email', 'email-msg');
+            return true;
+        }
+
         function validatePassword() {
             const password = document.getElementById('password').value;
 
@@ -217,12 +261,12 @@
             const cpw = document.getElementById('confirm-password').value;
 
             if (!cpw.trim()) {
-                setError('confirm-password', 'match-msg', 'Konfirmasi sandi wajib diisi');
+                setError('confirm-password', 'match-msg', 'Konfirmasi password wajib diisi');
                 return false;
             }
 
             if (pw !== cpw) {
-                setError('confirm-password', 'match-msg', 'Sandi tidak cocok');
+                setError('confirm-password', 'match-msg', 'Password tidak cocok');
                 return false;
             }
 
@@ -232,15 +276,13 @@
 
         function validateForm() {
             const isUsernameValid = validateUsername();
+            const isEmailValid = validateEmail();
             const isPasswordValid = validatePassword();
             const isMatchValid = checkMatch();
 
-            if (isUsernameValid && isPasswordValid && isMatchValid) {
+            if (isUsernameValid && isEmailValid && isPasswordValid && isMatchValid) {
                 alert('Registrasi berhasil');
             }
         }
     </script>
-
-</body>
-
-</html>
+@endpush

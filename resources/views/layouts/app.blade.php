@@ -25,13 +25,17 @@
     data-is-buyer="{{ session('role') === 'buyer' ? 'true' : 'false' }}"
 >
 
-    @include('partials.navbar')
+    @if(!request()->routeIs('cart', 'checkout'))
+        @include('partials.navbar')
+    @endif
 
     <main>
         @yield('content')
     </main>
 
-    @include('partials.footer')
+    @if(!request()->routeIs('cart', 'checkout'))
+        @include('partials.footer')
+    @endif
 
     @stack('scripts')
 </body>

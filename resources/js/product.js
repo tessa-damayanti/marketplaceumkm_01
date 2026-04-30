@@ -197,16 +197,20 @@ document.addEventListener('DOMContentLoaded', () => {
     const sortOptions = document.querySelectorAll('.sort-option');
 
     if (sortButton && sortMenu) {
+        // Toggle dropdown and arrow rotation
         sortButton.addEventListener('click', (e) => {
             e.stopPropagation();
             sortMenu.classList.toggle('hidden');
             sortButton.querySelector('svg').classList.toggle('rotate-180');
         });
 
+        // Handle option click
         sortOptions.forEach(option => {
             option.addEventListener('click', function () {
                 const sortValue = this.dataset.value;
                 sortLabel.innerText = this.innerText;
+                
+                // Close dropdown
                 sortMenu.classList.add('hidden');
                 sortButton.querySelector('svg').classList.remove('rotate-180');
 
@@ -232,12 +236,21 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         });
 
+        // Close when clicking outside
         document.addEventListener('click', (e) => {
-            if (!sortButton.contains(e.target)) {
+            if (!sortButton.contains(e.target) && !sortMenu.contains(e.target)) {
                 sortMenu.classList.add('hidden');
                 sortButton.querySelector('svg').classList.remove('rotate-180');
             }
         });
+
+        // Close when scrolling (looking at products)
+        window.addEventListener('scroll', () => {
+            if (!sortMenu.classList.contains('hidden')) {
+                sortMenu.classList.add('hidden');
+                sortButton.querySelector('svg').classList.remove('rotate-180');
+            }
+        }, { passive: true });
     }
 
     document.getElementById('productModal')?.addEventListener('click', function (e) {

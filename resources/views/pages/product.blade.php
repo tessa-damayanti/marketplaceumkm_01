@@ -106,12 +106,20 @@
             </button>
 
             <!-- Menu Dropdown  -->
-            <ul id="sortMenu"
-                class="absolute left-0 top-[calc(100%+6px)] z-[100] hidden w-full overflow-hidden border border-[#DDD0C4] bg-white shadow-xl">
-                <li data-value="default" class="sort-option cursor-pointer px-4 py-2 text-xs font-medium text-[#7A5A43] transition-colors hover:bg-[#BFA28C] hover:text-white sm:py-2.5 sm:text-sm">Terbaru</li>
-                <li data-value="price-asc" class="sort-option cursor-pointer px-4 py-2 text-xs font-medium text-[#7A5A43] transition-colors hover:bg-[#BFA28C] hover:text-white sm:py-2.5 sm:text-sm">Harga Termurah</li>
-                <li data-value="price-desc" class="sort-option cursor-pointer px-4 py-2 text-xs font-medium text-[#7A5A43] transition-colors hover:bg-[#BFA28C] hover:text-white sm:py-2.5 sm:text-sm">Harga Termahal</li>
-            </ul>
+            <div id="sortMenu"
+                class="absolute right-0 top-[calc(100%+6px)] z-[100] hidden w-[180px] overflow-hidden rounded-xl border border-[#DDD0C4] bg-white shadow-xl">
+                <ul>
+                    <li>
+                        <button type="button" data-value="default" class="sort-option block w-full cursor-pointer px-4 py-2 text-left text-xs font-medium text-[#7A5A43] transition-colors hover:bg-[#BFA28C] hover:text-white sm:py-2.5 sm:text-sm">Terbaru</button>
+                    </li>
+                    <li>
+                        <button type="button" data-value="price-asc" class="sort-option block w-full cursor-pointer px-4 py-2 text-left text-xs font-medium text-[#7A5A43] transition-colors hover:bg-[#BFA28C] hover:text-white sm:py-2.5 sm:text-sm">Harga Termurah</button>
+                    </li>
+                    <li>
+                        <button type="button" data-value="price-desc" class="sort-option block w-full cursor-pointer px-4 py-2 text-left text-xs font-medium text-[#7A5A43] transition-colors hover:bg-[#BFA28C] hover:text-white sm:py-2.5 sm:text-sm">Harga Termahal</button>
+                    </li>
+                </ul>
+            </div>
         </div>
     </div>
 </section>
