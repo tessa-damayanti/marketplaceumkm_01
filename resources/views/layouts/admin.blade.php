@@ -189,6 +189,36 @@
         </tr>`).join('');
     }
 
+    function toggleProdukKategoriFilter(e) {
+      e.stopPropagation();
+      const menu = document.getElementById('produk-filter-kat-menu');
+      const icon = document.getElementById('produk-filter-kat-icon');
+      menu?.classList.toggle('hidden');
+      icon?.classList.toggle('rotate-180');
+    }
+
+    function selectProdukKategoriFilter(val) {
+      const input = document.getElementById('produk-filter-kat');
+      const label = document.getElementById('produk-filter-kat-label');
+      if (input) input.value = val;
+      if (label) label.innerText = val || 'Semua Kategori';
+
+      const options = document.querySelectorAll('.produk-kategori-option');
+      options.forEach(opt => {
+        if (opt.innerText.trim() === (val || 'Semua Kategori')) {
+          opt.classList.add('bg-[#fbf8f5]', 'text-[#BFA28C]');
+          opt.classList.remove('text-[#5c4432]');
+        } else {
+          opt.classList.remove('bg-[#fbf8f5]', 'text-[#BFA28C]');
+          opt.classList.add('text-[#5c4432]');
+        }
+      });
+
+      document.getElementById('produk-filter-kat-menu')?.classList.add('hidden');
+      document.getElementById('produk-filter-kat-icon')?.classList.remove('rotate-180');
+      renderProdukTable();
+    }
+
     function setModalMode(mode) {
       editingProdukId = null;
       selectedProdukImage = '';
@@ -419,9 +449,9 @@
 
           <div class="detail-section-title">Bukti Pembayaran</div>
           <div class="payment-proof-card">
-            <img src="https://images.unsplash.com/photo-1591047139829-d91aecb6caea?q=80&w=100&auto=format&fit=crop" class="proof-thumb cursor-pointer hover:opacity-80 transition" 
-            onclick="viewBukti('https://images.unsplash.com/photo-1591047139829-d91aecb6caea?q=80&w=1000&auto=format&fit=crop')">
-            <button type="button" class="btn-lihat-bukti" onclick="viewBukti('https://images.unsplash.com/photo-1591047139829-d91aecb6caea?q=80&w=1000&auto=format&fit=crop')">Lihat Bukti</button>
+            <img src="https://i.pinimg.com/1200x/82/65/1b/82651bb05dfea5ea161f389688fb4ec2.jpg" class="proof-thumb cursor-pointer hover:opacity-80 transition" 
+            onclick="viewBukti('https://i.pinimg.com/1200x/82/65/1b/82651bb05dfea5ea161f389688fb4ec2.jpg')">
+            <button type="button" class="btn-lihat-bukti" onclick="viewBukti('https://i.pinimg.com/1200x/82/65/1b/82651bb05dfea5ea161f389688fb4ec2.jpg')">Lihat Bukti</button>
           </div>
 
           <div class="detail-section-title">Item Pesanan</div>
@@ -554,6 +584,14 @@
       if (btn && !btn.contains(e.target)) {
         menu?.classList.add('hidden');
         icon?.classList.remove('rotate-180');
+      }
+
+      const produkBtn = document.getElementById('produk-filter-kat-btn');
+      const produkMenu = document.getElementById('produk-filter-kat-menu');
+      const produkIcon = document.getElementById('produk-filter-kat-icon');
+      if (produkBtn && !produkBtn.contains(e.target) && !produkMenu?.contains(e.target)) {
+        produkMenu?.classList.add('hidden');
+        produkIcon?.classList.remove('rotate-180');
       }
     });
 

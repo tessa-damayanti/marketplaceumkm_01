@@ -1,4 +1,3 @@
-/* basic reset */
 :root {
   --bg-page: #ffffff;
   --bg-soft: #f0e7dd;
@@ -1438,5 +1437,42 @@ label.field-label {
   
   .search-wrap {
     width: 100%;
+  }
+
+  #page-produk .produk-header,
+  #page-kategori .kategori-header {
+    align-items: stretch;
+    gap: 10px;
+    padding: 16px 20px;
+  }
+
+  #page-produk .produk-filter-row,
+  #page-kategori .kategori-filter-row {
+    width: 100%;
+    flex: 1 1 100%;
+    gap: 10px;
+  }
+
+  #page-produk .produk-filter-row .search-wrap,
+  #page-produk .produk-filter-row .produk-filter-select,
+  #page-kategori .kategori-filter-row {
+    width: 100%;
+    min-width: 0;
+    flex: 1 1 100%;
+  }
+
+  #page-produk .produk-filter-menu {
+    max-height: 220px;
+    overflow-y: auto;
+  }
+
+  #page-produk .produk-add-btn,
+  #page-kategori .kategori-add-btn {
+    display: inline-flex;
+    width: 100%;
+    min-height: 42px;
+    align-items: center;
+    justify-content: center;
+    white-space: nowrap;
   }
 }

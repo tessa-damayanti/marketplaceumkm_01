@@ -10,7 +10,7 @@
 
       <!-- Filter Row -->
       <div class="flex flex-nowrap items-center gap-3 overflow-x-auto px-5 py-4 scrollbar-hide">
-  
+
         <!-- Search -->
         <div class="search-wrap !w-56 !min-w-[14rem] !flex-[0_0_14rem]">
           <input type="text" id="pesanan-search" onkeyup="renderPesananTable()" placeholder="Cari pesanan..."
@@ -27,7 +27,7 @@
           <option value="Konfirmasi Ulang">Konfirmasi Ulang</option>
         </select>
 
-        <!-- Date --> 
+        <!-- Date -->
         <div class="flex flex-shrink-0 items-center gap-2">
           <span class="text-[10px] font-bold uppercase tracking-wider text-[#a78d78]">Dari</span>
           <input type="date" id="pesanan-date-from" onchange="renderPesananTable()"
@@ -55,7 +55,7 @@
           <tbody id="pesanan-tbody"></tbody>
         </table>
       </div>
-      
+
       <div class="pagi-row border-t border-[#f0e7dd] bg-white px-6 py-4">
         <span id="pesanan-pagi-info" class="text-xs font-semibold text-[#9a8575]">1 - 6 dari 6</span>
         <div class="pagi-btns">
