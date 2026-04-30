@@ -133,7 +133,7 @@
                                         d="M16.5 10.5V7.875a4.5 4.5 0 00-9 0V10.5m-.75 0h10.5A1.75 1.75 0 0119 12.25v6A1.75 1.75 0 0117.25 20H6.75A1.75 1.75 0 015 18.25v-6A1.75 1.75 0 016.75 10.5z" />
                                 </svg>
                             </div>
-                            <h2 class="text-4xl font-bold text-[#fffaf6]">Lupa Password?</h2>
+                            <h2 class="text-4xl font-bold text-[#fffaf6]">Lupa Password ?</h2>
                             <p class="mt-4 text-[#f2e4d8] text-base leading-relaxed">
                                 Masukkan email Anda
                         </div>
@@ -148,7 +148,7 @@
                                     <input
                                         id="forgot-email"
                                         type="email"
-                                        placeholder="nama@email.com"
+                                        placeholder="nama@gmail.com"
                                         oninput="validateForgotEmail()"
                                         class="w-full h-14 rounded-2xl border border-[#d8c7ba] bg-[#fbf7f2] px-6 text-[#5c4432] placeholder:text-[#b79f8a] transition-[border-color,box-shadow,background-color] duration-200 focus:border-[#8f7561] focus:shadow-[0_0_0_3px_rgba(143,117,97,0.18)] focus:outline-none focus:bg-[#fffdfb]">
                                 </div>
