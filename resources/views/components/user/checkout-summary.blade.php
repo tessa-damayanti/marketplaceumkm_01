@@ -1,7 +1,7 @@
-<h2 class="mb-7 text-2xl font-bold text-[#2f241d]">Ringkasan Pesanan</h2>
+<h2 class="mb-7 text-2xl font-bold text-[#5c4432]">Ringkasan Pesanan</h2>
 
 <div class="mb-7 rounded-3xl border border-[#e5d8ca] bg-[#faf7f4] p-5">
-    <p class="mb-3 text-sm font-bold uppercase tracking-[3px] text-[#b08b68]">
+    <p class="mb-3 text-sm font-bold uppercase tracking-[3px] text-[#BFA28C]">
         Metode Pembayaran
     </p>
 
@@ -18,7 +18,7 @@
 </div>
 
 <div class="mb-7">
-    <h3 class="mb-4 text-xl font-bold text-[#2f241d]">Item Pesanan</h3>
+    <h3 class="mb-4 text-xl font-bold text-[#5c4432]">Item Pesanan</h3>
 
     <div class="space-y-4">
         @foreach ($cartItems as $item)
@@ -57,15 +57,15 @@
 
 <div class="mb-7 rounded-3xl bg-[#efe4d8] p-5">
     <div class="flex items-center justify-between gap-4">
-        <p class="text-xl font-bold text-[#2f241d]">Total Pembayaran</p>
-        <p class="text-2xl font-bold text-[#2f241d]">
+        <p class="text-xl font-bold text-[#5c4432]">Total Pembayaran</p>
+        <p class="text-2xl font-bold text-[#5c4432]">
             Rp{{ number_format($grandTotal, 0, ',', '.') }}
         </p>
     </div>
 </div>
 
 <div class="mb-7">
-    <p class="mb-3 text-xl font-bold text-[#2f241d]">Bukti Pembayaran</p>
+    <p class="mb-3 text-xl font-bold text-[#5c4432]">Bukti Pembayaran</p>
 
     <label for="bukti-transfer" class="block cursor-pointer">
         <div id="uploadBox" class="flex h-[170px] items-center justify-center overflow-hidden rounded-3xl border-2 border-dashed border-[#d8c3af] bg-[#faf7f4] transition hover:border-[#a78d78] hover:bg-[#efe4d8]">

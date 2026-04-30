@@ -12,7 +12,7 @@
             >
         </div>
 
-        <h3 id="sidebarProfileName" class="text-base font-bold text-[#3e2c1e]">
+        <h3 id="sidebarProfileName" class="text-base font-bold text-[#5c4432]">
             Halo, Nikita Willy
         </h3>
 
@@ -24,7 +24,7 @@
         {{-- Akun --}}
         <button onclick="switchTab('akun')"
             id="btn-tab-akun"
-            class="flex w-full items-center gap-4 rounded-2xl px-6 py-4 text-left font-medium text-[#8b6f58] hover:bg-[#fbf7f2]">
+            class="flex w-full items-center gap-4 rounded-2xl px-6 py-4 text-left font-medium text-[#5c4432] hover:bg-[#fbf7f2]">
 
             <svg xmlns="http://www.w3.org/2000/svg"
                 class="h-6 w-6"
@@ -43,7 +43,7 @@
         {{-- Riwayat --}}
         <button onclick="switchTab('riwayat')"
             id="btn-tab-riwayat"
-            class="flex w-full items-center gap-4 rounded-2xl px-6 py-4 text-left font-medium text-[#8b6f58] hover:bg-[#fbf7f2]">
+            class="flex w-full items-center gap-4 rounded-2xl px-6 py-4 text-left font-medium text-[#5c4432] hover:bg-[#fbf7f2]">
 
             <svg xmlns="http://www.w3.org/2000/svg"
                 class="h-6 w-6"

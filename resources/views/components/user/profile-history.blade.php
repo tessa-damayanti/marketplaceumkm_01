@@ -1,12 +1,12 @@
 <div id="tab-riwayat" class="block">
-    <h2 class="mb-6 text-4xl font-extrabold text-[#2f1f16]">
+    <h2 class="mb-6 text-4xl font-bold text-[#5c4432]">
         Riwayat Pembelian
     </h2>
 
     <div class="overflow-hidden rounded-[18px] bg-white shadow-[0_6px_22px_rgba(92,68,50,0.08)]">
         <table class="w-full table-fixed text-left">
             <thead>
-                <tr class="border-b border-[#eee5dc] bg-[#fcfaf8] text-sm font-bold text-[#4b3829]">
+                <tr class="border-b border-[#eee5dc] bg-[#fcfaf8] text-sm font-bold text-[#5c4432]">
                     <th class="w-[17%] px-6 py-5 whitespace-nowrap">No. Pesanan</th>
                     <th class="w-[31%] px-6 py-5">Produk</th>
                     <th class="w-[24%] px-6 py-5 text-center whitespace-nowrap">Status Pembayaran</th>
@@ -15,7 +15,7 @@
                 </tr>
             </thead>
 
-            <tbody class="text-sm text-[#3e2c1e]">
+            <tbody class="text-sm text-[#5c4432]">
                 <!-- ROW 1 -->
                 <tr class="border-b border-[#eee5dc]">
                     <td class="px-6 py-6 font-bold whitespace-nowrap">VL-250212-001</td>
@@ -29,8 +29,8 @@
                             </div>
 
                             <div class="min-w-0">
-                                <p class="text-base font-bold text-[#2f1f16]">Kemeja Stripe</p>
-                                <p class="mt-1 text-sm text-[#8b7a6d]">+2 produk lainnya</p>
+                                <p class="text-base font-bold text-[#5c4432]">Kemeja Stripe</p>
+                                <p class="mt-1 text-sm text-[#7b6858]">+2 produk lainnya</p>
                             </div>
                         </div>
                     </td>
@@ -42,7 +42,7 @@
                         </span>
                     </td>
 
-                    <td class="px-6 py-6 text-base font-bold whitespace-nowrap text-[#2f1f16]">
+                    <td class="px-6 py-6 text-base font-bold whitespace-nowrap text-[#5c4432]">
                         Rp382.000
                     </td>
 
@@ -69,7 +69,7 @@
                             </div>
 
                             <div class="min-w-0">
-                                <p class="text-base font-bold text-[#2f1f16]">Gaun Biru Wrap</p>
+                                <p class="text-base font-bold text-[#5c4432]">Gaun Biru Wrap</p>
                             </div>
                         </div>
                     </td>
@@ -81,7 +81,7 @@
                         </span>
                     </td>
 
-                    <td class="px-6 py-6 text-base font-bold whitespace-nowrap text-[#2f1f16]">
+                    <td class="px-6 py-6 text-base font-bold whitespace-nowrap text-[#5c4432]">
                         Rp170.000
                     </td>
 
@@ -108,7 +108,7 @@
                             </div>
 
                             <div class="min-w-0">
-                                <p class="text-base font-bold text-[#2f1f16]">Cardigan Rajut Pink</p>
+                                <p class="text-base font-bold text-[#5c4432]">Cardigan Rajut Pink</p>
                             </div>
                         </div>
                     </td>
@@ -120,7 +120,7 @@
                         </span>
                     </td>
 
-                    <td class="px-6 py-6 text-base font-bold whitespace-nowrap text-[#2f1f16]">
+                    <td class="px-6 py-6 text-base font-bold whitespace-nowrap text-[#5c4432]">
                         Rp112.000
                     </td>
 

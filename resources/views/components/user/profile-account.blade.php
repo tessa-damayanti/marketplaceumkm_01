@@ -1,7 +1,7 @@
 <div id="tab-akun" class="hidden rounded-[32px] bg-white p-10 shadow-[0_8px_30px_rgba(92,68,50,0.06)] min-h-[500px]">
 
-    <h2 class="text-4xl font-bold text-[#3e2c1e]">Edit Profil</h2>
-    <p class="mt-2 text-[#8b6f58] mb-10">
+    <h2 class="text-4xl font-bold text-[#5c4432]">Edit Profil</h2>
+    <p class="mt-2 text-[#7b6858] mb-10">
         Perbarui informasi diri Anda agar pengiriman pesanan lebih akurat.
     </p>
 
@@ -11,7 +11,7 @@
         @csrf
 
         <div class="col-span-1 md:border-r md:border-[#f4ece3] md:pr-8">
-            <label class="mb-4 block text-sm font-bold text-[#3e2c1e]">
+            <label class="mb-4 block text-sm font-bold text-[#5c4432]">
                 Foto Profil
             </label>
 
@@ -37,27 +37,27 @@
         <div class="col-span-1 md:col-span-2 space-y-5">
 
             <div>
-                <label class="mb-2 block text-sm font-bold text-[#3e2c1e]">
+                <label class="mb-2 block text-sm font-bold text-[#5c4432]">
                     Nama Lengkap
                 </label>
                 <input id="profileName" name="name" type="text" value="Nikita Willy"
-                    class="w-full rounded-2xl border border-[#f2e4d8] px-5 py-3.5 focus:outline-none focus:border-[#a16223]">
+                    class="w-full rounded-2xl border border-[#f2e4d8] px-5 py-3.5 text-[#7b6858] focus:outline-none focus:border-[#a16223]">
             </div>
 
             <div>
-                <label class="mb-2 block text-sm font-bold text-[#3e2c1e]">
+                <label class="mb-2 block text-sm font-bold text-[#5c4432]">
                     No WhatsApp
                 </label>
                 <input id="profilePhone" name="phone" type="text" value="0812-3456-7890"
-                    class="w-full rounded-2xl border border-[#f2e4d8] px-5 py-3.5 focus:outline-none focus:border-[#a16223]">
+                    class="w-full rounded-2xl border border-[#f2e4d8] px-5 py-3.5 text-[#7b6858] focus:outline-none focus:border-[#a16223]">
             </div>
 
             <div>
-                <label class="mb-2 block text-sm font-bold text-[#3e2c1e]">
+                <label class="mb-2 block text-sm font-bold text-[#5c4432]">
                     Alamat
                 </label>
                 <textarea id="profileAddress" name="address" rows="4"
-                    class="w-full rounded-2xl border border-[#f2e4d8] px-5 py-3.5 focus:outline-none focus:border-[#a16223]">Jl. Melati No. 12, Bandung</textarea>
+                    class="w-full rounded-2xl border border-[#f2e4d8] px-5 py-3.5 text-[#7b6858] focus:outline-none focus:border-[#a16223]">Jl. Melati No. 12, Bandung</textarea>
             </div>
 
             <div class="flex justify-end">

@@ -184,29 +184,30 @@
                                     </div>
 
                                     <div>
-                                        <p class="font-bold text-[#2f1f16]">${item.name}</p>
-                                        <p class="mt-1 text-sm text-[#8b7a6d]">Ukuran: ${item.size}</p>
-                                        <p class="text-sm text-[#8b7a6d]">Qty: ${item.qty}</p>
-                                        <p class="mt-1 text-sm font-bold text-[#2f1f16]">Subtotal: ${item.subtotal}</p>
+                                        <p class="font-bold text-[#5c4432]">${item.name}</p>
+                                        <p class="mt-1 text-sm text-[#7b6858]">Ukuran: ${item.size}</p>
+                                        <p class="text-sm text-[#7b6858]">Qty: ${item.qty}</p>
+                                        <p class="mt-1 text-sm font-bold text-[#5c4432]">Subtotal: ${item.subtotal}</p>
                                     </div>
                                 </div>
 
                                 <form method="POST" action="{{ route('cart.add') }}">
-        @csrf
+    @csrf
 
-        <input type="hidden" name="name" value="${item.name}">
-        <input type="hidden" name="category" value="Riwayat Pesanan">
-        <input type="hidden" name="image" value="${item.img}">
-        <input type="hidden" name="price" value="${getPrice(item)}">
-        <input type="hidden" name="size" value="${item.size}">
-        <input type="hidden" name="qty" value="${getQty(item)}">
-        <input type="hidden" name="stock" value="99">
+    <input type="hidden" name="name" value="${item.name}">
+    <input type="hidden" name="category" value="Riwayat Pesanan">
+    <input type="hidden" name="image" value="${item.img}">
+    <input type="hidden" name="price" value="${getPrice(item)}">
+    <input type="hidden" name="size" value="${item.size}">
+    <input type="hidden" name="qty" value="${getQty(item)}">
+    <input type="hidden" name="stock" value="99">
+    <input type="hidden" name="redirect_to" value="cart">
 
-        <button type="submit"
-            class="rounded-lg border border-[#BFA28C] px-5 py-2 text-sm font-semibold text-[#6b422b] transition hover:bg-[#A88A72] hover:text-white">
-            Beli Lagi
-        </button>
-    </form>
+    <button type="submit"
+        class="relative z-10 rounded-xl bg-[#BFA28C] px-5 py-2 font-bold text-white transition hover:bg-[#A88A72]">
+        Beli Lagi
+    </button>
+</form>
 
                             </div>
                         `;
