@@ -52,17 +52,16 @@
 
         <form action="#" method="POST" enctype="multipart/form-data" onsubmit="showOrderToast(event)">
             @csrf
-
             <div class="grid md:grid-cols-[1fr_1.05fr]">
-                @include('components.user.checkout-buyer')
+                <x-user.checkout-buyer />
 
                 <div class="p-5 sm:p-8">
-                    @include('components.user.checkout-summary')
+                    <x-user.checkout-summary />
                 </div>
             </div>
         </form>
     </div>
 </div>
 
-@include('components.user.checkout-toast')
+<x-user.checkout-toast />
 @endsection

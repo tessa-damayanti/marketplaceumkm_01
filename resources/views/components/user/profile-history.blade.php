@@ -1,17 +1,18 @@
 <div id="tab-riwayat" class="block">
-    <h2 class="mb-6 text-4xl font-bold text-[#5c4432]">
+    <h2 class="mb-6 text-2xl font-bold text-[#5c4432] md:text-4xl">
         Riwayat Pembelian
     </h2>
 
     <div class="overflow-hidden rounded-[18px] bg-white shadow-[0_6px_22px_rgba(92,68,50,0.08)]">
-        <table class="w-full table-fixed text-left">
-            <thead>
+        <div class="overflow-x-auto">
+            <table class="w-full min-w-[800px] text-left">
+                <thead>
                 <tr class="border-b border-[#eee5dc] bg-[#fcfaf8] text-sm font-bold text-[#5c4432]">
-                    <th class="w-[17%] px-6 py-5 whitespace-nowrap">No. Pesanan</th>
-                    <th class="w-[31%] px-6 py-5">Produk</th>
-                    <th class="w-[24%] px-6 py-5 text-center whitespace-nowrap">Status Pembayaran</th>
-                    <th class="w-[14%] px-6 py-5 whitespace-nowrap">Total</th>
-                    <th class="w-[14%] px-6 py-5 text-center whitespace-nowrap">Aksi</th>
+                    <th class="min-w-[160px] px-6 py-5 whitespace-nowrap">No. Pesanan</th>
+                    <th class="min-w-[280px] px-6 py-5 whitespace-nowrap">Produk</th>
+                    <th class="min-w-[200px] px-6 py-5 text-center whitespace-nowrap">Status Pembayaran</th>
+                    <th class="min-w-[140px] px-6 py-5 whitespace-nowrap">Total</th>
+                    <th class="min-w-[120px] px-6 py-5 text-center whitespace-nowrap">Aksi</th>
                 </tr>
             </thead>
 
@@ -135,6 +136,7 @@
                 </tr>
             </tbody>
         </table>
+        </div>
 
         <div class="flex items-center justify-between border-t border-[#eee5dc] px-6 py-5">
             <p class="text-sm text-[#8b6f58]">

@@ -198,39 +198,7 @@
 
         <div id="product-grid" class="grid grid-cols-1 gap-7 sm:grid-cols-2 lg:grid-cols-4">
             @foreach ($products as $index => $product)
-                <div class="product-card group cursor-pointer overflow-hidden rounded-[18px] bg-white shadow-[0_2px_14px_rgba(167,141,120,0.10)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_14px_32px_rgba(167,141,120,0.20)]"
-                    data-index="{{ $index }}" data-original-index="{{ $index }}"
-                    data-price="{{ str_replace('.', '', $product['price']) }}" data-name="{{ strtolower($product['name']) }}"
-                    data-product='@json($product)' onclick="openModalFromElement(this)">
-                    <div class="card-thumb overflow-hidden">
-                        <img src="{{ $product['image'] }}" alt="{{ $product['name'] }}"
-                            class="block h-[200px] w-full object-cover transition-transform duration-500 ease-out will-change-transform group-hover:scale-[1.06] md:h-[240px]">
-                    </div>
-
-                    <div class="p-4">
-                        <p class="mb-1 text-[10px] font-bold uppercase tracking-[3px] text-[#b08b68]">
-                            {{ $product['category'] }}
-                        </p>
-
-                        <h3 class="mb-1.5 text-[0.94rem] font-semibold leading-snug text-[#5c4432]">
-                            {{ $product['name'] }}
-                        </h3>
-
-                        <div class="mb-3 flex items-center justify-between gap-1">
-                            <p class="text-[1.05rem] font-bold text-[#7a5a43]">
-                                Rp{{ number_format((int) str_replace('.', '', $product['price']), 0, ',', '.') }}
-                            </p>
-                            <p class="text-[12px] font-semibold text-[#b08b68]">
-                                {{ $product['sold'] ?? 0 }} terjual
-                            </p>
-                        </div>
-
-                        <button type="button"
-                            class="w-full rounded-2xl bg-[#BFA28C] py-2.5 text-sm font-semibold text-white transition-all duration-200 hover:bg-[#A88A72] hover:shadow-[0_5px_14px_rgba(191,162,140,0.2)]">
-                            Lihat Detail
-                        </button>
-                    </div>
-                </div>
+                <x-user.product-card :product="$product" :index="$index" />
             @endforeach
         </div>
     </section>

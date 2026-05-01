@@ -8,23 +8,23 @@
 
             {{-- Sidebar --}}
             <div class="lg:col-span-3">
-                @include('components.user.profile-sidebar')
+                <x-user.profile-sidebar />
             </div>
 
             {{-- Konten --}}
             <div class="lg:col-span-9">
-                @include('components.user.profile-account')
-                @include('components.user.profile-history')
+                <x-user.profile-account />
+                <x-user.profile-history />
             </div>
 
         </div>
     </div>
 
     {{-- Modal --}}
-    @include('components.user.profile-order-modal')
+    <x-user.profile-order-modal />
 
     {{-- Toast --}}
-    @include('components.user.profile-toast')
+    <x-user.profile-toast />
 
 @endsection
 
