@@ -8,11 +8,11 @@
             <table class="w-full min-w-[800px] text-left">
                 <thead>
                 <tr class="border-b border-[#eee5dc] bg-[#fcfaf8] text-sm font-bold text-[#5c4432]">
-                    <th class="min-w-[160px] px-6 py-5 whitespace-nowrap">No. Pesanan</th>
-                    <th class="min-w-[280px] px-6 py-5 whitespace-nowrap">Produk</th>
-                    <th class="min-w-[200px] px-6 py-5 text-center whitespace-nowrap">Status Pembayaran</th>
-                    <th class="min-w-[140px] px-6 py-5 whitespace-nowrap">Total</th>
-                    <th class="min-w-[120px] px-6 py-5 text-center whitespace-nowrap">Aksi</th>
+                    <th class="px-6 py-5 whitespace-nowrap">No. Pesanan</th>
+                    <th class="px-6 py-5 whitespace-nowrap">Produk</th>
+                    <th class="px-6 py-5 text-center whitespace-nowrap">Status Pembayaran</th>
+                    <th class="px-6 py-5 whitespace-nowrap">Total</th>
+                    <th class="px-6 py-5 text-center whitespace-nowrap">Aksi</th>
                 </tr>
             </thead>
 
@@ -44,7 +44,7 @@
                     </td>
 
                     <td class="px-6 py-6 text-base font-bold whitespace-nowrap text-[#5c4432]">
-                        Rp382.000
+                        Rp362.000
                     </td>
 
                     <td class="px-6 py-6">
@@ -122,7 +122,7 @@
                     </td>
 
                     <td class="px-6 py-6 text-base font-bold whitespace-nowrap text-[#5c4432]">
-                        Rp112.000
+                        Rp90.000
                     </td>
 
                     <td class="px-6 py-6">

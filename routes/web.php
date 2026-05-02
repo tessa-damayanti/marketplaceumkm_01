@@ -11,9 +11,12 @@ use App\Http\Controllers\ProductController;
 Route::get('/', [ProductController::class, 'home'])->name('home');
 Route::get('/product', [ProductController::class, 'index'])->name('product');
 
-Route::view('/about', 'pages.about')->name('about');
-Route::view('/contact', 'pages.contact')->name('contact');
-Route::view('/checkout', 'pages.checkout')->name('checkout');
+Route::get('/checkout', function () {
+    if (session('role') !== 'buyer') {
+        return redirect()->route('login')->with('error', 'Silakan login terlebih dahulu untuk checkout.');
+    }
+    return view('pages.checkout');
+})->name('checkout');
 
 // Cart
 Route::get('/cart', [CartController::class, 'index'])->name('cart');
@@ -21,8 +24,12 @@ Route::post('/cart/add', [CartController::class, 'add'])->name('cart.add');
 Route::post('/cart/remove', [CartController::class, 'remove'])->name('cart.remove');
 Route::post('/cart/update', [CartController::class, 'update'])->name('cart.update');
 
-// Profile & Auth Actions
-Route::view('/profile', 'pages.profile')->name('profile');
+Route::get('/profile', function () {
+    if (session('role') !== 'buyer') {
+        return redirect()->route('login')->with('error', 'Silakan login terlebih dahulu untuk mengakses profil.');
+    }
+    return view('pages.profile');
+})->name('profile');
 Route::post('/login', [LoginController::class, 'loginSubmit'])->name('login.submit');
 Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 

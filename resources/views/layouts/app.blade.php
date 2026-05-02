@@ -26,7 +26,7 @@
 >
 
     @if(!request()->routeIs('cart', 'checkout'))
-        @include('partials.navbar')
+        <x-navbar />
     @endif
 
     <main>
@@ -34,7 +34,7 @@
     </main>
 
     @if(!request()->routeIs('cart', 'checkout'))
-        @include('partials.footer')
+        <x-footer />
     @endif
 
     @stack('scripts')

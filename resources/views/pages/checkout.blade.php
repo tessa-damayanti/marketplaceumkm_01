@@ -53,10 +53,10 @@
         <form action="#" method="POST" enctype="multipart/form-data" onsubmit="showOrderToast(event)">
             @csrf
             <div class="grid md:grid-cols-[1fr_1.05fr]">
-                <x-user.checkout-buyer />
+                <x-user.checkout-buyer :buyerName="$buyerName" :buyerPhone="$buyerPhone" :buyerAddress="$buyerAddress" />
 
                 <div class="p-5 sm:p-8">
-                    <x-user.checkout-summary />
+                    <x-user.checkout-summary :cartItems="$cartItems" :grandTotal="$grandTotal" />
                 </div>
             </div>
         </form>

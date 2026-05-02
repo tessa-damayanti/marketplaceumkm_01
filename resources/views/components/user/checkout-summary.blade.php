@@ -1,3 +1,5 @@
+@props(['cartItems', 'grandTotal'])
+
 <h2 class="mb-5 text-xl font-bold text-[#5c4432] sm:mb-7 sm:text-2xl">Ringkasan Pesanan</h2>
 
 <div class="mb-7 rounded-3xl border border-[#e5d8ca] bg-[#faf7f4] p-5">
