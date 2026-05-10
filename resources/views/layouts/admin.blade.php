@@ -235,11 +235,20 @@
       document.getElementById('prod-modal-title').textContent = 'Edit Produk';
       document.getElementById('prod-nama').value = p.nama;
       document.getElementById('prod-kat').value = p.kategori;
-      document.getElementById('prod-harga').value = p.harga;
+      document.getElementById('prod-harga').value = p.harga ? 'Rp ' + p.harga.toLocaleString('id-ID') : '';
       document.getElementById('prod-desk').value = p.deskripsi;
       selectedProdukImage = p.image || '';
       document.getElementById('upload-hint').textContent = 'Foto tersimpan';
       openAdminModal('modal-tambah-produk');
+    }
+
+    function formatRupiahInput(input) {
+      let value = input.value.replace(/\D/g, '');
+      if (value) {
+        input.value = 'Rp ' + parseInt(value).toLocaleString('id-ID');
+      } else {
+        input.value = '';
+      }
     }
 
     function openHapusProduk(id) { deletingProdukId = id; openAdminModal('modal-hapus-produk'); }
@@ -250,9 +259,9 @@
       const harga = parseInt(document.getElementById('prod-harga').value.replace(/\D/g, '')) || 0;
       const desk = document.getElementById('prod-desk').value.trim();
 
-      if (!nama) return alert('Nama produk wajib diisi.');
-      if (!harga || harga <= 0) return alert('Harga produk wajib diisi dengan benar.');
-      if (!desk) return alert('Keterangan/Deskripsi produk wajib diisi.');
+      if (!nama) return showAdminToast('Peringatan', 'Nama produk wajib diisi.', 'error');
+      if (!harga || harga <= 0) return showAdminToast('Peringatan', 'Harga produk wajib diisi dengan benar.', 'error');
+      if (!desk) return showAdminToast('Peringatan', 'Keterangan/Deskripsi produk wajib diisi.', 'error');
 
       if (editingProdukId) {
         const p = produkList.find(x => x.id === editingProdukId);
@@ -313,7 +322,7 @@
     function openHapusKat(id) { deletingKatId = id; openAdminModal('modal-hapus-kat'); }
     function saveKategori() {
       const nama = document.getElementById('kat-nama').value.trim();
-      if (!nama) return alert('Nama kategori wajib diisi.');
+      if (!nama) return showAdminToast('Peringatan', 'Nama kategori wajib diisi.', 'error');
       if (editingKatId) {
         const k = kategoriList.find(x => x.id === editingKatId);
         if (k) k.nama = nama;

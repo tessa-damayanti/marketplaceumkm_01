@@ -1,4 +1,3 @@
-<!-- modal-->
 <!-- tambah dan edit produk -->
 <div class="overlay" id="modal-tambah-produk">
   <div class="modal">
@@ -29,7 +28,7 @@
       </div>
       <div>
         <label class="field-label">Harga</label>
-        <input type="text" id="prod-harga" placeholder="Rp 100.000" style="width:100%">
+        <input type="text" id="prod-harga" placeholder="Rp 100.000" style="width:100%" oninput="formatRupiahInput(this)">
       </div>
       <div>
         <label class="field-label">Deskripsi</label>

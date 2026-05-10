@@ -48,7 +48,7 @@
 
     <div class="grid grid-cols-1 gap-6 lg:grid-cols-3">
 
-      <!-- Main Table Section -->
+      <!-- Table Section -->
       <div class="lg:col-span-2">
         <div
           class="surface data-surface h-full overflow-hidden rounded-2xl border border-[#e2d4c5] bg-white shadow-[0_12px_28px_rgba(92,68,50,0.06)]">
@@ -77,7 +77,7 @@
         </div>
       </div>
 
-      <!-- Stats Section -->
+      <!-- Section -->
       <div class="lg:col-span-1">
         <div
           class="flex h-full flex-col overflow-hidden rounded-2xl border border-[#e2d4c5] bg-white shadow-[0_12px_28px_rgba(92,68,50,0.06)]">
