@@ -15,25 +15,28 @@
       </div>
       <div>
         <label class="field-label">Nama Produk</label>
-        <input type="text" id="prod-nama" placeholder="Kemeja Stripe" style="width:100%">
+        <input type="text" id="prod-nama" placeholder="Nama produk.." style="width:100%" oninput="document.getElementById('err-prod-nama').style.display='none'">
+        <span class="error-msg" id="err-prod-nama" style="color: #ef4444; font-size: 12px; font-weight: 500; display: none; margin-top: 4px;">Nama produk wajib diisi.</span>
       </div>
       <div>
         <label class="field-label">Kategori</label>
         <select id="prod-kat" style="width:100%">
           <option>Gaun</option>
           <option>Kemeja</option>
-          <option>Kardigan</option>
+          <option>Cardigan</option>
           <option>Rok</option>
         </select>
       </div>
       <div>
         <label class="field-label">Harga</label>
-        <input type="text" id="prod-harga" placeholder="Rp 100.000" style="width:100%" oninput="formatRupiahInput(this)">
+        <input type="text" id="prod-harga" placeholder="Rp 100.000" style="width:100%" oninput="formatRupiahInput(this); document.getElementById('err-prod-harga').style.display='none'">
+        <span class="error-msg" id="err-prod-harga" style="color: #ef4444; font-size: 12px; font-weight: 500; display: none; margin-top: 4px;">Harga produk wajib diisi.</span>
       </div>
       <div>
         <label class="field-label">Deskripsi</label>
         <textarea id="prod-desk" rows="4" placeholder="Deskripsi produk..."
-          style="width:100%;resize:vertical;"></textarea>
+          style="width:100%;resize:vertical;" oninput="document.getElementById('err-prod-desk').style.display='none'"></textarea>
+        <span class="error-msg" id="err-prod-desk" style="color: #ef4444; font-size: 12px; font-weight: 500; display: none; margin-top: 4px;">Deskripsi produk wajib diisi.</span>
       </div>
     </div>
     <div class="modal-footer">
@@ -65,7 +68,8 @@
     <div class="modal-body">
       <div>
         <label class="field-label">Nama Kategori</label>
-        <input type="text" id="kat-nama" placeholder="Nama Kategori..." style="width:100%">
+        <input type="text" id="kat-nama" placeholder="Nama Kategori..." style="width:100%" oninput="document.getElementById('err-kat-nama').style.display='none'">
+        <span class="error-msg" id="err-kat-nama" style="color: #ef4444; font-size: 12px; font-weight: 500; display: none; margin-top: 4px;">Nama kategori wajib diisi.</span>
       </div>
     </div>
     <div class="modal-footer">

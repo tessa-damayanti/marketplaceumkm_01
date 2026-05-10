@@ -95,8 +95,8 @@
       'Kemeja Hitam': 'https://i.pinimg.com/736x/b3/3f/b9/b33fb97104fe57a9b2c093f6e0b857ec.jpg',
       'Gaun Ivory': 'https://i.pinimg.com/1200x/11/59/c1/1159c13c68d7581c8253d1fdb5b77e99.jpg',
       'Gaun Floral Pastel': 'https://img.fantaskycdn.com/6bdf5a35272dcc4348d5b0a5594b3d78_1024x.jpeg',
-      'Kardigan Floral': 'https://i.pinimg.com/1200x/9f/d0/5b/9fd05ba93f69906a9875be57f76906ed.jpg',
-      'Kardigan Rajut': 'https://i.pinimg.com/736x/78/2a/3d/782a3d260721c8f3d515966337443416.jpg',
+      'Cardigan Floral': 'https://i.pinimg.com/1200x/9f/d0/5b/9fd05ba93f69906a9875be57f76906ed.jpg',
+      'Cardigan Rajut': 'https://i.pinimg.com/736x/78/2a/3d/782a3d260721c8f3d515966337443416.jpg',
       'Rok Denim': 'https://i.pinimg.com/736x/1a/66/22/1a66221e9292bb9a8c2e7d4fd618db5d.jpg',
       'Rok Plisket': 'https://i.pinimg.com/736x/ff/b9/06/ffb9065c829ab35740b27c4f962300bf.jpg',
     };
@@ -226,6 +226,10 @@
       ['prod-nama', 'prod-harga', 'prod-desk', 'file-upload'].forEach(id => document.getElementById(id).value = '');
       document.getElementById('prod-kat').value = 'Gaun';
       document.getElementById('upload-hint').textContent = 'Belum ada file dipilih';
+      ['err-prod-nama', 'err-prod-harga', 'err-prod-desk'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.style.display = 'none';
+      });
     }
 
     function openEditProduk(id) {
@@ -239,6 +243,10 @@
       document.getElementById('prod-desk').value = p.deskripsi;
       selectedProdukImage = p.image || '';
       document.getElementById('upload-hint').textContent = 'Foto tersimpan';
+      ['err-prod-nama', 'err-prod-harga', 'err-prod-desk'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.style.display = 'none';
+      });
       openAdminModal('modal-tambah-produk');
     }
 
@@ -259,9 +267,11 @@
       const harga = parseInt(document.getElementById('prod-harga').value.replace(/\D/g, '')) || 0;
       const desk = document.getElementById('prod-desk').value.trim();
 
-      if (!nama) return showAdminToast('Peringatan', 'Nama produk wajib diisi.', 'error');
-      if (!harga || harga <= 0) return showAdminToast('Peringatan', 'Harga produk wajib diisi dengan benar.', 'error');
-      if (!desk) return showAdminToast('Peringatan', 'Keterangan/Deskripsi produk wajib diisi.', 'error');
+      let isValid = true;
+      if (!nama) { document.getElementById('err-prod-nama').style.display = 'block'; isValid = false; }
+      if (!harga || harga <= 0) { document.getElementById('err-prod-harga').style.display = 'block'; isValid = false; }
+      if (!desk) { document.getElementById('err-prod-desk').style.display = 'block'; isValid = false; }
+      if (!isValid) return;
 
       if (editingProdukId) {
         const p = produkList.find(x => x.id === editingProdukId);
@@ -310,19 +320,30 @@
         </tr>`).join('');
     }
 
-    function setKatModalMode(mode) { editingKatId = null; document.getElementById('kat-modal-title').textContent = 'Tambah Kategori'; document.getElementById('kat-nama').value = ''; }
+    function setKatModalMode(mode) { 
+      editingKatId = null; 
+      document.getElementById('kat-modal-title').textContent = 'Tambah Kategori'; 
+      document.getElementById('kat-nama').value = ''; 
+      const errEl = document.getElementById('err-kat-nama');
+      if (errEl) errEl.style.display = 'none';
+    }
     function openEditKat(id) {
       const k = kategoriList.find(x => x.id === id);
       if (!k) return;
       editingKatId = id;
       document.getElementById('kat-modal-title').textContent = 'Edit Kategori';
       document.getElementById('kat-nama').value = k.nama;
+      const errEl = document.getElementById('err-kat-nama');
+      if (errEl) errEl.style.display = 'none';
       openAdminModal('modal-tambah-kat');
     }
     function openHapusKat(id) { deletingKatId = id; openAdminModal('modal-hapus-kat'); }
     function saveKategori() {
       const nama = document.getElementById('kat-nama').value.trim();
-      if (!nama) return showAdminToast('Peringatan', 'Nama kategori wajib diisi.', 'error');
+      if (!nama) {
+        document.getElementById('err-kat-nama').style.display = 'block';
+        return;
+      }
       if (editingKatId) {
         const k = kategoriList.find(x => x.id === editingKatId);
         if (k) k.nama = nama;

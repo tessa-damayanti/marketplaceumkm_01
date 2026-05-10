@@ -782,6 +782,7 @@ label.field-label {
 }
 
 #modal-tambah-produk input[type="text"],
+#modal-tambah-kat input[type="text"],
 #modal-tambah-produk select,
 #modal-tambah-produk textarea {
   width: 100%;
@@ -795,6 +796,14 @@ label.field-label {
   appearance: none;
   -webkit-appearance: none;
   -moz-appearance: none;
+}
+
+#modal-tambah-produk input[type="text"]::placeholder,
+#modal-tambah-kat input[type="text"]::placeholder,
+#modal-tambah-produk textarea::placeholder {
+  color: var(--text-muted);
+  font-weight: 400;
+  opacity: 1;
 }
 
 #modal-tambah-produk textarea {
@@ -811,6 +820,7 @@ label.field-label {
 }
 
 #modal-tambah-produk input[type="text"]:focus,
+#modal-tambah-kat input[type="text"]:focus,
 #modal-tambah-produk select:focus,
 #modal-tambah-produk textarea:focus,
 #modal-tambah-produk .upload-zone:focus-within {

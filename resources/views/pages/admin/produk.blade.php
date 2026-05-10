@@ -33,7 +33,7 @@
               <li class="produk-kategori-option cursor-pointer border-b border-[#f0e7dd] px-4 py-2.5 text-sm font-medium text-[#5c4432] transition-colors hover:bg-[#BFA28C] hover:text-white"
                 onclick="selectProdukKategoriFilter('Kemeja')">Kemeja</li>
               <li class="produk-kategori-option cursor-pointer border-b border-[#f0e7dd] px-4 py-2.5 text-sm font-medium text-[#5c4432] transition-colors hover:bg-[#BFA28C] hover:text-white"
-                onclick="selectProdukKategoriFilter('Kardigan')">Kardigan</li>
+                onclick="selectProdukKategoriFilter('Cardigan')">Cardigan</li>
               <li class="produk-kategori-option cursor-pointer px-4 py-2.5 text-sm font-medium text-[#5c4432] transition-colors hover:bg-[#BFA28C] hover:text-white"
                 onclick="selectProdukKategoriFilter('Rok')">Rok</li>
             </ul>
