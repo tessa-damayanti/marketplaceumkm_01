@@ -5,6 +5,16 @@
 @section('content')
 <div id="login-config" data-login-url="{{ route('login.submit') }}" hidden></div>
 
+@push('styles')
+<style>
+    html,
+    body {
+        overscroll-behavior: none;
+    }
+</style>
+@endpush
+
+<!-- Toast -->
 <div id="login-toast" class="pointer-events-none fixed right-6 top-6 z-50 translate-y-3 opacity-0 transition-all duration-300">
     <div class="flex min-w-[320px] max-w-[360px] items-start gap-3 rounded-[24px] border border-white/60 bg-[#fffaf6]/95 px-5 py-4 shadow-[0_24px_60px_rgba(92,68,50,0.18)] backdrop-blur">
         <div id="login-toast-icon" class="mt-0.5 flex h-10 w-10 items-center justify-center rounded-2xl bg-[#dff1e3] text-[#5e936c]">
@@ -19,7 +29,7 @@
     </div>
 </div>
 
-<div class="w-full max-w-5xl rounded-[34px] overflow-hidden bg-white shadow-[0_24px_60px_rgba(92,68,50,0.18)]">
+<div class="w-full max-w-5xl rounded-[34px] overflow-hidden bg-white shadow-[0_24px_60px_rgba(92,68,50,0.18)] animate-fade-up scale-[0.92]">
     <div class="grid md:grid-cols-2 min-h-[600px]">
 
         <!-- LEFT SIDE -->

@@ -12,6 +12,7 @@
                 value="{{ $buyerName }}"
                 class="w-full rounded-2xl border border-[#dccabb] bg-white px-5 py-4 outline-none transition focus:border-[#a78d78] focus:ring-4 focus:ring-[#a78d78]/15"
             >
+            <p id="name-msg" class="hidden mt-2 text-sm font-semibold text-[#dc2626]"></p>
         </div>
 
         <div>
@@ -22,6 +23,7 @@
                 value="{{ $buyerPhone }}"
                 class="w-full rounded-2xl border border-[#dccabb] bg-white px-5 py-4 outline-none transition focus:border-[#a78d78] focus:ring-4 focus:ring-[#a78d78]/15"
             >
+            <p id="phone-msg" class="hidden mt-2 text-sm font-semibold text-[#dc2626]"></p>
         </div>
 
         <div>
@@ -31,6 +33,7 @@
                 rows="7"
                 class="w-full resize-none rounded-2xl border border-[#dccabb] bg-white px-5 py-4 outline-none transition focus:border-[#a78d78] focus:ring-4 focus:ring-[#a78d78]/15"
             >{{ $buyerAddress }}</textarea>
+            <p id="address-msg" class="hidden mt-2 text-sm font-semibold text-[#dc2626]"></p>
         </div>
     </div>
 </div>

@@ -1,9 +1,10 @@
 @extends('layouts.app')
+
 @section('title', 'Produk')
 
 @section('content')
 
-<!-- Toast session success -->
+<!-- Toast -->
 @if (session('success'))
 <div id="cart-toast" class="pointer-events-none fixed right-6 top-6 z-[999] translate-y-3 opacity-0 transition-all duration-500">
     <div class="flex min-w-[320px] max-w-[360px] items-start gap-3 rounded-[24px] border border-white/60 bg-[#fffaf6]/95 px-5 py-4 shadow-[0_24px_60px_rgba(92,68,50,0.18)] backdrop-blur">
@@ -18,6 +19,8 @@
         </div>
     </div>
 </div>
+
+@push('scripts')
 <script>
     document.addEventListener('DOMContentLoaded', () => {
         const toast = document.getElementById('cart-toast');
@@ -97,17 +100,17 @@
 
         <!-- Dropdown urutkan produk -->
         <div class="relative min-[480px]:min-w-[180px]">
-            <button id="sortButton" type="button"
+            <button id="sortButton" type="button" data-dropdown-toggle="sortMenu" data-dropdown-placement="bottom-end"
                 class="flex w-full items-center justify-between gap-2 rounded-xl border border-[#DDD0C4] bg-white px-3 py-2 text-xs font-semibold text-[#7A5A43] outline-none transition-all duration-200 hover:border-[#BFA28C] focus:border-[#BFA28C] focus:ring-2 focus:ring-[#BFA28C]/20 sm:rounded-2xl sm:px-4 sm:py-3 sm:text-sm [font-family:Poppins,sans-serif]">
                 <span id="sortLabel">Terbaru</span>
-                <svg width="12" height="8" viewBox="0 0 14 8" fill="none" class="transition-transform duration-200">
+                <svg width="12" height="8" viewBox="0 0 14 8" fill="none" class="transition-transform duration-200" id="sortArrow">
                     <path d="M2 2l5 4 5-4" stroke="#7A5A43" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
                 </svg>
             </button>
 
             <!-- Menu Dropdown  -->
             <div id="sortMenu"
-                class="absolute right-0 top-[calc(100%+6px)] z-[100] hidden w-[180px] overflow-hidden rounded-xl border border-[#DDD0C4] bg-white shadow-xl">
+                class="z-[100] hidden w-[180px] overflow-hidden rounded-xl border border-[#DDD0C4] bg-white shadow-xl">
                 <ul>
                     <li>
                         <button type="button" data-value="default" class="sort-option block w-full cursor-pointer px-4 py-2 text-left text-xs font-medium text-[#7A5A43] transition-colors hover:bg-[#BFA28C] hover:text-white sm:py-2.5 sm:text-sm">Terbaru</button>
@@ -263,6 +266,7 @@
 </section>
 
 <section class="mx-auto max-w-7xl px-4 pb-14 sm:px-6 [font-family:Poppins,sans-serif]">
+    @if(count($displayProducts) > 0)
     <div id="product-grid"
         class="grid grid-cols-2 gap-[0.85rem] md:grid-cols-3 md:gap-5 lg:grid-cols-4 lg:gap-6">
 
@@ -271,6 +275,16 @@
         @endforeach
 
     </div>
+    @else
+    <div class="flex flex-col items-center justify-center py-20 text-center">
+        <div class="mb-4 flex h-20 w-20 items-center justify-center rounded-full bg-[#EDE4DA]">
+            <svg class="h-10 w-10 text-[#BFA28C]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+            </svg>
+        </div>
+        <h3 class="text-xl font-bold text-[#5c4432]">Produk tidak ditemukan</h3>
+    </div>
+    @endif
 </section>
 
     <x-product-modal />

@@ -5,9 +5,9 @@
             <a href="{{ route('home') }}" class="text-2xl font-bold text-[#5c4432]">Velora</a>
 
             <div class="hidden items-center gap-8 text-sm font-medium md:flex">
-                <a href="{{ route('home') }}" class="transition hover:text-[#8f7561] {{ request()->routeIs('home') ? 'font-bold text-[#5c4432]' : '' }}">Beranda</a>
-                <a href="{{ route('product') }}" class="transition hover:text-[#8f7561] {{ request()->routeIs('product') ? 'font-bold text-[#5c4432]' : '' }}">Kategori</a>
-                <a href="{{ route('home') }}#tentang" class="transition hover:text-[#8f7561]">Tentang</a>
+                <a href="{{ route('home') }}" id="nav-beranda" class="transition hover:text-[#8f7561] {{ request()->routeIs('home') ? 'font-bold text-[#5c4432]' : '' }}">Beranda</a>
+                <a href="{{ route('product') }}" id="nav-kategori" class="transition hover:text-[#8f7561] {{ request()->routeIs('product') ? 'font-bold text-[#5c4432]' : '' }}">Kategori</a>
+                <a href="{{ route('home') }}#tentang" id="nav-tentang" class="transition hover:text-[#8f7561]">Tentang</a>
             </div>
         </div>
 
@@ -72,9 +72,9 @@
     {{-- Mobile menu --}}
     <div id="mobileMenu" class="hidden border-t border-[#c9a882] bg-[#d8c3af] px-6 pb-4 md:hidden">
         <div class="flex flex-col gap-3 py-3 text-sm font-medium">
-            <a href="{{ route('home') }}" class="py-1 transition hover:text-[#8f7561]">Beranda</a>
-            <a href="{{ route('product') }}" class="py-1 transition hover:text-[#8f7561]">Kategori</a>
-            <a href="{{ route('home') }}#tentang" class="py-1 transition hover:text-[#8f7561]">Tentang</a>
+            <a href="{{ route('home') }}" id="mobile-nav-beranda" class="py-1 transition hover:text-[#8f7561] {{ request()->routeIs('home') ? 'font-bold text-[#5c4432]' : '' }}">Beranda</a>
+            <a href="{{ route('product') }}" id="mobile-nav-kategori" class="py-1 transition hover:text-[#8f7561] {{ request()->routeIs('product') ? 'font-bold text-[#5c4432]' : '' }}">Kategori</a>
+            <a href="{{ route('home') }}#tentang" id="mobile-nav-tentang" class="py-1 transition hover:text-[#8f7561]">Tentang</a>
         </div>
         <form action="{{ route('product') }}" method="GET" class="relative mt-2">
             <input type="text" name="search" placeholder="Cari Produk..." class="w-full rounded-full border border-[#bfa58e] bg-[#fdfaf7] px-5 py-2.5 pl-11 text-sm outline-none focus:border-[#8f7561]">
@@ -84,3 +84,59 @@
         </form>
     </div>
 </nav>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const isHomeRoute = {{ request()->routeIs('home') ? 'true' : 'false' }};
+    if (!isHomeRoute) return;
+
+    const navBeranda = document.getElementById('nav-beranda');
+    const navTentang = document.getElementById('nav-tentang');
+    const mobileBeranda = document.getElementById('mobile-nav-beranda');
+    const mobileTentang = document.getElementById('mobile-nav-tentang');
+
+    function setTentangActive(isActive) {
+        if (isActive) {
+            navBeranda?.classList.remove('font-bold', 'text-[#5c4432]');
+            navTentang?.classList.add('font-bold', 'text-[#5c4432]');
+            mobileBeranda?.classList.remove('font-bold', 'text-[#5c4432]');
+            mobileTentang?.classList.add('font-bold', 'text-[#5c4432]');
+        } else {
+            navBeranda?.classList.add('font-bold', 'text-[#5c4432]');
+            navTentang?.classList.remove('font-bold', 'text-[#5c4432]');
+            mobileBeranda?.classList.add('font-bold', 'text-[#5c4432]');
+            mobileTentang?.classList.remove('font-bold', 'text-[#5c4432]');
+        }
+    }
+
+    function checkHash() {
+        if (window.location.hash === '#tentang') {
+            setTentangActive(true);
+        } else {
+            setTentangActive(false);
+        }
+    }
+
+    window.addEventListener('hashchange', checkHash);
+    
+    checkHash();
+
+    // Scroll ke bagian Tentang
+    const tentangSection = document.getElementById('tentang');
+    if (tentangSection) {
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    setTentangActive(true);
+                    history.replaceState(null, null, '#tentang');
+                } else if (window.scrollY < tentangSection.offsetTop - 300) {
+                    setTentangActive(false);
+                    history.replaceState(null, null, window.location.pathname);
+                }
+            });
+        }, { threshold: 0.3 });
+        
+        observer.observe(tentangSection);
+    }
+});
+</script>

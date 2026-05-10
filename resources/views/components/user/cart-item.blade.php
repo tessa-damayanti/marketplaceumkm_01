@@ -40,7 +40,7 @@
         <!-- Kuantitas dan Hapus -->
         <div class="flex items-end justify-between pl-[calc(0.75rem+72px)] sm:pl-[calc(1rem+82px)]">
             
-            <!-- Qty & Warning Stack -->
+            <!-- Qty dan Warning Stack -->
             <div class="flex flex-col">
                 <!-- Qty Counter -->
                 <div class="flex items-center gap-3">

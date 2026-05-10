@@ -12,6 +12,22 @@
 @endpush
 
 @section('content')
+
+<!-- Toast -->
+<div id="register-toast" class="pointer-events-none fixed right-6 top-6 z-50 translate-y-3 opacity-0 transition-all duration-300">
+    <div class="flex min-w-[320px] max-w-[360px] items-start gap-3 rounded-[24px] border border-white/60 bg-[#fffaf6]/95 px-5 py-4 shadow-[0_24px_60px_rgba(92,68,50,0.18)] backdrop-blur">
+        <div id="register-toast-icon" class="mt-0.5 flex h-10 w-10 items-center justify-center rounded-2xl bg-[#dff1e3] text-[#5e936c]">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+            </svg>
+        </div>
+        <div class="min-w-0 flex-1">
+            <p id="register-toast-title" class="text-sm font-bold text-[#5c4432]">Berhasil</p>
+            <p id="register-toast-message" class="mt-1 text-sm leading-6 text-[#7b6858]">Registrasi berhasil.</p>
+        </div>
+    </div>
+</div>
+
 <div class="w-full max-w-5xl rounded-[34px] overflow-hidden bg-white shadow-[0_24px_60px_rgba(92,68,50,0.18)] animate-fade-up scale-[0.92]">
     <div class="grid md:grid-cols-2 min-h-[600px]">
 
@@ -30,7 +46,7 @@
 
         <!-- Right side -->
         <div class="bg-[#a78d78] flex items-center justify-center px-8 py-8 md:px-14">
-            <div class="w-full max-w-md">
+            <div class="w-full max-w-md fade-up-soft">
 
                 <div class="text-center mb-6">
                     <h2 class="text-4xl font-bold text-[#fffaf6]">Registrasi</h2>
@@ -167,6 +183,43 @@
 
 @push('scripts')
 <script>
+    let toastTimer = null;
+
+    function showToast(title, message, type = 'success') {
+        const toast = document.getElementById('register-toast');
+        const icon = document.getElementById('register-toast-icon');
+        const titleEl = document.getElementById('register-toast-title');
+        const messageEl = document.getElementById('register-toast-message');
+
+        titleEl.textContent = title;
+        messageEl.textContent = message;
+
+        if (type === 'error') {
+            icon.className = 'mt-0.5 flex h-10 w-10 items-center justify-center rounded-2xl bg-[#f8dede] text-[#c45b5b]';
+            icon.innerHTML = `
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v4m0 4h.01M10.29 3.86l-7.18 12.44A2 2 0 004.82 19h14.36a2 2 0 001.71-2.7L13.71 3.86a2 2 0 00-3.42 0z" />
+                </svg>
+            `;
+        } else {
+            icon.className = 'mt-0.5 flex h-10 w-10 items-center justify-center rounded-2xl bg-[#dff1e3] text-[#5e936c]';
+            icon.innerHTML = `
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+                </svg>
+            `;
+        }
+
+        toast.classList.remove('opacity-0', 'translate-y-3');
+        toast.classList.add('opacity-100', 'translate-y-0');
+
+        if (toastTimer) clearTimeout(toastTimer);
+        toastTimer = setTimeout(() => {
+            toast.classList.add('opacity-0', 'translate-y-3');
+            toast.classList.remove('opacity-100', 'translate-y-0');
+        }, 2200);
+    }
+
     function togglePassword(btn) {
         const input = btn.closest('.relative').querySelector('input');
         const icon = btn.querySelector('svg');
@@ -247,11 +300,6 @@
             return false;
         }
 
-        if (password.length < 8) {
-            setError('password', 'password-msg', 'Password minimal 8 karakter');
-            return false;
-        }
-
         clearError('password', 'password-msg');
         return true;
     }
@@ -266,7 +314,7 @@
         }
 
         if (pw !== cpw) {
-            setError('confirm-password', 'match-msg', 'Password tidak cocok');
+            setError('confirm-password', 'match-msg', 'Password tidak sesuai');
             return false;
         }
 
@@ -281,7 +329,10 @@
         const isMatchValid = checkMatch();
 
         if (isUsernameValid && isEmailValid && isPasswordValid && isMatchValid) {
-            alert('Registrasi berhasil');
+            showToast('Berhasil', 'Registrasi berhasil');
+            setTimeout(() => {
+                window.location.href = "{{ route('login') }}";
+            }, 1200);
         }
     }
 </script>

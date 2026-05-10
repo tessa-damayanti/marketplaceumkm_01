@@ -53,18 +53,17 @@ class ProductController extends Controller
         ];
     }
 
-    //  Halaman beranda dengan menampilkan 4 produk unggulan
+    //  Halaman beranda dengan menampilkan 4 produk terbaru
     public function home()
     {
         $allProducts = $this->getAllProducts();
         $products = [];
 
-        // Ambil produk pertama (terbaru) dari setiap kategori utama
+        // Ambil produk terbaru dari setiap kategori
         $categories = ['kemeja', 'gaun', 'cardigan', 'rok'];
 
         foreach ($categories as $cat) {
             if (isset($allProducts[$cat]) && count($allProducts[$cat]) > 0) {
-                // Ambil elemen terakhir (produk yang paling baru dimasukkan di kode)
                 $products[] = end($allProducts[$cat]);
             }
         }
@@ -79,12 +78,18 @@ class ProductController extends Controller
 
         $defaultCategory = $request->input('category', 'semua');
         $search = $request->input('search', '');
+        
+        $searchLower = strtolower(trim($search));
+
+        // Jika pencarian tentang
+        if ($searchLower === 'tentang') {
+            return redirect()->to(route('home') . '#tentang');
+        }
 
         // Gabungkan produk sesuai kategori
         if ($defaultCategory === 'semua') {
             $displayProducts = [];
             foreach ($products as $category => $items) {
-                // Balikkan urutan produk dalam kategori agar yang terakhir ditambah muncul di atas
                 $displayProducts = array_merge($displayProducts, array_reverse($items));
             }
         } else {
@@ -92,12 +97,25 @@ class ProductController extends Controller
         }
 
         // Filter search
-        if ($search) {
-            $displayProducts = array_filter($displayProducts, function ($product) use ($search) {
-                return str_contains(strtolower($product['name']), strtolower($search))
-                    || str_contains(strtolower($product['category']), strtolower($search));
+        if ($searchLower) {
+            $displayProducts = array_filter($displayProducts, function ($product) use ($searchLower) {
+                return str_contains(strtolower($product['name']), $searchLower)
+                    || str_contains(strtolower($product['category']), $searchLower);
             });
             $displayProducts = array_values($displayProducts);
+        
+            if (count($displayProducts) > 0) {
+                $matchedCategories = array_unique(array_map(function ($item) {
+                    return strtolower($item['category']);
+                }, $displayProducts));
+
+                if (count($matchedCategories) === 1) {
+                    $defaultCategory = array_values($matchedCategories)[0];
+                }
+            } else if (array_key_exists($searchLower, $products)) {
+                // Jika tidak ada produk yang cocok, namun kata kunci pencarian adalah nama kategori valid
+                $defaultCategory = $searchLower;
+            }
         }
 
         return view('pages.product', compact('displayProducts', 'defaultCategory', 'search'));

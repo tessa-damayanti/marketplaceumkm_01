@@ -1,7 +1,6 @@
 @props(['cartItems', 'grandTotal'])
 
 <h2 class="mb-5 text-xl font-bold text-[#5c4432] sm:mb-7 sm:text-2xl">Ringkasan Pesanan</h2>
-
 <div class="mb-7 rounded-3xl border border-[#e5d8ca] bg-[#faf7f4] p-5">
     <p class="mb-3 text-sm font-bold uppercase tracking-[3px] text-[#BFA28C]">
         Metode Pembayaran
@@ -65,10 +64,10 @@
     </div>
 </div>
 
-<div class="mb-5 rounded-[20px] bg-[#efe4d8] p-4 sm:mb-7 sm:rounded-3xl sm:p-5">
+<div class="mb-5 rounded-[18px] bg-[#efe4d8] p-3 sm:mb-6 sm:rounded-2xl sm:p-4">
     <div class="flex items-center justify-between gap-4">
-        <p class="text-base font-bold text-[#5c4432] sm:text-xl">Total Pembayaran</p>
-        <p class="text-lg font-bold text-[#5c4432] sm:text-2xl">
+        <p class="text-sm font-bold text-[#5c4432] sm:text-lg">Total Pembayaran</p>
+        <p class="text-base font-bold text-[#5c4432] sm:text-xl">
             Rp{{ number_format($grandTotal, 0, ',', '.') }}
         </p>
     </div>
@@ -94,6 +93,7 @@
 
         <input id="bukti-transfer" name="payment_proof" type="file" accept=".jpg,.jpeg,.png" class="hidden">
     </label>
+    <p id="proof-msg" class="hidden mt-2 text-sm font-semibold text-[#dc2626]"></p>
 </div>
 
 <button

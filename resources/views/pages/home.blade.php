@@ -35,6 +35,8 @@
         }
     </style>
 
+    <meta name="is-buyer" content="{{ session('role') === 'buyer' ? 'true' : 'false' }}">
+
     <!-- Toast session success -->
     @if (session('success'))
         <div id="cart-toast"
@@ -240,7 +242,7 @@
         let selectedSize = null;
         let currentProduct = null;
 
-        const isBuyerLoggedIn = @json(session('role') === 'buyer');
+       const isBuyerLoggedIn = document.querySelector('meta[name="is-buyer"]').content === 'true';
 
         function requireBuyerLogin() {
             if (!isBuyerLoggedIn) {

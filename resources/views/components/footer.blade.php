@@ -13,9 +13,9 @@
                 Kami siap membantu!
             </p>
 
-            <div class="mt-4 flex h-12 w-12 items-center justify-center rounded-full bg-green-500">
+            <a href="https://wa.me/6282313713429" target="_blank" class="mt-4 flex h-12 w-12 items-center justify-center rounded-full bg-green-500">
                 <img src="https://cdn-icons-png.flaticon.com/512/733/733585.png" alt="WhatsApp" class="h-6 w-6" >
-            </div>
+            </a>
         </div>
     </div>
 </footer>
