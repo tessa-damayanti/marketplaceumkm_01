@@ -1,5 +1,5 @@
 <div id="tab-riwayat" class="block">
-    <h2 class="mb-6 text-2xl font-bold text-[#5c4432] md:text-4xl">
+    <h2 class="mb-6 text-3xl font-bold text-[#5c4432]">
         Riwayat Pembelian
     </h2>
 
@@ -138,24 +138,24 @@
         </table>
         </div>
 
-        <div class="flex items-center justify-between border-t border-[#eee5dc] px-6 py-5">
-            <p class="text-sm text-[#8b6f58]">
+        <div class="flex items-center justify-between border-t border-[#eee5dc] px-6 py-4">
+            <p class="text-xs text-[#8b6f58]">
                 1 - 3 dari 3
             </p>
 
-            <div class="flex items-center gap-2">
+            <div class="flex items-center gap-1.5">
                 <button
-                    class="flex h-9 w-9 items-center justify-center rounded-lg border border-[#f1e8df] text-sm text-[#8b6f58] hover:bg-[#fcfaf8]">
+                    class="flex h-8 w-8 items-center justify-center rounded-[10px] border border-[#f1e8df] text-sm text-[#8b6f58] transition hover:bg-[#fcfaf8]">
                     ‹
                 </button>
 
                 <button
-                    class="flex h-9 w-9 items-center justify-center rounded-lg bg-[#BFA28C] text-sm font-bold text-white">
+                    class="flex h-8 w-8 items-center justify-center rounded-[10px] bg-[#BFA28C] text-sm font-bold text-white transition hover:bg-[#A88A72]">
                     1
                 </button>
 
                 <button
-                    class="flex h-9 w-9 items-center justify-center rounded-lg border border-[#f1e8df] text-sm text-[#8b6f58] hover:bg-[#fcfaf8]">
+                    class="flex h-8 w-8 items-center justify-center rounded-[10px] border border-[#f1e8df] text-sm text-[#8b6f58] transition hover:bg-[#fcfaf8]">
                     ›
                 </button>
             </div>

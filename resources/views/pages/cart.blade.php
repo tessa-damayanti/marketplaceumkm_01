@@ -68,7 +68,7 @@
             </div>
 
             <!-- Footer -->
-            <div class="flex flex-col gap-4 border-t border-[#eee3d8] px-5 sm:px-7 py-5 sm:flex-row sm:items-end sm:justify-between">
+            <div class="flex flex-col gap-4 border-t border-[#eee3d8] px-5 sm:px-7 pt-5 pb-8 sm:flex-row sm:items-end sm:justify-between sm:pb-10">
                 <div>
                     <p class="text-sm font-medium text-[#9b8778]">Total</p>
                     <p id="cart-total" class="mt-1 text-lg sm:text-xl font-bold leading-none text-[#5c4432]">
@@ -76,10 +76,15 @@
                     </p>
                 </div>
 
-                <a href="{{ route('checkout') }}" id="btn-checkout"
-                    class="inline-flex h-[42px] sm:h-[46px] w-full sm:w-[120px] items-center justify-center rounded-[14px] bg-[#A98B76] text-sm font-semibold text-white transition hover:bg-[#967A66] focus:outline-none focus:ring-2 focus:ring-[#c4ab96]">
-                    Beli
-                </a>
+                <div class="relative w-full sm:w-auto">
+                    <a href="{{ route('checkout') }}" id="btn-checkout"
+                        class="inline-flex h-[42px] sm:h-[46px] w-full sm:w-[120px] items-center justify-center rounded-[14px] bg-[#A98B76] text-sm font-semibold text-white transition hover:bg-[#967A66] focus:outline-none focus:ring-2 focus:ring-[#c4ab96]">
+                        Beli
+                    </a>
+                    <p id="validation-msg" class="hidden absolute top-full right-0 mt-1 whitespace-nowrap text-[10px] sm:text-xs font-medium text-red-600">
+                        Silahkan pilih produk yang akan dibeli
+                    </p>
+                </div>
             </div>
         </div>
         </section>
@@ -108,12 +113,10 @@
             const checkAll = document.getElementById('check-all');
             const itemChecks = document.querySelectorAll('.item-check');
             
-            // Restore Checkbox States
             const savedStates = JSON.parse(localStorage.getItem('cartCheckedStates')) || {};
             
             itemChecks.forEach((item) => {
                 const key = item.dataset.key;
-                // Default to true if never saved, otherwise use saved state
                 if (savedStates[key] === undefined) {
                     item.checked = true;
                 } else {
@@ -121,7 +124,6 @@
                 }
             });
 
-            // Sync checkAll initial state
             const allChecked = [...itemChecks].every((cb) => cb.checked);
             checkAll.checked = allChecked;
 
@@ -139,6 +141,12 @@
                 itemChecks.forEach((item) => { item.checked = checkAll.checked; });
                 saveStates();
                 updateCartTotal();
+                
+                // Sembunyikan pesan validasi jika ada item yang dipilih
+                const validationMsg = document.getElementById('validation-msg');
+                if (validationMsg && checkAll.checked && itemChecks.length > 0) {
+                    validationMsg.classList.add('hidden');
+                }
             });
 
             itemChecks.forEach((item) => {
@@ -147,6 +155,15 @@
                     checkAll.checked = allChecked;
                     saveStates();
                     updateCartTotal();
+
+                    // Sembunyikan pesan validasi jika ada item yang dipilih
+                    const validationMsg = document.getElementById('validation-msg');
+                    if (validationMsg) {
+                        const anyChecked = [...itemChecks].some((cb) => cb.checked);
+                        if (anyChecked) {
+                            validationMsg.classList.add('hidden');
+                        }
+                    }
                 });
             });
 
@@ -162,7 +179,10 @@
                     });
 
                     if (selectedKeys.length === 0) {
-                        alert('Silakan pilih minimal 1 produk untuk dibeli.');
+                        const validationMsg = document.getElementById('validation-msg');
+                        if (validationMsg) {
+                            validationMsg.classList.remove('hidden');
+                        }
                         return;
                     }
 
@@ -177,12 +197,9 @@
     </script>
 
     <script>
-        // Simpan posisi scroll sebelum halaman direfresh/form disubmit
         document.addEventListener('submit', function() {
             localStorage.setItem('scrollPos', window.scrollY);
         });
-
-        // Kembalikan posisi scroll setelah halaman dimuat ulang
         window.addEventListener('load', function() {
             const scrollPos = localStorage.getItem('scrollPos');
             if (scrollPos) {

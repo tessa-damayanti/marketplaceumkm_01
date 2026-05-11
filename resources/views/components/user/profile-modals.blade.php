@@ -1,6 +1,6 @@
 <div id="orderModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/55 p-4">
 
-    <div class="flex max-h-[88vh] w-full max-w-3xl flex-col overflow-hidden rounded-2xl bg-white shadow-2xl">
+    <div class="flex max-h-[88vh] w-full max-w-2xl flex-col overflow-hidden rounded-2xl bg-white shadow-2xl">
 
         <!-- HEADER -->
         <div class="relative border-b border-[#f1e8df] px-7 py-5">
@@ -71,6 +71,30 @@
                 </p>
 
                 <p id="modal-total" class="text-2xl font-extrabold text-[#5c4432]"></p>
+            </div>
+        </div>
+    </div>
+</div>
+
+{{-- Modal Logout --}}
+<div id="modal-logout" class="fixed inset-0 z-[9999] hidden items-center justify-center bg-black/40">
+    <div class="w-[380px] max-w-[calc(100%-32px)] animate-fade-up-soft rounded-[20px] bg-white shadow-[0_20px_50px_rgba(0,0,0,0.15)] transition-transform">
+        <div class="px-6 py-7">
+            <p class="text-center text-sm font-semibold leading-relaxed text-[#1a1a1a]">
+                Apakah Anda yakin ingin keluar dari Profile?
+            </p>
+            <div class="mt-5 flex justify-center gap-[10px]">
+                <button onclick="closeLogoutModal()" 
+                    class="rounded-xl border border-[#d8c3af] bg-white px-7 py-2.5 text-sm font-bold text-[#5c4432] transition hover:bg-[#fcf8f3] hover:border-[#c7b09b]">
+                    Batal
+                </button>
+                <form action="{{ route('logout') }}" method="POST" class="m-0">
+                    @csrf
+                    <button type="submit" 
+                        class="rounded-xl bg-[#ef4444] px-7 py-2.5 text-sm font-semibold text-white transition hover:brightness-105">
+                        Ya, Keluar
+                    </button>
+                </form>
             </div>
         </div>
     </div>

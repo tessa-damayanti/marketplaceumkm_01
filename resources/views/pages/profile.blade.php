@@ -3,6 +3,15 @@
 @section('title', 'Profil Saya')
 
 @section('content')
+
+@push('styles')
+<style>
+    html,
+    body {
+        overscroll-behavior: none;
+    }
+</style>
+@endpush
     <div class="mx-auto max-w-7xl px-4 py-10 md:px-8">
         <div class="grid grid-cols-1 gap-8 lg:grid-cols-12">
 
@@ -20,8 +29,8 @@
         </div>
     </div>
 
-    {{-- Modal --}}
-    <x-user.profile-order-modal />
+    {{-- Modals --}}
+    <x-user.profile-modals />
 
     {{-- Toast --}}
     <x-user.profile-toast />
@@ -39,8 +48,8 @@
             const btnAkun = document.getElementById('btn-tab-akun');
             const btnRiwayat = document.getElementById('btn-tab-riwayat');
 
-            const inactive = ['text-[#8b6f58]', 'font-medium'];
-            const active = ['bg-[#f4ece3]', 'text-[#5c4432]', 'font-bold'];
+            const inactive = ['text-[#8b6f58]', 'font-medium', 'bg-transparent'];
+            const active = ['bg-[#e8ded3]', 'text-[#5c4432]', 'font-bold'];
 
             btnAkun.classList.remove(...active);
             btnAkun.classList.add(...inactive);
@@ -106,7 +115,7 @@
 
             'VL-250206-003': {
                 id: 'VL-250206-003',
-                date: '06 Feb 2026, 09:12 WIB',
+                date: '06 Feb 2026, 09:15 WIB',
                 status: 'Pembayaran Ditolak',
                 badgeBg: 'bg-[#fee2e2]',
                 badgeText: 'text-[#dc2626]',
@@ -123,60 +132,39 @@
             }
         };
 
-        function lockScroll() {
-            const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
-            document.body.style.overflow = 'hidden';
-            document.body.style.paddingRight = scrollbarWidth + 'px';
-        }
-
-        function unlockScroll() {
-            document.body.style.overflow = '';
-            document.body.style.paddingRight = '';
-        }
-
-        function openModal() {
+        function openOrderModal() {
             const modal = document.getElementById('orderModal');
             modal.classList.remove('hidden');
             modal.classList.add('flex');
-
-            lockScroll();
+            document.body.style.overflow = 'hidden';
         }
 
         function closeOrderModal() {
             const modal = document.getElementById('orderModal');
             modal.classList.add('hidden');
             modal.classList.remove('flex');
-
-            unlockScroll();
-        }
-
-        function rupiahToNumber(value) {
-            return Number(String(value).replace(/[^0-9]/g, ''));
-        }
-
-        function getQty(item) {
-            return Number(String(item.qty).split('x')[0].trim()) || 1;
-        }
-
-        function getPrice(item) {
-            return rupiahToNumber(item.subtotal) / getQty(item);
+            document.body.style.overflow = '';
         }
 
         function openOrderDetail(orderId) {
             const order = orders[orderId];
+            if (!order) return;
 
-            document.getElementById('modal-order-id').textContent = order.id;
+            document.getElementById('modal-order-id').textContent = 'ID Pesanan: ' + order.id;
             document.getElementById('modal-date').textContent = order.date;
 
             const badge = document.getElementById('modal-status-badge');
+            badge.className = 'mt-2 inline-flex rounded-full px-5 py-2 text-sm font-semibold ' + order.badgeBg + ' ' + order.badgeText;
             badge.textContent = order.status;
-            badge.className = `mt-2 inline-flex rounded-full ${order.badgeBg} px-5 py-2 text-sm font-semibold ${order.badgeText}`;
 
-            const itemsWrapper = document.getElementById('modal-items');
-            itemsWrapper.innerHTML = '';
+            const itemsContainer = document.getElementById('modal-items');
+            itemsContainer.innerHTML = '';
+
+            const getPrice = (item) => parseInt(item.qty.split('Rp')[1].replace(/\./g, ''));
+            const getQty = (item) => parseInt(item.qty.split('x')[0]);
 
             order.items.forEach(item => {
-                itemsWrapper.innerHTML += `
+                itemsContainer.innerHTML += `
                             <div class="mb-4 rounded-[20px] bg-[#f4ede5] px-3 py-4 sm:px-4 sm:py-5 last:mb-0">
                                 <div class="flex items-center gap-3 sm:gap-4">
                                     <img src="${item.img}" alt="${item.name}" class="h-[72px] w-[72px] flex-shrink-0 rounded-[14px] object-cover sm:h-[82px] sm:w-[82px]">
@@ -215,7 +203,25 @@
 
             document.getElementById('modal-total').textContent = order.total;
 
-            openModal();
+            openOrderModal();
         }
+
+        function openLogoutModal() {
+            const modal = document.getElementById('modal-logout');
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeLogoutModal() {
+            const modal = document.getElementById('modal-logout');
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+            document.body.style.overflow = '';
+        }
+        document.addEventListener('DOMContentLoaded', () => {
+            // Set Riwayat sebagai tab aktif secara default
+            switchTab('riwayat');
+        });
     </script>
 @endpush

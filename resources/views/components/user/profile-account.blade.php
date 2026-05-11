@@ -1,6 +1,6 @@
 <div id="tab-akun" class="hidden rounded-[32px] bg-white p-10 shadow-[0_8px_30px_rgba(92,68,50,0.06)] min-h-[500px]">
 
-    <h2 class="text-4xl font-bold text-[#5c4432]">Edit Profil</h2>
+    <h2 class="text-3xl font-bold text-[#5c4432]">Edit Profil</h2>
     <p class="mt-2 text-[#7b6858] mb-10">
         Perbarui informasi diri Anda agar pengiriman pesanan lebih akurat.
     </p>
@@ -41,7 +41,8 @@
                     Nama Lengkap
                 </label>
                 <input id="profileName" name="name" type="text" value="Nikita Willy"
-                    class="w-full rounded-2xl border border-[#f2e4d8] px-5 py-3.5 text-[#7b6858] focus:outline-none focus:border-[#a16223]">
+                    class="w-full rounded-2xl border border-[#f2e4d8] px-5 py-3.5 text-[#7b6858] focus:outline-none focus:border-[#a16223] transition-all">
+                <p id="name-error" class="mt-1 hidden text-xs font-semibold text-red-500">Nama wajib diisi</p>
             </div>
 
             <div>
@@ -49,7 +50,8 @@
                     No WhatsApp
                 </label>
                 <input id="profilePhone" name="phone" type="text" value="0812-3456-7890"
-                    class="w-full rounded-2xl border border-[#f2e4d8] px-5 py-3.5 text-[#7b6858] focus:outline-none focus:border-[#a16223]">
+                    class="w-full rounded-2xl border border-[#f2e4d8] px-5 py-3.5 text-[#7b6858] focus:outline-none focus:border-[#a16223] transition-all">
+                <p id="phone-error" class="mt-1 hidden text-xs font-semibold text-red-500">No WhatsApp wajib diisi</p>
             </div>
 
             <div>
@@ -57,12 +59,13 @@
                     Alamat
                 </label>
                 <textarea id="profileAddress" name="address" rows="4"
-                    class="w-full rounded-2xl border border-[#f2e4d8] px-5 py-3.5 text-[#7b6858] focus:outline-none focus:border-[#a16223]">Jl. Melati No. 12, Bandung</textarea>
+                    class="w-full rounded-2xl border border-[#f2e4d8] px-5 py-3.5 text-[#7b6858] focus:outline-none focus:border-[#a16223] transition-all">Jl. Melati No. 12, Bandung</textarea>
+                <p id="address-error" class="mt-1 hidden text-xs font-semibold text-red-500">Alamat wajib diisi</p>
             </div>
 
             <div class="flex justify-end">
                 <button type="submit"
-                    class="relative z-10 rounded-xl bg-[#BFA28C] px-10 py-4 font-bold text-white transition hover:bg-[#A88A72]">
+                    class="relative z-10 rounded-xl bg-[#BFA28C] px-8 py-3 font-bold text-white transition hover:bg-[#A88A72]">
                     Simpan
                 </button>
             </div>
@@ -85,7 +88,49 @@
     function saveProfile(event) {
         event.preventDefault();
 
-        const name = document.getElementById('profileName').value;
+        const nameInput = document.getElementById('profileName');
+        const phoneInput = document.getElementById('profilePhone');
+        const addressInput = document.getElementById('profileAddress');
+
+        const nameError = document.getElementById('name-error');
+        const phoneError = document.getElementById('phone-error');
+        const addressError = document.getElementById('address-error');
+
+        let isValid = true;
+
+        // Validasi Nama
+        if (!nameInput.value.trim()) {
+            nameInput.classList.add('border-red-500');
+            nameError.classList.remove('hidden');
+            isValid = false;
+        } else {
+            nameInput.classList.remove('border-red-500');
+            nameError.classList.add('hidden');
+        }
+
+        // Validasi Phone
+        if (!phoneInput.value.trim()) {
+            phoneInput.classList.add('border-red-500');
+            phoneError.classList.remove('hidden');
+            isValid = false;
+        } else {
+            phoneInput.classList.remove('border-red-500');
+            phoneError.classList.add('hidden');
+        }
+
+        // Validasi Alamat
+        if (!addressInput.value.trim()) {
+            addressInput.classList.add('border-red-500');
+            addressError.classList.remove('hidden');
+            isValid = false;
+        } else {
+            addressInput.classList.remove('border-red-500');
+            addressError.classList.add('hidden');
+        }
+
+        if (!isValid) return;
+
+        const name = nameInput.value;
         const preview = document.getElementById('profilePreview').src;
 
         const sidebarName = document.getElementById('sidebarProfileName');

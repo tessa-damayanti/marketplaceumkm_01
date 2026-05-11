@@ -1,5 +1,5 @@
 <div id="productModal"
-    class="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto bg-black/50 px-3 py-6 backdrop-blur-[2px]
+    class="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto bg-black/50 px-3 py-6
         opacity-0 transition-opacity duration-200 ease-in-out
         [&.modal-hidden]:hidden sm:px-4 [font-family:Poppins,sans-serif]"
     style="display:none;">
