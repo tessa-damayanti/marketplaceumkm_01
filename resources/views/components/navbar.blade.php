@@ -87,7 +87,8 @@
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    const isHomeRoute = {{ request()->routeIs('home') ? 'true' : 'false' }};
+    const isHomeRoute = "{{ request()->routeIs('home') ? 'true' : 'false' }}" === "true";
+
     if (!isHomeRoute) return;
 
     const navBeranda = document.getElementById('nav-beranda');
@@ -118,11 +119,11 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     window.addEventListener('hashchange', checkHash);
-    
+
     checkHash();
 
-    // Scroll ke bagian Tentang
     const tentangSection = document.getElementById('tentang');
+
     if (tentangSection) {
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
@@ -135,7 +136,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             });
         }, { threshold: 0.3 });
-        
+
         observer.observe(tentangSection);
     }
 });
