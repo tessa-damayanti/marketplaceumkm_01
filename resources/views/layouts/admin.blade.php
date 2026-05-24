@@ -502,12 +502,6 @@
             </div>
           </div>
 
-          <div class="detail-section-title">Bukti Pembayaran</div>
-          <div class="payment-proof-card">
-            <img src="https://i.pinimg.com/1200x/82/65/1b/82651bb05dfea5ea161f389688fb4ec2.jpg" class="proof-thumb cursor-pointer hover:opacity-80 transition" 
-            onclick="viewBukti('https://i.pinimg.com/1200x/82/65/1b/82651bb05dfea5ea161f389688fb4ec2.jpg')">
-            <button type="button" class="btn-lihat-bukti" onclick="viewBukti('https://i.pinimg.com/1200x/82/65/1b/82651bb05dfea5ea161f389688fb4ec2.jpg')">Lihat Bukti</button>
-          </div>
 
           <div class="detail-section-title">Item Pesanan</div>
           <div class="space-y-3">
@@ -534,68 +528,17 @@
             <div class="text-sm font-medium text-[#5c4432]">Total Pembayaran</div>
             <div class="text-lg font-semibold text-[#5c4432]">${rp(total)}</div>
           </div>
-
-          <div class="update-status-section">
-            <div class="update-status-label">Update Status</div>
-            <div class="relative flex-1">
-              <button type="button" onclick="toggleStatusDropdown(event)" id="status-dropdown-btn" class="flex w-full items-center justify-between gap-2 rounded-2xl border border-[#d8c3af] bg-white px-4 py-2.5 text-[14px] font-medium text-[#5c4432] outline-none transition-all duration-200 hover:border-[#BFA28C]">
-                <span id="current-status-label">${o.status}</span>
-                <svg id="status-dropdown-icon" width="10" height="6" viewBox="0 0 14 8" fill="none" class="transition-transform duration-200">
-                    <path d="M2 2l5 4 5-4" stroke="#5c4432" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-                </svg>
-              </button>
-               <ul id="status-dropdown-menu" class="absolute left-0 top-[calc(100%+6px)] z-[100] hidden w-full overflow-hidden border border-[#d8c3af] bg-white shadow-xl">
-                ${statusOptions.map(st => `
-                  <li onclick="selectStatus('${st}')" class="status-option-item cursor-pointer px-4 py-2 text-[14px] font-medium transition-colors border-b border-[#f0e7dd] last:border-0 ${st === o.status ? 'bg-[#fbf8f5] text-[#BFA28C]' : 'text-[#5c4432]'} hover:bg-[#BFA28C] hover:text-white">
-                    ${st}
-                  </li>
-                `).join('')}
-              </ul>
-              <input type="hidden" id="status-select" value="${o.status}">
-            </div>
-          </div>
         </div>
 
         <div class="modal-action-footer">
-          <button type="button" onclick="closeAdminModal('modal-pesanan')" class="btn-modal-cancel">Batal</button>
-          <button type="button" onclick="saveEditStatus()" class="btn-modal-save">Simpan</button>
+          <button type="button" onclick="closeAdminModal('modal-pesanan')" class="btn-modal-cancel">Tutup</button>
         </div>
       `;
 
       openAdminModal('modal-pesanan');
     }
 
-    function toggleStatusDropdown(e) {
-      e.stopPropagation();
-      const menu = document.getElementById('status-dropdown-menu');
-      const icon = document.getElementById('status-dropdown-icon');
-      menu.classList.toggle('hidden');
-      icon.classList.toggle('rotate-180');
-    }
 
-    function selectStatus(val) {
-      document.getElementById('status-select').value = val;
-      document.getElementById('current-status-label').innerText = val;
-
-      const items = document.querySelectorAll('.status-option-item');
-      items.forEach(item => {
-        if (item.innerText.trim() === val) {
-          item.classList.add('bg-[#fbf8f5]', 'text-[#BFA28C]');
-          item.classList.remove('text-[#5c4432]');
-        } else {
-          item.classList.remove('bg-[#fbf8f5]', 'text-[#BFA28C]');
-          item.classList.add('text-[#5c4432]');
-        }
-      });
-
-      document.getElementById('status-dropdown-menu').classList.add('hidden');
-      document.getElementById('status-dropdown-icon').classList.remove('rotate-180');
-    }
-
-    function viewBukti(url) {
-      document.getElementById('bukti-image-full').src = url;
-      openAdminModal('modal-bukti');
-    }
 
     // PESANAN FILTER
     function togglePesananStatusFilter(e) {
@@ -631,15 +574,7 @@
       renderPesananTable();
     }
 
-    // Close dropdown on click outside
     document.addEventListener('click', (e) => {
-      const btn = document.getElementById('status-dropdown-btn');
-      const menu = document.getElementById('status-dropdown-menu');
-      const icon = document.getElementById('status-dropdown-icon');
-      if (btn && !btn.contains(e.target)) {
-        menu?.classList.add('hidden');
-        icon?.classList.remove('rotate-180');
-      }
 
       const produkBtn = document.getElementById('produk-filter-kat-btn');
       const produkMenu = document.getElementById('produk-filter-kat-menu');
@@ -658,14 +593,7 @@
       }
     });
 
-    function saveEditStatus() {
-      const o = pesananList.find(x => x.id === viewingPesananId);
-      if (o) o.status = document.getElementById('status-select').value;
-      closeAdminModal('modal-pesanan');
-      renderPesananTable();
-      renderDashboard();
-      showAdminToast('Status Diperbarui', 'Status pesanan berhasil disimpan.');
-    }
+
 
     window.addEventListener('resize', setupPesananDateInputs);
     document.addEventListener('DOMContentLoaded', () => { setupPesananDateInputs(); renderDashboard(); renderProdukTable(); renderKategoriTable(); renderStokTable(); renderPesananTable(); });
