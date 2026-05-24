@@ -8,7 +8,7 @@
             <table class="w-full min-w-[800px] text-left">
                 <thead>
                 <tr class="border-b border-[#eee5dc] bg-[#fcfaf8] text-sm font-bold text-[#5c4432]">
-                    <th class="px-6 py-5 whitespace-nowrap">No. Pesanan</th>
+                    <th class="px-6 py-5 whitespace-nowrap">ID. Pesanan</th>
                     <th class="px-6 py-5 whitespace-nowrap">Produk</th>
                     <th class="px-6 py-5 text-center whitespace-nowrap">Status Pembayaran</th>
                     <th class="px-6 py-5 whitespace-nowrap">Total</th>

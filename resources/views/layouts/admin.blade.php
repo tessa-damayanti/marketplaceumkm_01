@@ -277,7 +277,7 @@
         const p = produkList.find(x => x.id === editingProdukId);
         if (p) { Object.assign(p, { nama, kategori: kat, harga, deskripsi: desk }); if (selectedProdukImage) p.image = selectedProdukImage; }
       } else {
-        produkList.push({ id: 'P' + String(produkIdCounter++).padStart(3, '0'), nama, kategori: kat, harga, deskripsi: desk, image: selectedProdukImage, stok: { S: 0, M: 0, L: 0, XL: 0 } });
+        produkList.unshift({ id: 'PRD-' + Math.random().toString(36).substr(2, 6).toUpperCase(), nama, kategori: kat, harga, deskripsi: desk, image: selectedProdukImage, stok: { S: 0, M: 0, L: 0, XL: 0 } });
       }
       closeAdminModal('modal-tambah-produk');
       renderProdukTable();
@@ -348,7 +348,7 @@
         const k = kategoriList.find(x => x.id === editingKatId);
         if (k) k.nama = nama;
       } else {
-        kategoriList.push({ id: 'K' + String(katIdCounter++).padStart(3, '0'), nama });
+        kategoriList.unshift({ id: 'KAT-' + Math.random().toString(36).substr(2, 6).toUpperCase(), nama });
       }
       closeAdminModal('modal-tambah-kat');
       renderKategoriTable();

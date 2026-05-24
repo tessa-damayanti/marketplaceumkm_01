@@ -322,17 +322,49 @@
         return true;
     }
 
-    function validateForm() {
+    async function validateForm() {
         const isUsernameValid = validateUsername();
         const isEmailValid = validateEmail();
         const isPasswordValid = validatePassword();
         const isMatchValid = checkMatch();
 
         if (isUsernameValid && isEmailValid && isPasswordValid && isMatchValid) {
-            showToast('Berhasil', 'Registrasi berhasil');
-            setTimeout(() => {
-                window.location.href = "{{ route('login') }}";
-            }, 1200);
+            const username = document.getElementById('username').value.trim();
+            const email = document.getElementById('email').value.trim();
+            const password = document.getElementById('password').value;
+
+            try {
+                const response = await fetch("{{ route('register.submit') }}", {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json',
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || ''
+                    },
+                    body: JSON.stringify({
+                        username,
+                        email,
+                        password
+                    })
+                });
+
+                const data = await response.json();
+
+                if (response.ok && data.success) {
+                    showToast('Berhasil', 'Registrasi berhasil');
+                    setTimeout(() => {
+                        window.location.href = "{{ route('login') }}";
+                    }, 1200);
+                } else {
+                    let errorMsg = data.message || 'Registrasi gagal';
+                    if (data.errors) {
+                        errorMsg = Object.values(data.errors)[0][0];
+                    }
+                    showToast('Gagal', errorMsg, 'error');
+                }
+            } catch (error) {
+                showToast('Gagal', 'Terjadi kesalahan server', 'error');
+            }
         }
     }
 </script>

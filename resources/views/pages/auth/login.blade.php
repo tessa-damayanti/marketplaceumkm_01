@@ -150,6 +150,8 @@
 
                         <form class="space-y-5" onsubmit="return false;">
 
+
+
                             <div>
                                 <label class="block text-sm font-semibold text-[#fff4eb] mb-2">
                                     Alamat email
@@ -249,8 +251,12 @@
         const input = document.getElementById(inputId);
         const msg = document.getElementById(msgId);
 
-        msg.textContent = message;
-        msg.classList.remove('hidden');
+        if (message) {
+            msg.textContent = message;
+            msg.classList.remove('hidden');
+        } else {
+            msg.classList.add('hidden');
+        }
         input.classList.add('border-[#dc2626]', 'shadow-[0_0_0_3px_rgba(220,38,38,0.15)]');
     }
 
@@ -296,6 +302,7 @@
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
+                        'Accept': 'application/json',
                         'X-CSRF-TOKEN': csrfToken
                     },
                     body: JSON.stringify({
@@ -306,14 +313,19 @@
 
                 const data = await response.json();
 
-                if (data.success) {
-                    showToast('Login berhasil', username === 'admin1' ? 'Selamat datang, Admin.' : 'Selamat datang, User.');
+                if (response.ok && data.success) {
+                    showToast('Login berhasil', username === 'admin1' ? 'Selamat datang, Admin' : 'Selamat Datang');
                     setTimeout(() => {
                         window.location.href = data.redirect;
                     }, 900);
                 } else {
-                    setError('password', 'password-msg', data.message);
-                    showToast('Login gagal', data.message, 'error');
+                    let errorMsg = data.message || 'Username atau password salah';
+                    if (data.errors) {
+                        errorMsg = Object.values(data.errors)[0][0];
+                    }
+                    setError('username', 'username-msg', '');
+                    setError('password', 'password-msg', errorMsg);
+                    showToast('Login gagal', errorMsg, 'error');
                 }
             } catch (error) {
                 showToast('Terjadi kesalahan', 'Tidak dapat terhubung ke server.', 'error');
@@ -346,9 +358,40 @@
         return true;
     }
 
-    function validateForgotForm() {
-        if (validateForgotEmail()) {
-            showToast('Tautan reset dikirim', 'Silakan cek email untuk melanjutkan reset password.');
+    async function validateForgotForm() {
+        const isEmailValid = validateForgotEmail();
+
+        if (isEmailValid) {
+            const email = document.getElementById('forgot-email').value.trim();
+
+            try {
+                const response = await fetch("{{ route('password.email') }}", {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json',
+                        'X-CSRF-TOKEN': csrfToken
+                    },
+                    body: JSON.stringify({
+                        email
+                    })
+                });
+
+                const data = await response.json();
+
+                if (response.ok && data.success) {
+                    showToast('Berhasil', 'Silakan cek email Anda untuk melanjutkan reset password.');
+                    setTimeout(() => { showLogin(); }, 2000);
+                } else {
+                    let errorMsg = data.message || 'Gagal mengirim link reset password.';
+                    if (data.errors) {
+                        errorMsg = Object.values(data.errors)[0][0];
+                    }
+                    showToast('Gagal', errorMsg, 'error');
+                }
+            } catch (error) {
+                showToast('Terjadi kesalahan', 'Tidak dapat terhubung ke server.', 'error');
+            }
         }
     }
 </script>

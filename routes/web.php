@@ -36,6 +36,13 @@ Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 // Auth Views
 Route::get('/login', [LoginController::class, 'index'])->name('login');
 Route::get('/register', [LoginController::class, 'showRegister'])->name('register');
+Route::post('/register', [LoginController::class, 'registerSubmit'])->name('register.submit');
+
+Route::get('/forgot-password', [LoginController::class, 'showForgotPassword'])->name('password.request');
+Route::post('/forgot-password', [LoginController::class, 'forgotPasswordSubmit'])->name('password.email');
+
+Route::get('/reset-password/{token}', [LoginController::class, 'showResetPassword'])->name('password.reset');
+Route::post('/reset-password', [LoginController::class, 'resetPasswordSubmit'])->name('password.update');
 
 //Admin Routes
 Route::prefix('admin')->group(function () {
