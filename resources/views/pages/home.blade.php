@@ -97,106 +97,86 @@
     <section id="kategori" class="mx-auto max-w-7xl px-6 pb-6 pt-8">
         <h2 class="mb-5 text-center text-2xl font-bold md:text-3xl">Kategori</h2>
 
-        <div id="categoryTabs"
-            class="flex flex-wrap justify-center gap-[0.45rem] overflow-x-auto scroll-smooth [-ms-overflow-style:none] [scrollbar-width:none] sm:overflow-x-visible [&::-webkit-scrollbar]:hidden">
+        <div class="relative flex items-center gap-2">
+            {{-- Arrow Kiri --}}
+            <button id="cat-prev-home"
+                class="hidden shrink-0 h-9 w-9 items-center justify-center rounded-full bg-white border border-[#e2d4c5] shadow-sm text-[#6B4F3A] transition hover:bg-[#EDE4DA] hover:shadow-md"
+                onclick="scrollCatHome(-1)">
+                <svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg>
+            </button>
 
-            <!-- Semua -->
-            <a href="{{ route('product') }}?category=semua"
-                class="group inline-flex shrink-0 cursor-pointer items-center gap-[6px] whitespace-nowrap rounded-full border-[1.5px] border-transparent
-                          px-2.5 py-1.5 text-[0.72rem] font-semibold no-underline transition-all duration-200
-                          sm:px-3.5 sm:py-2 sm:text-[0.78rem] bg-[#EDE4DA] text-[#6B4F3A] hover:bg-[#BFA28C] hover:text-white hover:border-[#BFA28C] hover:shadow-[0_4px_14px_rgba(191,162,140,0.25)] hover:-translate-y-px">
-                <span
-                    class="inline-flex h-[20px] w-[20px] shrink-0 items-center justify-center rounded-full bg-[#F0E7DD] group-hover:bg-white/20 transition-all duration-200">
-                    <svg width="11" height="11" viewBox="0 0 11 11" fill="currentColor">
-                        <rect x="0" y="0" width="4.5" height="4.5" rx="1" />
-                        <rect x="6.5" y="0" width="4.5" height="4.5" rx="1" />
-                        <rect x="0" y="6.5" width="4.5" height="4.5" rx="1" />
-                        <rect x="6.5" y="6.5" width="4.5" height="4.5" rx="1" />
-                    </svg>
-                </span>
-                Semua
-            </a>
+            <div id="categoryTabs"
+                class="flex gap-[0.45rem] overflow-hidden scroll-smooth"
+                style="max-width: 100%;">
 
-            <!-- Kemeja -->
-            <a href="{{ route('product') }}?category=kemeja"
-                class="group inline-flex shrink-0 cursor-pointer items-center gap-[6px] whitespace-nowrap rounded-full border-[1.5px] border-transparent
-                          px-2.5 py-1.5 text-[0.72rem] font-semibold no-underline transition-all duration-200
-                          sm:px-3.5 sm:py-2 sm:text-[0.78rem] bg-[#EDE4DA] text-[#6B4F3A] hover:bg-[#BFA28C] hover:text-white hover:border-[#BFA28C] hover:shadow-[0_4px_14px_rgba(191,162,140,0.25)] hover:-translate-y-px">
-                <span class="inline-flex h-[22px] w-[22px] items-center justify-center transition group-hover:scale-110">
-                    <svg viewBox="0 0 64 64" fill="none" class="h-full w-full">
-                        <path d="M18 18L28 10H36L46 18L54 26L48 36L44 33V54H20V33L16 36L10 26L18 18Z" stroke="currentColor"
-                            stroke-width="3.5" stroke-linejoin="round" />
-                        <path d="M28 10L32 18L36 10" stroke="currentColor" stroke-width="3.5" stroke-linejoin="round" />
-                        <path d="M32 18V54" stroke="currentColor" stroke-width="2.5" />
-                        <circle cx="32" cy="26" r="1.5" fill="currentColor" />
-                        <circle cx="32" cy="34" r="1.5" fill="currentColor" />
-                        <circle cx="32" cy="42" r="1.5" fill="currentColor" />
-                        <rect x="36" y="30" width="7" height="6" rx="1.2" stroke="currentColor" stroke-width="2.5" />
-                    </svg>
-                </span>
-                Kemeja
-            </a>
+                @foreach($categories as $cat)
+                    @php $catLower = strtolower($cat->nama); @endphp
+                    <a href="{{ route('product') }}?category={{ $catLower }}"
+                        class="cat-tab-home group inline-flex shrink-0 cursor-pointer items-center gap-[6px] text-center break-words rounded-full border-[1.5px] border-transparent
+                                  w-[100px] max-w-[100px] min-h-[42px] px-4 py-2 justify-center text-[0.72rem] font-semibold no-underline transition-all duration-200
+                                  sm:px-3.5 sm:py-2 sm:text-[0.78rem] bg-[#EDE4DA] text-[#6B4F3A] hover:bg-[#BFA28C] hover:text-white hover:border-[#BFA28C] hover:shadow-[0_4px_14px_rgba(191,162,140,0.25)] hover:-translate-y-px">
+                        {{ $cat->nama }}
+                    </a>
+                @endforeach
+            </div>
 
-            <!-- Gaun -->
-            <a href="{{ route('product') }}?category=gaun"
-                class="group inline-flex shrink-0 cursor-pointer items-center gap-[6px] whitespace-nowrap rounded-full border-[1.5px] border-transparent
-                          px-2.5 py-1.5 text-[0.72rem] font-semibold no-underline transition-all duration-200
-                          sm:px-3.5 sm:py-2 sm:text-[0.78rem] bg-[#EDE4DA] text-[#6B4F3A] hover:bg-[#BFA28C] hover:text-white hover:border-[#BFA28C] hover:shadow-[0_4px_14px_rgba(191,162,140,0.25)] hover:-translate-y-px">
-                <span
-                    class="inline-flex h-[22px] w-[22px] shrink-0 items-center justify-center transition duration-200 group-hover:scale-110">
-                    <svg viewBox="0 0 64 64" fill="none" class="h-full w-full">
-                        <path d="M25 8 C27 11 29 12 32 12 C35 12 37 11 39 8 L41 22 L36 25 L33 19 H31 L28 25 L23 22 L25 8Z"
-                            stroke="currentColor" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round" />
-                        <path d="M25 25H39" stroke="currentColor" stroke-width="4" stroke-linecap="round" />
-                        <path d="M25 27 L15 55 C22 58 42 58 49 55 L39 27 Z" stroke="currentColor" stroke-width="3.8"
-                            stroke-linecap="round" stroke-linejoin="round" />
-                        <path d="M27 31L24 55M32 31V57M37 31L40 55" stroke="currentColor" stroke-width="2.4"
-                            stroke-linecap="round" />
-                    </svg>
-                </span>
-                Gaun
-            </a>
-
-            <!-- Cardigan -->
-            <a href="{{ route('product') }}?category=cardigan"
-                class="group inline-flex shrink-0 cursor-pointer items-center gap-[6px] whitespace-nowrap rounded-full border-[1.5px] border-transparent
-                          px-2.5 py-1.5 text-[0.72rem] font-semibold no-underline transition-all duration-200
-                          sm:px-3.5 sm:py-2 sm:text-[0.78rem] bg-[#EDE4DA] text-[#6B4F3A] hover:bg-[#BFA28C] hover:text-white hover:border-[#BFA28C] hover:shadow-[0_4px_14px_rgba(191,162,140,0.25)] hover:-translate-y-px">
-                <span class="inline-flex h-[22px] w-[22px] items-center justify-center transition group-hover:scale-110">
-                    <svg viewBox="0 0 64 64" fill="none" class="h-full w-full">
-                        <path d="M20 13L32 19L44 13L54 23L48 36L43 33V54H21V33L16 36L10 23L20 13Z" stroke="currentColor"
-                            stroke-width="4" stroke-linejoin="round" />
-                        <path d="M32 19V54" stroke="currentColor" stroke-width="3" />
-                        <path d="M25 30H30M34 30H39M25 39H30M34 39H39" stroke="currentColor" stroke-width="3"
-                            stroke-linecap="round" />
-                        <path d="M26 16L32 25L38 16" stroke="currentColor" stroke-width="3" stroke-linejoin="round" />
-                    </svg>
-                </span>
-                Cardigan
-            </a>
-
-            <!-- Rok -->
-            <a href="{{ route('product') }}?category=rok"
-                class="group inline-flex shrink-0 cursor-pointer items-center gap-[6px] whitespace-nowrap rounded-full border-[1.5px] border-transparent
-                          px-2.5 py-1.5 text-[0.72rem] font-semibold no-underline transition-all duration-200
-                          sm:px-3.5 sm:py-2 sm:text-[0.78rem] bg-[#EDE4DA] text-[#6B4F3A] hover:bg-[#BFA28C] hover:text-white hover:border-[#BFA28C] hover:shadow-[0_4px_14px_rgba(191,162,140,0.25)] hover:-translate-y-px">
-                <span class="inline-flex h-[22px] w-[22px] items-center justify-center transition group-hover:scale-110">
-                    <svg viewBox="0 0 64 64" fill="none" class="h-full w-full">
-                        <path d="M22 10H42L44 18H20L22 10Z" stroke="currentColor" stroke-width="4"
-                            stroke-linejoin="round" />
-                        <path d="M20 18L12 54H52L44 18" stroke="currentColor" stroke-width="4" stroke-linejoin="round" />
-                        <path d="M26 18L23 54M32 18V54M38 18L41 54" stroke="currentColor" stroke-width="3"
-                            stroke-linecap="round" />
-                    </svg>
-                </span>
-                Rok
-            </a>
+            {{-- Arrow Kanan --}}
+            <button id="cat-next-home"
+                class="hidden shrink-0 h-9 w-9 items-center justify-center rounded-full bg-white border border-[#e2d4c5] shadow-sm text-[#6B4F3A] transition hover:bg-[#EDE4DA] hover:shadow-md"
+                onclick="scrollCatHome(1)">
+                <svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M9 5l6 6-6 6"/></svg>
+            </button>
         </div>
     </section>
 
+    <script>
+    (function() {
+        const MAX_VISIBLE = 10;
+        const container = document.getElementById('categoryTabs');
+        const tabs = Array.from(container.querySelectorAll('.cat-tab-home'));
+        const prevBtn = document.getElementById('cat-prev-home');
+        const nextBtn = document.getElementById('cat-next-home');
+        let currentOffset = 0;
+
+        function updateVisibility() {
+            tabs.forEach((tab, i) => {
+                tab.style.display = (i >= currentOffset && i < currentOffset + MAX_VISIBLE) ? '' : 'none';
+            });
+            // Show/hide arrows
+            const needArrows = tabs.length > MAX_VISIBLE;
+            prevBtn.classList.toggle('hidden', !needArrows);
+            nextBtn.classList.toggle('hidden', !needArrows);
+            prevBtn.style.display = needArrows ? 'inline-flex' : 'none';
+            nextBtn.style.display = needArrows ? 'inline-flex' : 'none';
+            prevBtn.disabled = currentOffset === 0;
+            prevBtn.style.opacity = currentOffset === 0 ? '0.4' : '1';
+            nextBtn.disabled = currentOffset + MAX_VISIBLE >= tabs.length;
+            nextBtn.style.opacity = currentOffset + MAX_VISIBLE >= tabs.length ? '0.4' : '1';
+        }
+
+       window.scrollCatHome = function(dir) {
+    currentOffset = Math.max(
+        0,
+        Math.min(currentOffset + (dir * MAX_VISIBLE), tabs.length - MAX_VISIBLE)
+    );
+
+    updateVisibility();
+};
+
+        updateVisibility();
+    })();
+    </script>
+
     <!-- Produk Terbaru -->
     <section class="mx-auto max-w-7xl px-6 pb-12">
-        <h2 class="mb-8 text-2xl font-bold md:text-3xl">Produk Terbaru</h2>
+        <div class="mb-8 flex items-center gap-4">
+    <h2 class="text-2xl font-bold md:text-3xl">Produk Terbaru</h2>
+
+    <a href="{{ route('product') }}?category=semua"
+       class="mt-2 text-sm font-semibold text-[#000000] no-underline transition hover:text-[#6B4F3A] hover:underline">
+       Lihat semua
+    </a>
+</div>
 
         <div id="product-grid" class="grid grid-cols-1 gap-7 sm:grid-cols-2 lg:grid-cols-4">
             @foreach ($products as $index => $product)

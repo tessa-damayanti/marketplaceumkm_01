@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\Kategori;
 
 class DashboardController extends Controller
 {
@@ -60,12 +61,31 @@ class DashboardController extends Controller
 
     private function getKategoriData()
     {
-        return [
-            ['id' => 'KAT-1A2B3C', 'nama' => 'Kemeja'],
-            ['id' => 'KAT-4D5E6F', 'nama' => 'Gaun'],
-            ['id' => 'KAT-7G8H9J', 'nama' => 'Cardigan'],
-            ['id' => 'KAT-0K1L2M', 'nama' => 'Rok'],
-        ];
+        return Kategori::orderBy('id', 'asc')->get()->map(function ($k) {
+            return ['id' => $k->id, 'nama' => $k->nama];
+        })->toArray();
+    }
+
+    public function storeKategori(Request $request)
+    {
+        $request->validate(['nama' => 'required|string|max:255|unique:kategoris,nama']);
+        $kat = Kategori::create(['nama' => $request->nama]);
+        return response()->json(['success' => true, 'data' => ['id' => $kat->id, 'nama' => $kat->nama]]);
+    }
+
+    public function updateKategori(Request $request, $id)
+    {
+        $request->validate(['nama' => 'required|string|max:255|unique:kategoris,nama,' . $id]);
+        $kat = Kategori::findOrFail($id);
+        $kat->update(['nama' => $request->nama]);
+        return response()->json(['success' => true, 'data' => ['id' => $kat->id, 'nama' => $kat->nama]]);
+    }
+
+    public function destroyKategori($id)
+    {
+        $kat = Kategori::findOrFail($id);
+        $kat->delete();
+        return response()->json(['success' => true]);
     }
 
     private function getPesananData()

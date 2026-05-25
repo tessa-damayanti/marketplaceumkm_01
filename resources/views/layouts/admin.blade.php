@@ -4,6 +4,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="csrf-token" content="{{ csrf_token() }}">
   <title>@yield('title', 'Admin Dashboard')</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -301,15 +302,32 @@
     }
 
     // KATEGORI
+    let katCurrentPage = 1;
+    const katPerPage = 8;
+
+    function searchKategori() {
+      katCurrentPage = 1;
+      renderKategoriTable();
+    }
+
     function renderKategoriTable() {
       if (!document.getElementById('kategori-tbody')) return;
       const searchQuery = document.getElementById('kat-search')?.value.toLowerCase() || '';
       let list = kategoriList;
       if (searchQuery) list = list.filter(k => k.nama.toLowerCase().includes(searchQuery));
 
-      document.getElementById('kategori-tbody').innerHTML = list.map(k => `
+      const totalItems = list.length;
+      const totalPages = Math.ceil(totalItems / katPerPage) || 1;
+      if (katCurrentPage > totalPages) katCurrentPage = totalPages;
+
+      const startIdx = (katCurrentPage - 1) * katPerPage;
+      const paginatedList = list.slice(startIdx, startIdx + katPerPage);
+
+      document.getElementById('kategori-tbody').innerHTML = paginatedList.map((k, index) => {
+        const seqNum = startIdx + index + 1;
+        return `
         <tr>
-          <td class="id-cell">${k.id}</td>
+          <td class="id-cell">${seqNum}</td>
           <td>${k.nama}</td>
           <td class="action-cell">
             <div class="action-buttons">
@@ -317,7 +335,31 @@
               <button class="icon-btn icon-btn-delete" data-tooltip="Hapus" onclick="openHapusKat('${k.id}')">${deleteIcon}</button>
             </div>
           </td>
-        </tr>`).join('');
+        </tr>`;
+      }).join('');
+
+      const infoEl = document.getElementById('kat-pagi-info');
+      if (infoEl) {
+        const endIdx = Math.min(startIdx + katPerPage, totalItems);
+        infoEl.textContent = totalItems === 0 ? '0 dari 0' : `${startIdx + 1} - ${endIdx} dari ${totalItems}`;
+      }
+
+      const pagiContainer = document.querySelector('#page-kategori .pagi-btns');
+      if (pagiContainer) {
+        let btnsHtml = `<button class="pagi-btn" ${katCurrentPage === 1 ? 'disabled style="opacity:0.5;cursor:not-allowed;"' : ''} onclick="katCurrentPage--; renderKategoriTable()">
+          <svg class="h-3 w-3" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg>
+        </button>`;
+        
+        for (let i = 1; i <= totalPages; i++) {
+          btnsHtml += `<button class="pagi-btn ${i === katCurrentPage ? 'active' : ''}" onclick="katCurrentPage = ${i}; renderKategoriTable()">${i}</button>`;
+        }
+
+        btnsHtml += `<button class="pagi-btn" ${katCurrentPage === totalPages ? 'disabled style="opacity:0.5;cursor:not-allowed;"' : ''} onclick="katCurrentPage++; renderKategoriTable()">
+          <svg class="h-3 w-3" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 5l6 6-6 6"/></svg>
+        </button>`;
+        
+        pagiContainer.innerHTML = btnsHtml;
+      }
     }
 
     function setKatModalMode(mode) { 
@@ -325,40 +367,102 @@
       document.getElementById('kat-modal-title').textContent = 'Tambah Kategori'; 
       document.getElementById('kat-nama').value = ''; 
       const errEl = document.getElementById('err-kat-nama');
-      if (errEl) errEl.style.display = 'none';
+      if (errEl) {
+        errEl.textContent = 'Nama kategori wajib diisi.';
+        errEl.style.display = 'none';
+      }
     }
     function openEditKat(id) {
-      const k = kategoriList.find(x => x.id === id);
+      const k = kategoriList.find(x => String(x.id) === String(id));
       if (!k) return;
       editingKatId = id;
       document.getElementById('kat-modal-title').textContent = 'Edit Kategori';
       document.getElementById('kat-nama').value = k.nama;
       const errEl = document.getElementById('err-kat-nama');
-      if (errEl) errEl.style.display = 'none';
+      if (errEl) {
+        errEl.textContent = 'Nama kategori wajib diisi.';
+        errEl.style.display = 'none';
+      }
       openAdminModal('modal-tambah-kat');
     }
     function openHapusKat(id) { deletingKatId = id; openAdminModal('modal-hapus-kat'); }
-    function saveKategori() {
+    async function saveKategori() {
       const nama = document.getElementById('kat-nama').value.trim();
+      const errEl = document.getElementById('err-kat-nama');
       if (!nama) {
-        document.getElementById('err-kat-nama').style.display = 'block';
+        if (errEl) {
+          errEl.textContent = 'Nama kategori wajib diisi.';
+          errEl.style.display = 'block';
+        }
         return;
       }
-      if (editingKatId) {
-        const k = kategoriList.find(x => x.id === editingKatId);
-        if (k) k.nama = nama;
-      } else {
-        kategoriList.unshift({ id: 'KAT-' + Math.random().toString(36).substr(2, 6).toUpperCase(), nama });
+      
+      const isEdit = !!editingKatId;
+      const url = isEdit ? `/admin/kategori/${editingKatId}` : `/admin/kategori`;
+      const method = isEdit ? 'PUT' : 'POST';
+      const csrf = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+
+      try {
+        const res = await fetch(url, {
+          method,
+          headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': csrf,
+            'Accept': 'application/json'
+          },
+          body: JSON.stringify({ nama })
+        });
+        
+        const data = await res.json();
+
+        if (res.status === 422 && data.errors && data.errors.nama) {
+          if (errEl) {
+            errEl.textContent = 'Nama kategori sudah ada.';
+            errEl.style.display = 'block';
+          }
+          return;
+        }
+
+        if (data.success) {
+          if (isEdit) {
+            const k = kategoriList.find(x => String(x.id) === String(editingKatId));
+            if (k) k.nama = nama;
+          } else {
+            kategoriList.push(data.data);
+          }
+          closeAdminModal('modal-tambah-kat');
+          renderKategoriTable();
+          showAdminToast('Berhasil', isEdit ? 'Kategori berhasil diperbarui.' : 'Kategori baru berhasil ditambahkan.');
+        } else {
+          showAdminToast('Gagal', 'Terjadi kesalahan.', 'error');
+        }
+      } catch (err) {
+        showAdminToast('Gagal', 'Koneksi bermasalah.', 'error');
       }
-      closeAdminModal('modal-tambah-kat');
-      renderKategoriTable();
-      showAdminToast('Berhasil', editingKatId ? 'Kategori berhasil diperbarui.' : 'Kategori baru berhasil ditambahkan.');
     }
-    function confirmHapusKat() {
-      kategoriList = kategoriList.filter(x => x.id !== deletingKatId);
-      closeAdminModal('modal-hapus-kat');
-      renderKategoriTable();
-      showAdminToast('Berhasil Dihapus', 'Kategori telah dihapus.', 'error');
+
+    async function confirmHapusKat() {
+      const csrf = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+      try {
+        const res = await fetch(`/admin/kategori/${deletingKatId}`, {
+          method: 'DELETE',
+          headers: {
+            'X-CSRF-TOKEN': csrf,
+            'Accept': 'application/json'
+          }
+        });
+        const data = await res.json();
+        if (data.success) {
+          kategoriList = kategoriList.filter(x => String(x.id) !== String(deletingKatId));
+          closeAdminModal('modal-hapus-kat');
+          renderKategoriTable();
+          showAdminToast('Berhasil Dihapus', 'Kategori telah dihapus.', 'error');
+        } else {
+          showAdminToast('Gagal', 'Terjadi kesalahan.', 'error');
+        }
+      } catch (err) {
+        showAdminToast('Gagal', 'Koneksi bermasalah.', 'error');
+      }
     }
 
     // STOK

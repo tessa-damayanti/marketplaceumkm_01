@@ -1,62 +1,23 @@
 @props(['cartItems', 'grandTotal'])
 
 <h2 class="mb-5 text-xl font-bold text-[#5c4432] sm:mb-7 sm:text-2xl">Ringkasan Pesanan</h2>
-<div class="mb-7 rounded-3xl border border-[#e5d8ca] bg-[#faf7f4] p-5">
-    <p class="mb-3 text-sm font-bold uppercase tracking-[3px] text-[#BFA28C]">
-        Metode Pembayaran
-    </p>
 
-    <div class="flex flex-wrap items-center justify-between gap-4">
-        <div>
-            <p class="text-sm font-medium text-[#7b6858]">Transfer BNI</p>
-            <p class="text-2xl font-bold text-[#5c4432]">1992345919</p>
-        </div>
-
-        <div class="rounded-2xl bg-white px-5 py-3 text-base font-bold text-[#5c4432] shadow-sm">
-            A.n Velora
-        </div>
-    </div>
-</div>
-
-<div class="mb-5 sm:mb-7">
-    <h3 class="mb-3 text-lg font-bold text-[#5c4432] sm:mb-4 sm:text-xl">Item Pesanan</h3>
-
-    <div class="space-y-4">
+{{-- Item Pesanan --}}
+<div class="mb-6">
+    <h3 class="mb-3 text-lg font-bold text-[#5c4432]">Item Pesanan</h3>
+    <div class="space-y-3">
         @foreach ($cartItems as $item)
-            @php
-                $subtotal = (int) $item['price'] * (int) $item['qty'];
-            @endphp
-
-            <div class="mb-4 rounded-[20px] bg-[#f4ede5] px-3 sm:px-4 py-4 sm:py-5 last:mb-0">
-                <div class="flex items-start gap-3 sm:gap-4">
-                    <!-- Gambar -->
-                    <img
-                        src="{{ $item['image'] ?? '' }}"
-                        alt="{{ $item['name'] }}"
-                        class="h-[72px] w-[72px] sm:h-[82px] sm:w-[82px] flex-shrink-0 rounded-[14px] object-cover"
-                    >
-
-                    <!-- Info Produk -->
-                    <div class="min-w-0 flex-1 flex justify-between">
-                        <!-- Kiri: Nama dan Ukuran -->
-                        <div>
-                            <h4 class="text-sm sm:text-base font-semibold text-[#5c4432] leading-snug">
-                                {{ $item['name'] }}
-                            </h4>
-                            <p class="mt-1 text-xs text-[#7b6858]">
-                                Ukuran : {{ $item['size'] ?? '-' }}
-                            </p>
-                        </div>
-
-                        <!-- Kanan: Harga dan Qty -->
-                        <div class="text-right ml-2">
-                            <p class="text-sm sm:text-base font-semibold leading-none text-[#7a5a43]">
-                                Rp{{ number_format($item['price'], 0, ',', '.') }}
-                            </p>
-                            <p class="mt-1 sm:mt-2 text-xs sm:text-sm font-medium text-[#7b6858]">
-                                x{{ $item['qty'] }}
-                            </p>
-                        </div>
+            <div class="flex items-center gap-3 rounded-[18px] bg-[#f4ede5] px-4 py-3">
+                <img src="{{ $item['image'] ?? '' }}" alt="{{ $item['name'] }}"
+                    class="h-16 w-16 flex-shrink-0 rounded-[12px] object-cover">
+                <div class="min-w-0 flex-1 flex justify-between items-start">
+                    <div>
+                        <p class="text-sm font-semibold text-[#5c4432]">{{ $item['name'] }}</p>
+                        <p class="text-xs text-[#7b6858]">Ukuran: {{ $item['size'] ?? '-' }}</p>
+                    </div>
+                    <div class="text-right ml-2 flex-shrink-0">
+                        <p class="text-sm font-semibold text-[#7a5a43]">Rp{{ number_format($item['price'], 0, ',', '.') }}</p>
+                        <p class="text-xs text-[#7b6858]">x{{ $item['qty'] }}</p>
                     </div>
                 </div>
             </div>
@@ -64,6 +25,7 @@
     </div>
 </div>
 
+{{-- Total --}}
 <div class="mb-5 rounded-[18px] bg-[#efe4d8] p-3 sm:mb-6 sm:rounded-2xl sm:p-4">
     <div class="flex items-center justify-between gap-4">
         <p class="text-sm font-bold text-[#5c4432] sm:text-lg">Total Pembayaran</p>
@@ -73,33 +35,9 @@
     </div>
 </div>
 
-<div class="mb-5 sm:mb-7">
-    <p class="mb-2 text-lg font-bold text-[#5c4432] sm:mb-3 sm:text-xl">Bukti Pembayaran</p>
-
-    <label for="bukti-transfer" class="block cursor-pointer">
-        <div id="uploadBox" class="flex h-[170px] items-center justify-center overflow-hidden rounded-3xl border-2 border-dashed border-[#d8c3af] bg-[#faf7f4] transition hover:border-[#a78d78] hover:bg-[#efe4d8]">
-            <div id="uploadPlaceholder" class="text-center">
-                <svg xmlns="http://www.w3.org/2000/svg" class="mx-auto mb-3 h-14 w-14 text-[#7b6858]" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.6">
-                    <rect x="4" y="4" width="16" height="16" rx="2"></rect>
-                    <path d="M8 15l2.5-3 2.5 3 2-2 3 4"></path>
-                    <circle cx="9" cy="9" r="1"></circle>
-                </svg>
-                <p class="font-medium text-[#6e5a4c]">Klik untuk upload bukti</p>
-                <p class="mt-1 text-sm text-[#9a8575]">Format: JPG / PNG</p>
-            </div>
-
-            <img id="previewImage" src="" class="hidden h-full w-full object-cover" alt="Preview Bukti Pembayaran">
-        </div>
-
-        <input id="bukti-transfer" name="payment_proof" type="file" accept=".jpg,.jpeg,.png" class="hidden">
-    </label>
-    <p id="proof-msg" class="hidden mt-2 text-sm font-semibold text-[#dc2626]"></p>
-</div>
-
-<button
-    type="submit"
-    class="w-full rounded-2xl bg-[#BFA28C] py-3 text-base font-bold text-white shadow-md transition hover:bg-[#A88A72] sm:py-4 sm:text-lg"
->
-    Buat Pesanan
-
+<button type="submit" id="pay-btn"
+    class="w-full rounded-2xl bg-[#BFA28C] py-3 text-base font-bold text-white shadow-md transition hover:bg-[#A88A72] active:scale-[0.98] sm:py-4 sm:text-lg">
+    Bayar Sekarang
 </button>
+
+</script>

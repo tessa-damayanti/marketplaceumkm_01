@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\Kategori;
 
 class ProductController extends Controller
 {
@@ -60,21 +61,24 @@ class ProductController extends Controller
         $products = [];
 
         // Ambil produk terbaru dari setiap kategori
-        $categories = ['kemeja', 'gaun', 'cardigan', 'rok'];
+        $dummyCategories = ['kemeja', 'gaun', 'cardigan', 'rok'];
 
-        foreach ($categories as $cat) {
+        foreach ($dummyCategories as $cat) {
             if (isset($allProducts[$cat]) && count($allProducts[$cat]) > 0) {
                 $products[] = end($allProducts[$cat]);
             }
         }
+        
+        $categories = Kategori::orderBy('id', 'asc')->get();
 
-        return view('pages.home', compact('products'));
+        return view('pages.home', compact('products', 'categories'));
     }
 
     //  Halaman produk, filter kategori dan search
     public function index(Request $request)
     {
         $products = $this->getAllProducts();
+        $categories = Kategori::orderBy('id', 'asc')->get();
 
         $defaultCategory = $request->input('category', 'semua');
         $search = $request->input('search', '');
@@ -118,6 +122,6 @@ class ProductController extends Controller
             }
         }
 
-        return view('pages.product', compact('displayProducts', 'defaultCategory', 'search'));
+        return view('pages.product', compact('displayProducts', 'defaultCategory', 'search', 'categories'));
     }
 }

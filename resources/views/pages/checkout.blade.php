@@ -1,45 +1,40 @@
 @php
-    $buyerName = session('buyer_name', 'Nikita Willy');
-    $buyerPhone = session('buyer_phone', '0812-3456-7890');
+    $buyerName    = session('buyer_name',    'Nikita Willy');
+    $buyerPhone   = session('buyer_phone',   '0812-3456-7890');
     $buyerAddress = session('buyer_address', 'Jl. Melati No. 12, Bandung');
 
     if (request('name')) {
         $cartItems = [[
-            'name' => request('name'),
+            'name'  => request('name'),
             'price' => (int) request('price'),
-            'qty' => (int) request('qty', 1),
-            'size' => request('size') ?: 'M',
-            'image' => request('image') ?: 'https://i.pinimg.com/736x/78/2a/3d/782a3d260721c8f3d515966337443416.jpg',
+            'qty'   => (int) request('qty', 1),
+            'size'  => request('size') ?: 'M',
+            'image' => request('image') ?: '',
         ]];
     } else {
         $allCartItems = session('cart', []);
-        $selected = request('selected');
-        
-        if (is_array($selected) && count($selected) > 0) {
-            $cartItems = collect($allCartItems)->filter(function ($item, $key) use ($selected) {
-                return in_array($key, $selected);
-            })->all();
-        } else {
-            $cartItems = $allCartItems;
-        }
+        $selected     = request('selected');
+        $cartItems    = (is_array($selected) && count($selected) > 0)
+            ? collect($allCartItems)->filter(fn($v, $k) => in_array($k, $selected))->all()
+            : $allCartItems;
     }
 
-    $grandTotal = collect($cartItems)->sum(fn ($item) => (int) $item['price'] * (int) $item['qty']);
+    $grandTotal       = collect($cartItems)->sum(fn($i) => (int) $i['price'] * (int) $i['qty']);
+    $orderFingerprint = md5($grandTotal . collect($cartItems)->pluck('name')->join(','));
 @endphp
 
 @extends('layouts.app')
 @section('title', 'Checkout')
 
 @push('styles')
-    <style>
-        html, body {
-            overscroll-behavior: none;
-        }
-        body {
-            background-color: #f7f2eb;
-            color: #2f241d;
-        }
-    </style>
+<style>
+    html, body { overscroll-behavior: none; }
+    body { background-color: #f7f2eb; color: #2f241d; }
+    #pay-modal.open  { opacity: 1; pointer-events: auto; }
+    #pay-modal.open #pay-card { transform: translateY(0); }
+    #section-qris.show, #section-va.show,
+    #status-indicator.show { display: flex; }
+</style>
 @endpush
 
 @section('content')
@@ -50,11 +45,11 @@
             <h1 class="text-xl font-bold text-[#5c4432] sm:text-3xl">Beli Sekarang</h1>
         </div>
 
-        <form action="#" method="POST" enctype="multipart/form-data" onsubmit="showOrderToast(event)">
+        <form id="checkout-form" action="{{ route('checkout.charge') }}" method="POST">
             @csrf
+            <input type="hidden" name="grand_total" value="{{ $grandTotal }}">
             <div class="grid md:grid-cols-[1fr_1.05fr]">
                 <x-user.checkout-buyer :buyerName="$buyerName" :buyerPhone="$buyerPhone" :buyerAddress="$buyerAddress" />
-
                 <div class="p-5 sm:p-8">
                     <x-user.checkout-summary :cartItems="$cartItems" :grandTotal="$grandTotal" />
                 </div>
@@ -65,3 +60,82 @@
 
 <x-user.checkout-toast />
 @endsection
+
+@push('scripts')
+<script src="https://app.sandbox.midtrans.com/snap/snap.js" data-client-key="{{ config('midtrans.client_key') }}"></script>
+<script>
+const CHARGE_URL = '{{ route("checkout.charge") }}';
+const HOME_URL   = '{{ route("home") }}';
+const CSRF       = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+
+const payBtn = document.getElementById('pay-btn');
+
+function resetPayBtn() {
+    payBtn.disabled = false;
+    payBtn.textContent = 'Bayar Sekarang';
+}
+
+function showAlert(msg, type, cb) {
+    if (typeof window.showCustomAlert === 'function') {
+        window.showCustomAlert(msg, type, cb || null);
+    } else { 
+        alert(msg); 
+        if (cb) cb(); 
+    }
+}
+
+document.getElementById('checkout-form').addEventListener('submit', async function(e) {
+    e.preventDefault();
+
+    payBtn.textContent = 'Memproses...';
+    payBtn.disabled    = true;
+
+    const formData = new FormData(this);
+
+    try {
+        const res = await fetch(CHARGE_URL, {
+            method: 'POST',
+            headers: { 'X-CSRF-TOKEN': CSRF, 'Accept': 'application/json' },
+            body: formData,
+        });
+
+        if (res.status === 419) { 
+            resetPayBtn(); 
+            showAlert('Sesi berakhir. Refresh halaman.', 'error'); 
+            return; 
+        }
+
+        const data = await res.json().catch(() => { throw new Error('Respon bukan JSON'); });
+
+        if (res.ok && data.snap_token) {
+            window.snap.pay(data.snap_token, {
+                onSuccess: function(result){
+                    showAlert('Pembayaran berhasil! Terima kasih.', 'success', () => { window.location.href = HOME_URL; });
+                },
+                onPending: function(result){
+                    showAlert('Menunggu pembayaran Anda!', 'success', () => { window.location.href = HOME_URL; });
+                },
+                onError: function(result){
+                    showAlert('Pembayaran gagal!', 'error');
+                    resetPayBtn();
+                },
+                onClose: function(){
+                    resetPayBtn();
+                }
+            });
+        } else if (res.status === 422) {
+            resetPayBtn();
+            showAlert('Validasi gagal: ' + (data.message || 'Periksa data Anda.'), 'error');
+        } else {
+            resetPayBtn();
+            showAlert('Gagal: ' + (data.error || data.message || 'Terjadi kesalahan.'), 'error');
+        }
+
+    } catch (err) {
+        console.error('[Checkout]', err);
+        resetPayBtn();
+        showAlert('Kesalahan jaringan. Periksa koneksi Anda.', 'error');
+    }
+});
+</script>
+@endpush

@@ -11,7 +11,7 @@
       class="surface data-surface overflow-hidden rounded-2xl border border-[#e2d4c5] bg-white shadow-[0_12px_28px_rgba(92,68,50,0.08)]">
       <div class="kategori-header flex flex-wrap items-center justify-between gap-4 px-5 py-4">
         <div class="kategori-filter-row search-wrap">
-          <input type="text" id="kat-search" onkeyup="renderKategoriTable()" placeholder="Cari kategori..."
+          <input type="text" id="kat-search" onkeyup="searchKategori()" placeholder="Cari kategori..."
             class="search-input">
         </div>
         <button
@@ -22,7 +22,7 @@
         <table>
           <thead>
             <tr>
-              <th>ID</th>
+              <th>No</th>
               <th>Nama Kategori</th>
               <th>Aksi</th>
             </tr>

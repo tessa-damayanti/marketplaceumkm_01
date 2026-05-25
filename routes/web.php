@@ -6,6 +6,7 @@ use App\Http\Controllers\KategoriController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\CheckoutController;
 
 // Public routes
 Route::get('/', [ProductController::class, 'home'])->name('home');
@@ -17,6 +18,9 @@ Route::get('/checkout', function () {
     }
     return view('pages.checkout');
 })->name('checkout');
+Route::post('/checkout/charge',  [CheckoutController::class, 'charge'])->name('checkout.charge');
+Route::post('/checkout/status',  [CheckoutController::class, 'checkStatus'])->name('checkout.status');
+
 
 // Cart
 Route::get('/cart', [CartController::class, 'index'])->name('cart');
@@ -49,6 +53,9 @@ Route::prefix('admin')->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('admin.dashboard');
     Route::get('/produk', [DashboardController::class, 'produk'])->name('admin.produk');
     Route::get('/kategori', [DashboardController::class, 'kategori'])->name('admin.kategori');
+    Route::post('/kategori', [DashboardController::class, 'storeKategori'])->name('admin.kategori.store');
+    Route::put('/kategori/{id}', [DashboardController::class, 'updateKategori'])->name('admin.kategori.update');
+    Route::delete('/kategori/{id}', [DashboardController::class, 'destroyKategori'])->name('admin.kategori.destroy');
     Route::get('/stok', [DashboardController::class, 'stok'])->name('admin.stok');
     Route::get('/pesanan', [DashboardController::class, 'pesanan'])->name('admin.pesanan');
 });
