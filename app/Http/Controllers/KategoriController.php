@@ -55,7 +55,6 @@ class KategoriController extends Controller
             ],
         ];
 
-        // Redirect ke halaman product karena list_kategori sudah dihapus
         return redirect()->route('product');
     }
 }

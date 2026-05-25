@@ -105,7 +105,13 @@
     const editIcon = `<svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M3 17.25V21h3.75L17.8 9.94l-3.75-3.75L3 17.25z"></path><path d="M14.06 4.94l3.75 3.75"></path></svg>`;
     const deleteIcon = `<svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M3 6h18"></path><path d="M8 6V4h8v2"></path><path d="M19 6l-1 14H6L5 6"></path><path d="M10 11v6"></path><path d="M14 11v6"></path></svg>`;
 
-    function getProdukImage(name = '', explicitImage = '') { return explicitImage || produkImages[name] || ''; }
+    function getProdukImage(name = '', explicitImage = '') {
+      if (explicitImage) {
+        if (explicitImage.startsWith('http')) return explicitImage;
+        return '/images/' + explicitImage;
+      }
+      return produkImages[name] || '';
+    }
 
     function renderThumb(name = '', className = 'foto-cell', imageUrl = '') {
       const image = getProdukImage(name, imageUrl);
@@ -174,9 +180,9 @@
       if (filterKat) list = list.filter(p => p.kategori === filterKat);
       if (searchQuery) list = list.filter(p => p.nama.toLowerCase().includes(searchQuery));
 
-      document.getElementById('produk-tbody').innerHTML = list.map(p => `
+      document.getElementById('produk-tbody').innerHTML = list.map((p, index) => `
         <tr>
-          <td class="id-cell">${p.id}</td>
+          <td class="id-cell">${index + 1}</td>
           <td class="action-cell">${renderThumb(p.nama, 'foto-cell', p.image || '')}</td>
           <td>${p.nama}</td>
           <td>${p.kategori}</td>
@@ -234,7 +240,7 @@
     }
 
     function openEditProduk(id) {
-      const p = produkList.find(x => x.id === id);
+      const p = produkList.find(x => String(x.id) === String(id));
       if (!p) return;
       editingProdukId = id;
       document.getElementById('prod-modal-title').textContent = 'Edit Produk';
@@ -275,10 +281,10 @@
       if (!isValid) return;
 
       if (editingProdukId) {
-        const p = produkList.find(x => x.id === editingProdukId);
+        const p = produkList.find(x => String(x.id) === String(editingProdukId));
         if (p) { Object.assign(p, { nama, kategori: kat, harga, deskripsi: desk }); if (selectedProdukImage) p.image = selectedProdukImage; }
       } else {
-        produkList.unshift({ id: 'PRD-' + Math.random().toString(36).substr(2, 6).toUpperCase(), nama, kategori: kat, harga, deskripsi: desk, image: selectedProdukImage, stok: { S: 0, M: 0, L: 0, XL: 0 } });
+        produkList.unshift({ id: produkList.length + 1, nama, kategori: kat, harga, deskripsi: desk, image: selectedProdukImage, stok: { S: 0, M: 0, L: 0, XL: 0 } });
       }
       closeAdminModal('modal-tambah-produk');
       renderProdukTable();
@@ -286,7 +292,7 @@
     }
 
     function confirmHapusProduk() {
-      produkList = produkList.filter(x => x.id !== deletingProdukId);
+      produkList = produkList.filter(x => String(x.id) !== String(deletingProdukId));
       closeAdminModal('modal-hapus-produk');
       renderProdukTable();
       showAdminToast('Berhasil Dihapus', 'Produk telah dihapus dari daftar.', 'error');
@@ -484,7 +490,7 @@
     }
 
     function openEditStok(id) {
-      const p = produkList.find(x => x.id === id);
+      const p = produkList.find(x => String(x.id) === String(id));
       if (!p) return;
       editingStokId = id;
       document.getElementById('stok-modal-produk-name').textContent = 'Produk: ' + p.nama;
@@ -493,7 +499,7 @@
     }
 
     function saveStok() {
-      const p = produkList.find(x => x.id === editingStokId);
+      const p = produkList.find(x => String(x.id) === String(editingStokId));
       if (!p) return;
       ['s', 'm', 'l', 'xl'].forEach(sz => p.stok[sz.toUpperCase()] = parseInt(document.getElementById('stok-' + sz).value) || 0);
       closeAdminModal('modal-stok');

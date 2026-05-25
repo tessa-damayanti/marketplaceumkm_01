@@ -47,16 +47,20 @@ class DashboardController extends Controller
 
     private function getProdukData()
     {
-        return [
-            ['id' => 'PRD-A8B9C2', 'nama' => 'Kemeja Stripe', 'kategori' => 'Kemeja', 'harga' => 100000, 'deskripsi' => 'Kemeja wanita bermotif garis.', 'stok' => ['S' => 4, 'M' => 4, 'L' => 4, 'XL' => 4]],
-            ['id' => 'PRD-X7Y6Z5', 'nama' => 'Gaun Ivory', 'kategori' => 'Gaun', 'harga' => 175000, 'deskripsi' => 'Gaun wanita elegan warna ivory.', 'stok' => ['S' => 3, 'M' => 5, 'L' => 2, 'XL' => 1]],
-            ['id' => 'PRD-M4N3P2', 'nama' => 'Cardigan Floral', 'kategori' => 'Cardigan', 'harga' => 118000, 'deskripsi' => 'Cardigan motif bunga cantik.', 'stok' => ['S' => 6, 'M' => 4, 'L' => 3, 'XL' => 2]],
-            ['id' => 'PRD-D1E2F3', 'nama' => 'Rok Denim', 'kategori' => 'Rok', 'harga' => 132000, 'deskripsi' => 'Rok denim kasual modern.', 'stok' => ['S' => 5, 'M' => 5, 'L' => 4, 'XL' => 3]],
-            ['id' => 'PRD-H8J9K0', 'nama' => 'Gaun Floral Pastel', 'kategori' => 'Gaun', 'harga' => 210000, 'deskripsi' => 'Gaun pastel bermotif floral.', 'stok' => ['S' => 2, 'M' => 4, 'L' => 3, 'XL' => 1]],
-            ['id' => 'PRD-L5M6N7', 'nama' => 'Kemeja Hitam', 'kategori' => 'Kemeja', 'harga' => 105000, 'deskripsi' => 'Kemeja polos warna hitam.', 'stok' => ['S' => 4, 'M' => 4, 'L' => 4, 'XL' => 4]],
-            ['id' => 'PRD-R3S4T5', 'nama' => 'Cardigan Rajut', 'kategori' => 'Cardigan', 'harga' => 145000, 'deskripsi' => 'Cardigan rajut hangat nyaman.', 'stok' => ['S' => 3, 'M' => 5, 'L' => 4, 'XL' => 2]],
-            ['id' => 'PRD-V1W2X3', 'nama' => 'Rok Plisket', 'kategori' => 'Rok', 'harga' => 98000, 'deskripsi' => 'Rok plisket elegan.', 'stok' => ['S' => 5, 'M' => 6, 'L' => 4, 'XL' => 3]],
-        ];
+        $produks = \App\Models\Produk::all();
+        $data = [];
+        foreach ($produks as $produk) {
+            $data[] = [
+                'id' => $produk->id,
+                'nama' => $produk->nama,
+                'kategori' => $produk->kategori,
+                'harga' => $produk->harga,
+                'deskripsi' => $produk->deskripsi,
+                'image' => $produk->image,
+                'stok' => ['S' => rand(1,5), 'M' => rand(1,5), 'L' => rand(1,5), 'XL' => rand(1,5)]
+            ];
+        }
+        return $data;
     }
 
     private function getKategoriData()

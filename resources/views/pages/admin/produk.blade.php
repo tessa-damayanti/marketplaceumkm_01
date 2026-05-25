@@ -48,7 +48,7 @@
         <table>
           <thead>
             <tr>
-              <th>ID</th>
+              <th>No</th>
               <th>Foto</th>
               <th>Nama Produk</th>
               <th>Kategori</th>
