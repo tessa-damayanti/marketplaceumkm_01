@@ -56,6 +56,15 @@
 
             <div>
                 <label class="mb-2 block text-sm font-bold text-[#5c4432]">
+                    Email
+                </label>
+                <input id="profileEmail" name="email" type="email" value="nikita@example.com"
+                    class="w-full rounded-2xl border border-[#f2e4d8] px-5 py-3.5 text-[#7b6858] focus:outline-none focus:border-[#a16223] transition-all">
+                <p id="email-error" class="mt-1 hidden text-xs font-semibold text-red-500">Email wajib diisi</p>
+            </div>
+
+            <div>
+                <label class="mb-2 block text-sm font-bold text-[#5c4432]">
                     Alamat
                 </label>
                 <textarea id="profileAddress" name="address" rows="4"
@@ -90,10 +99,12 @@
 
         const nameInput = document.getElementById('profileName');
         const phoneInput = document.getElementById('profilePhone');
+        const emailInput = document.getElementById('profileEmail');
         const addressInput = document.getElementById('profileAddress');
 
         const nameError = document.getElementById('name-error');
         const phoneError = document.getElementById('phone-error');
+        const emailError = document.getElementById('email-error');
         const addressError = document.getElementById('address-error');
 
         let isValid = true;
@@ -116,6 +127,16 @@
         } else {
             phoneInput.classList.remove('border-red-500');
             phoneError.classList.add('hidden');
+        }
+
+        // Validasi Email
+        if (!emailInput.value.trim()) {
+            emailInput.classList.add('border-red-500');
+            emailError.classList.remove('hidden');
+            isValid = false;
+        } else {
+            emailInput.classList.remove('border-red-500');
+            emailError.classList.add('hidden');
         }
 
         // Validasi Alamat

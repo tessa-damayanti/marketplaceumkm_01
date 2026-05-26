@@ -24,6 +24,7 @@
             <div class="lg:col-span-9">
                 <x-user.profile-account />
                 <x-user.profile-history />
+                <x-user.profile-password />
             </div>
 
         </div>
@@ -42,11 +43,13 @@
         function switchTab(tabId) {
             document.getElementById('tab-akun').classList.add('hidden');
             document.getElementById('tab-riwayat').classList.add('hidden');
+            document.getElementById('tab-password').classList.add('hidden');
 
             document.getElementById('tab-' + tabId).classList.remove('hidden');
 
             const btnAkun = document.getElementById('btn-tab-akun');
             const btnRiwayat = document.getElementById('btn-tab-riwayat');
+            const btnPassword = document.getElementById('btn-tab-password');
 
             const inactive = ['text-[#8b6f58]', 'font-medium', 'bg-transparent'];
             const active = ['bg-[#e8ded3]', 'text-[#5c4432]', 'font-bold'];
@@ -56,6 +59,9 @@
 
             btnRiwayat.classList.remove(...active);
             btnRiwayat.classList.add(...inactive);
+
+            btnPassword.classList.remove(...active);
+            btnPassword.classList.add(...inactive);
 
             const activeBtn = document.getElementById('btn-tab-' + tabId);
             activeBtn.classList.remove(...inactive);
