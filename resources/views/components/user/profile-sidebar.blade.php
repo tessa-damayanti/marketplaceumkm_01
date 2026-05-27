@@ -59,6 +59,23 @@
             Riwayat
         </button>
 
+        {{-- Ubah Password --}}
+        <button onclick="switchTab('password')"
+            id="btn-tab-password"
+            class="flex w-full items-center gap-4 rounded-2xl px-6 py-4 text-left font-medium text-[#8b6f58] hover:bg-[#f0e7dd] transition-colors">
+
+            <svg xmlns="http://www.w3.org/2000/svg"
+                 class="h-6 w-6"
+                 fill="none"
+                 viewBox="0 0 24 24"
+                 stroke="currentColor"
+                 stroke-width="1.8">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+            </svg>
+
+            Ubah Password
+        </button>
+
         {{-- Logout --}}
         <button onclick="openLogoutModal()"
             id="btn-tab-logout"
