@@ -33,12 +33,27 @@ class ProdukSeeder extends Seeder
             ['nama' => 'Cardigan Panjang', 'kategori' => 'Cardigan', 'harga' => 160000, 'deskripsi' => 'Cardigan panjang sampai lutut.'],
         ];
 
-        $i = 1;
         foreach ($produks as $produk) {
-            $produk['image'] = 'produk' . $i . '.jpg';
-            \App\Models\Produk::create($produk);
-            $i++;
-            if ($i > 3) $i = 1;
+            $kategoriId = \App\Models\Kategori::where('nama', $produk['kategori'])->first()->id;
+            
+            $imageName = 'produk4.jpg'; // default (Rok/dll)
+            if ($produk['kategori'] === 'Kemeja') {
+                $imageName = 'produk1.jpg';
+            } elseif ($produk['kategori'] === 'Gaun') {
+                $imageName = 'produk2.jpg';
+            } elseif ($produk['kategori'] === 'Cardigan') {
+                $imageName = 'produk3.jpg';
+            } elseif ($produk['kategori'] === 'Rok') {
+                $imageName = 'produk4.jpg';
+            }
+
+            \App\Models\Produk::create([
+                'nama' => $produk['nama'],
+                'kategori_id' => $kategoriId,
+                'harga' => $produk['harga'],
+                'deskripsi' => $produk['deskripsi'],
+                'image' => $imageName,
+            ]);
         }
     }
 }       

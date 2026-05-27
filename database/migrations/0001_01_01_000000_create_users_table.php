@@ -16,6 +16,10 @@ return new class extends Migration
             $table->string('name');
             $table->string('username')->unique();
             $table->string('email')->unique();
+            $table->string('nama_lengkap')->nullable();
+            $table->string('no_wa')->nullable();
+            $table->text('alamat')->nullable();
+            $table->string('foto_profile')->nullable();
             $table->enum('role', ['admin', 'buyer'])->default('buyer');
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');

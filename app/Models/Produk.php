@@ -10,9 +10,19 @@ class Produk extends Model
 
     protected $fillable = [
         'nama',
-        'kategori',
+        'kategori_id',
         'harga',
         'deskripsi',
         'image',
     ];
+
+    public function kategori()
+    {
+        return $this->belongsTo(Kategori::class, 'kategori_id');
+    }
+
+    public function stoks()
+    {
+        return $this->hasMany(Stok::class, 'produk_id');
+    }
 }

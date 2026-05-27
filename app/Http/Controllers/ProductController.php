@@ -9,22 +9,30 @@ class ProductController extends Controller
 {
     private function getAllProducts(): array
     {
-        $dbProduks = \App\Models\Produk::all();
+        $dbProduks = \App\Models\Produk::with(['kategori', 'stoks.ukuran'])->get();
         $mapped = [];
 
         foreach ($dbProduks as $p) {
-            $cat = strtolower($p->kategori);
+            $catName = $p->kategori ? $p->kategori->nama : 'Lainnya';
+            $cat = strtolower($catName);
             if (!isset($mapped[$cat])) {
                 $mapped[$cat] = [];
             }
 
+            $stokArray = ['S' => 0, 'M' => 0, 'L' => 0, 'XL' => 0];
+            foreach ($p->stoks as $stok) {
+                if ($stok->ukuran) {
+                    $stokArray[$stok->ukuran->nama_ukuran] = $stok->jumlah_stok;
+                }
+            }
+
             $mapped[$cat][] = [
                 'name' => $p->nama,
-                'category' => $p->kategori,
+                'category' => $catName,
                 'image' => $p->image ? asset('images/' . $p->image) : 'https://i.pinimg.com/1200x/b1/cc/2f/b1cc2fb9a73cb56f46e167b47d4febbf.jpg',
                 'desc' => $p->deskripsi,
                 'sizes' => ['S', 'M', 'L', 'XL'],
-                'stock' => ['S' => rand(1,10), 'M' => rand(1,10), 'L' => rand(1,10), 'XL' => rand(1,10)],
+                'stock' => $stokArray,
                 'price' => number_format($p->harga, 0, ',', '.'),
                 'sold' => rand(5, 50)
             ];

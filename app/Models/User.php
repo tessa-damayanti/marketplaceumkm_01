@@ -22,7 +22,21 @@ class User extends Authenticatable
         'email',
         'password',
         'role',
+        'nama_lengkap',
+        'no_wa',
+        'alamat',
+        'foto_profile',
     ];
+
+    public function keranjangs()
+    {
+        return $this->hasMany(Keranjang::class, 'user_id');
+    }
+
+    public function pesanans()
+    {
+        return $this->hasMany(Pesanan::class, 'user_id');
+    }
 
     /**
      * @var list<string>
