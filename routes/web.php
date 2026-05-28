@@ -56,7 +56,10 @@ Route::prefix('admin')->group(function () {
     Route::post('/kategori', [DashboardController::class, 'storeKategori'])->name('admin.kategori.store');
     Route::put('/kategori/{id}', [DashboardController::class, 'updateKategori'])->name('admin.kategori.update');
     Route::delete('/kategori/{id}', [DashboardController::class, 'destroyKategori'])->name('admin.kategori.destroy');
+    Route::post('/produk', [DashboardController::class, 'storeProduk'])->name('admin.produk.store');
+    Route::post('/produk/{id}', [DashboardController::class, 'updateProduk'])->name('admin.produk.update');
     Route::get('/stok', [DashboardController::class, 'stok'])->name('admin.stok');
+    Route::put('/stok/{produk_id}', [DashboardController::class, 'updateStok'])->name('admin.stok.update');
     Route::get('/pesanan', [DashboardController::class, 'pesanan'])->name('admin.pesanan');
 });
 

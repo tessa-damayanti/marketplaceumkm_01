@@ -61,6 +61,7 @@ class DashboardController extends Controller
             $data[] = [
                 'id' => $produk->id,
                 'nama' => $produk->nama,
+                'kategori_id' => $produk->kategori_id,
                 'kategori' => $produk->kategori ? $produk->kategori->nama : '',
                 'harga' => $produk->harga,
                 'deskripsi' => $produk->deskripsi,
@@ -97,6 +98,94 @@ class DashboardController extends Controller
     {
         $kat = Kategori::findOrFail($id);
         $kat->delete();
+        return response()->json(['success' => true]);
+    }
+
+    public function storeProduk(Request $request)
+    {
+        $request->validate([
+            'nama' => 'required|string|max:255|unique:produks,nama',
+            'kategori_id' => 'required|exists:kategoris,id',
+            'harga' => 'required|integer',
+            'deskripsi' => 'required|string',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048'
+        ]);
+
+        $data = $request->only(['nama', 'kategori_id', 'harga', 'deskripsi']);
+
+        if ($request->hasFile('image')) {
+            $file = $request->file('image');
+            $filename = time() . '_' . $file->getClientOriginalName();
+            $file->move(public_path('images'), $filename);
+            $data['image'] = $filename;
+        }
+
+        $produk = Produk::create($data);
+
+        // Inisialisasi stok 0 untuk ukuran S, M, L, XL
+        $ukurans = \App\Models\Ukuran::all();
+        foreach ($ukurans as $ukuran) {
+            \App\Models\Stok::create([
+                'produk_id' => $produk->id,
+                'ukuran_id' => $ukuran->id,
+                'jumlah_stok' => 0
+            ]);
+        }
+
+        return response()->json(['success' => true]);
+    }
+
+    public function updateProduk(Request $request, $id)
+    {
+        $request->validate([
+            'nama' => 'required|string|max:255|unique:produks,nama,' . $id,
+            'kategori_id' => 'required|exists:kategoris,id',
+            'harga' => 'required|integer',
+            'deskripsi' => 'required|string',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048'
+        ]);
+
+        $produk = Produk::findOrFail($id);
+        $data = $request->only(['nama', 'kategori_id', 'harga', 'deskripsi']);
+
+        if ($request->hasFile('image')) {
+            $file = $request->file('image');
+            $filename = time() . '_' . $file->getClientOriginalName();
+            $file->move(public_path('images'), $filename);
+            
+            // Hapus gambar lama jika ada
+            if ($produk->image && file_exists(public_path('images/' . $produk->image))) {
+                unlink(public_path('images/' . $produk->image));
+            }
+            
+            $data['image'] = $filename;
+        }
+
+        $produk->update($data);
+
+        return response()->json(['success' => true]);
+    }
+
+    public function updateStok(Request $request, $produk_id)
+    {
+        $request->validate([
+            'S' => 'required|integer|min:0',
+            'M' => 'required|integer|min:0',
+            'L' => 'required|integer|min:0',
+            'XL' => 'required|integer|min:0',
+        ]);
+
+        $sizes = ['S', 'M', 'L', 'XL'];
+        foreach ($sizes as $size) {
+            $ukuran = \App\Models\Ukuran::where('nama_ukuran', $size)->first();
+            if ($ukuran) {
+                \App\Models\Stok::updateOrCreate(
+                    ['produk_id' => $produk_id, 'ukuran_id' => $ukuran->id],
+                    ['jumlah_stok' => $request->$size]
+                );
+            }
+        }
+
         return response()->json(['success' => true]);
     }
 

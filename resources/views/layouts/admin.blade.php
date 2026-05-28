@@ -226,12 +226,19 @@
       renderProdukTable();
     }
 
+    function populateKategoriSelect() {
+      const select = document.getElementById('prod-kat');
+      if(select) {
+        select.innerHTML = kategoriList.map(k => `<option value="${k.id}">${k.nama}</option>`).join('');
+      }
+    }
+
     function setModalMode(mode) {
       editingProdukId = null;
       selectedProdukImage = '';
+      populateKategoriSelect();
       document.getElementById('prod-modal-title').textContent = 'Tambah Produk';
       ['prod-nama', 'prod-harga', 'prod-desk', 'file-upload'].forEach(id => document.getElementById(id).value = '');
-      document.getElementById('prod-kat').value = 'Gaun';
       document.getElementById('upload-hint').textContent = 'Belum ada file dipilih';
       ['err-prod-nama', 'err-prod-harga', 'err-prod-desk'].forEach(id => {
         const el = document.getElementById(id);
@@ -243,9 +250,10 @@
       const p = produkList.find(x => String(x.id) === String(id));
       if (!p) return;
       editingProdukId = id;
+      populateKategoriSelect();
       document.getElementById('prod-modal-title').textContent = 'Edit Produk';
       document.getElementById('prod-nama').value = p.nama;
-      document.getElementById('prod-kat').value = p.kategori;
+      document.getElementById('prod-kat').value = p.kategori_id || '';
       document.getElementById('prod-harga').value = p.harga ? 'Rp ' + p.harga.toLocaleString('id-ID') : '';
       document.getElementById('prod-desk').value = p.deskripsi;
       selectedProdukImage = p.image || '';
@@ -268,27 +276,62 @@
 
     function openHapusProduk(id) { deletingProdukId = id; openAdminModal('modal-hapus-produk'); }
 
-    function saveProduk() {
+    async function saveProduk() {
       const nama = document.getElementById('prod-nama').value.trim();
       const kat = document.getElementById('prod-kat').value;
       const harga = parseInt(document.getElementById('prod-harga').value.replace(/\D/g, '')) || 0;
       const desk = document.getElementById('prod-desk').value.trim();
-
+      const fileInput = document.getElementById('file-upload');
+      
       let isValid = true;
       if (!nama) { document.getElementById('err-prod-nama').style.display = 'block'; isValid = false; }
       if (!harga || harga <= 0) { document.getElementById('err-prod-harga').style.display = 'block'; isValid = false; }
       if (!desk) { document.getElementById('err-prod-desk').style.display = 'block'; isValid = false; }
       if (!isValid) return;
 
-      if (editingProdukId) {
-        const p = produkList.find(x => String(x.id) === String(editingProdukId));
-        if (p) { Object.assign(p, { nama, kategori: kat, harga, deskripsi: desk }); if (selectedProdukImage) p.image = selectedProdukImage; }
-      } else {
-        produkList.unshift({ id: produkList.length + 1, nama, kategori: kat, harga, deskripsi: desk, image: selectedProdukImage, stok: { S: 0, M: 0, L: 0, XL: 0 } });
+      const formData = new FormData();
+      formData.append('nama', nama);
+      formData.append('kategori_id', kat);
+      formData.append('harga', harga);
+      formData.append('deskripsi', desk);
+      if (fileInput.files.length > 0) {
+        formData.append('image', fileInput.files[0]);
       }
-      closeAdminModal('modal-tambah-produk');
-      renderProdukTable();
-      showAdminToast('Berhasil', editingProdukId ? 'Produk berhasil diperbarui.' : 'Produk baru berhasil ditambahkan.');
+
+      const isEdit = !!editingProdukId;
+      const url = isEdit ? `/admin/produk/${editingProdukId}` : `/admin/produk`;
+      const csrf = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+      
+      try {
+        const res = await fetch(url, {
+          method: 'POST',
+          headers: {
+            'X-CSRF-TOKEN': csrf,
+            'Accept': 'application/json'
+          },
+          body: formData
+        });
+        
+        const data = await res.json();
+        
+        if (res.status === 422 && data.errors && data.errors.nama) {
+          const errEl = document.getElementById('err-prod-nama');
+          if (errEl) {
+            errEl.textContent = 'Nama produk sudah ada.';
+            errEl.style.display = 'block';
+          }
+          return;
+        }
+
+        if (data.success) {
+          // Refresh the page to get the updated list from server
+          window.location.reload();
+        } else {
+          showAdminToast('Gagal', 'Terjadi kesalahan.', 'error');
+        }
+      } catch (err) {
+        showAdminToast('Gagal', 'Koneksi bermasalah.', 'error');
+      }
     }
 
     function confirmHapusProduk() {
@@ -498,13 +541,42 @@
       openAdminModal('modal-stok');
     }
 
-    function saveStok() {
+    async function saveStok() {
       const p = produkList.find(x => String(x.id) === String(editingStokId));
       if (!p) return;
-      ['s', 'm', 'l', 'xl'].forEach(sz => p.stok[sz.toUpperCase()] = parseInt(document.getElementById('stok-' + sz).value) || 0);
-      closeAdminModal('modal-stok');
-      renderStokTable();
-      showAdminToast('Berhasil', 'Stok produk berhasil diperbarui.');
+      
+      const payload = {};
+      let hasError = false;
+      ['s', 'm', 'l', 'xl'].forEach(sz => {
+        let val = parseInt(document.getElementById('stok-' + sz).value);
+        if (isNaN(val) || val < 0) {
+           val = 0; // enforce no negative
+        }
+        payload[sz.toUpperCase()] = val;
+      });
+
+      const csrf = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+      
+      try {
+        const res = await fetch(`/admin/stok/${editingStokId}`, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': csrf,
+            'Accept': 'application/json'
+          },
+          body: JSON.stringify(payload)
+        });
+
+        const data = await res.json();
+        if (data.success) {
+          window.location.reload();
+        } else {
+          showAdminToast('Gagal', 'Terjadi kesalahan saat menyimpan stok.', 'error');
+        }
+      } catch (err) {
+        showAdminToast('Gagal', 'Koneksi bermasalah.', 'error');
+      }
     }
 
     function normalizePesananFilterDate(value = '') {

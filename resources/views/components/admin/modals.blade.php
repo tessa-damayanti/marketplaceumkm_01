@@ -21,10 +21,6 @@
       <div>
         <label class="field-label">Kategori</label>
         <select id="prod-kat" style="width:100%">
-          <option>Gaun</option>
-          <option>Kemeja</option>
-          <option>Cardigan</option>
-          <option>Rok</option>
         </select>
       </div>
       <div>
