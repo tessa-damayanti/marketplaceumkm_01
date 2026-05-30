@@ -97,6 +97,14 @@ class DashboardController extends Controller
     public function destroyKategori($id)
     {
         $kat = Kategori::findOrFail($id);
+        
+        if ($kat->produks()->count() > 0) {
+            return response()->json([
+                'success' => false, 
+                'message' => 'Kategori gagal dihapus karena masih memiliki produk di dalamnya. Silakan pindahkan atau hapus produk terlebih dahulu.'
+            ], 400);
+        }
+
         $kat->delete();
         return response()->json(['success' => true]);
     }
@@ -163,6 +171,13 @@ class DashboardController extends Controller
 
         $produk->update($data);
 
+        return response()->json(['success' => true]);
+    }
+
+    public function destroyProduk($id)
+    {
+        $produk = Produk::findOrFail($id);
+        $produk->delete();
         return response()->json(['success' => true]);
     }
 

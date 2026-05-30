@@ -334,11 +334,28 @@
       }
     }
 
-    function confirmHapusProduk() {
-      produkList = produkList.filter(x => String(x.id) !== String(deletingProdukId));
-      closeAdminModal('modal-hapus-produk');
-      renderProdukTable();
-      showAdminToast('Berhasil Dihapus', 'Produk telah dihapus dari daftar.', 'error');
+    async function confirmHapusProduk() {
+      const csrf = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+      try {
+        const res = await fetch(`/admin/produk/${deletingProdukId}`, {
+          method: 'DELETE',
+          headers: {
+            'X-CSRF-TOKEN': csrf,
+            'Accept': 'application/json'
+          }
+        });
+        const data = await res.json();
+        if (data.success) {
+          produkList = produkList.filter(x => String(x.id) !== String(deletingProdukId));
+          closeAdminModal('modal-hapus-produk');
+          renderProdukTable();
+          showAdminToast('Berhasil Dihapus', 'Produk telah dihapus dari daftar.', 'success');
+        } else {
+          showAdminToast('Gagal', 'Terjadi kesalahan.', 'error');
+        }
+      } catch (err) {
+        showAdminToast('Gagal', 'Koneksi bermasalah.', 'error');
+      }
     }
 
     function handleFileChange(input) {
@@ -505,9 +522,9 @@
           kategoriList = kategoriList.filter(x => String(x.id) !== String(deletingKatId));
           closeAdminModal('modal-hapus-kat');
           renderKategoriTable();
-          showAdminToast('Berhasil Dihapus', 'Kategori telah dihapus.', 'error');
+          showAdminToast('Berhasil Dihapus', 'Kategori telah dihapus.', 'success');
         } else {
-          showAdminToast('Gagal', 'Terjadi kesalahan.', 'error');
+          showAdminToast('Gagal', data.message || 'Terjadi kesalahan.', 'error');
         }
       } catch (err) {
         showAdminToast('Gagal', 'Koneksi bermasalah.', 'error');
