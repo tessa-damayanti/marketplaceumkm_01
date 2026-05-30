@@ -34,7 +34,7 @@ class ProductController extends Controller
                 'sizes' => ['S', 'M', 'L', 'XL'],
                 'stock' => $stokArray,
                 'price' => number_format($p->harga, 0, ',', '.'),
-                'sold' => rand(5, 50)
+                'sold' => $p->id <= 20 ? (($p->id * 7) % 45) + 5 : 0
             ];
         }
 
@@ -46,16 +46,15 @@ class ProductController extends Controller
         $allProducts = $this->getAllProducts();
         $products = [];
 
-        // Ambil produk terbaru dari setiap kategori
-        $dummyCategories = ['kemeja', 'gaun', 'cardigan', 'rok'];
+        $categories = Kategori::orderBy('id', 'asc')->get();
 
-        foreach ($dummyCategories as $cat) {
-            if (isset($allProducts[$cat]) && count($allProducts[$cat]) > 0) {
-                $products[] = end($allProducts[$cat]);
+        // Ambil produk terbaru dari setiap kategori secara dinamis
+        foreach ($categories as $kategori) {
+            $catKey = strtolower($kategori->nama);
+            if (isset($allProducts[$catKey]) && count($allProducts[$catKey]) > 0) {
+                $products[] = end($allProducts[$catKey]);
             }
         }
-        
-        $categories = Kategori::orderBy('id', 'asc')->get();
 
         return view('pages.home', compact('products', 'categories'));
     }
@@ -67,7 +66,7 @@ class ProductController extends Controller
 
         $defaultCategory = $request->input('category', 'semua');
         $search = $request->input('search', '');
-        
+
         $searchLower = strtolower(trim($search));
 
         if ($searchLower === 'tentang') {
@@ -90,7 +89,7 @@ class ProductController extends Controller
                     || str_contains(strtolower($product['category']), $searchLower);
             });
             $displayProducts = array_values($displayProducts);
-        
+
             if (count($displayProducts) > 0) {
                 $matchedCategories = array_unique(array_map(function ($item) {
                     return strtolower($item['category']);

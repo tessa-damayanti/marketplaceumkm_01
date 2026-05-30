@@ -28,14 +28,10 @@
             class="produk-filter-menu absolute left-0 top-[calc(100%+6px)] z-[80] hidden w-full overflow-hidden rounded-xl border border-[#d8c3af] bg-white shadow-xl">
             <li class="produk-kategori-option cursor-pointer border-b border-[#f0e7dd] bg-[#fbf8f5] px-4 py-2.5 text-sm font-medium text-[#BFA28C] transition-colors hover:bg-[#BFA28C] hover:text-white"
               onclick="selectProdukKategoriFilter('')">Semua Kategori</li>
-            <li class="produk-kategori-option cursor-pointer border-b border-[#f0e7dd] px-4 py-2.5 text-sm font-medium text-[#5c4432] transition-colors hover:bg-[#BFA28C] hover:text-white"
-              onclick="selectProdukKategoriFilter('Gaun')">Gaun</li>
-            <li class="produk-kategori-option cursor-pointer border-b border-[#f0e7dd] px-4 py-2.5 text-sm font-medium text-[#5c4432] transition-colors hover:bg-[#BFA28C] hover:text-white"
-              onclick="selectProdukKategoriFilter('Kemeja')">Kemeja</li>
-            <li class="produk-kategori-option cursor-pointer border-b border-[#f0e7dd] px-4 py-2.5 text-sm font-medium text-[#5c4432] transition-colors hover:bg-[#BFA28C] hover:text-white"
-              onclick="selectProdukKategoriFilter('Cardigan')">Cardigan</li>
-            <li class="produk-kategori-option cursor-pointer px-4 py-2.5 text-sm font-medium text-[#5c4432] transition-colors hover:bg-[#BFA28C] hover:text-white"
-              onclick="selectProdukKategoriFilter('Rok')">Rok</li>
+            @foreach($kategori as $kat)
+            <li class="produk-kategori-option cursor-pointer px-4 py-2.5 text-sm font-medium text-[#5c4432] transition-colors hover:bg-[#BFA28C] hover:text-white @if(!$loop->last) border-b border-[#f0e7dd] @endif"
+              data-nama="{{ $kat['nama'] }}" onclick="selectProdukKategoriFilter(this.dataset.nama)">{{ $kat['nama'] }}</li>
+            @endforeach
           </ul>
           <input type="hidden" id="produk-filter-kat" value="">
         </div>

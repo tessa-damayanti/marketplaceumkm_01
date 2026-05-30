@@ -15,7 +15,7 @@ function requireBuyerLogin() {
 }
 
 function initCardAnimations() {
-    const cards = document.querySelectorAll('#product-grid .product-card');
+    const cards = document.querySelectorAll('#product-grid .product-card, #product-slider .product-card');
 
     cards.forEach(card => {
         card.classList.remove('card-visible');
@@ -42,7 +42,7 @@ function initCardAnimations() {
 }
 
 function resetProductCards() {
-    document.querySelectorAll('#product-grid .product-card').forEach(card => {
+    document.querySelectorAll('#product-grid .product-card, #product-slider .product-card').forEach(card => {
         card.classList.remove('card-visible');
         card.style.animation = 'none';
         card.offsetHeight;

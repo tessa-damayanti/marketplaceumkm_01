@@ -126,7 +126,6 @@
         </div>
     </div>
 </section>
-
 <section class="mx-auto max-w-7xl px-4 pb-4 pt-4 sm:px-6 sm:pb-6 sm:pt-5 [font-family:Poppins,sans-serif]">
     <div class="relative flex items-center gap-2">
 
@@ -134,82 +133,96 @@
         <button id="cat-prev-prod"
             class="hidden shrink-0 h-9 w-9 items-center justify-center rounded-full bg-white border border-[#e2d4c5] shadow-sm text-[#6B4F3A] transition hover:bg-[#EDE4DA] hover:shadow-md"
             onclick="scrollCatProd(-1)">
-            <svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg>
+            <svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                <path d="M15 18l-6-6 6-6" />
+            </svg>
         </button>
 
         <div id="categoryTabsProd"
             class="flex gap-[0.45rem] overflow-hidden scroll-smooth"
-            style="max-width:100%;">
+            style="width: calc((100px * 10) + (0.45rem * 9));">
 
             <a href="{{ route('product') }}?category=semua"
-                class="cat-tab-prod group inline-flex shrink-0 cursor-pointer items-center gap-[6px] text-center break-words rounded-full border-[1.5px] border-transparent
-                      w-[100px] max-w-[100px] min-h-[42px] px-4 py-2 justify-center text-[0.72rem] font-semibold no-underline transition-all duration-200
-                      sm:px-3.5 sm:py-2 sm:text-[0.78rem]
-                      {{ $defaultCategory === 'semua'
-                           ? 'bg-[#BFA28C] text-white border-[#BFA28C] shadow-[0_4px_14px_rgba(191,162,140,0.35)]'
-                           : 'bg-[#EDE4DA] text-[#6B4F3A] hover:bg-[#BFA28C] hover:text-white hover:border-[#BFA28C] hover:shadow-[0_4px_14px_rgba(191,162,140,0.25)] hover:-translate-y-px' }}">
+                class="cat-tab-prod group inline-flex shrink-0 cursor-pointer items-center justify-center gap-[6px] rounded-full border-[1.5px] border-transparent
+                w-[100px] max-w-[100px] min-h-[42px] px-4 py-2 text-center text-[0.72rem] font-semibold no-underline transition-all duration-200
+                sm:px-3.5 sm:py-2 sm:text-[0.78rem]
+                {{ $defaultCategory === 'semua'
+                    ? 'bg-[#BFA28C] text-white border-[#BFA28C] shadow-[0_4px_14px_rgba(191,162,140,0.35)]'
+                    : 'bg-[#EDE4DA] text-[#6B4F3A] hover:bg-[#BFA28C] hover:text-white hover:border-[#BFA28C] hover:shadow-[0_4px_14px_rgba(191,162,140,0.25)] hover:-translate-y-px' }}">
                 Semua
             </a>
 
             @foreach($categories as $cat)
-                @php $catLower = strtolower($cat->nama); @endphp
-                <a href="{{ route('product') }}?category={{ $catLower }}"
-                    class="cat-tab-prod group inline-flex shrink-0 cursor-pointer items-center gap-[6px] text-center break-words rounded-full border-[1.5px] border-transparent
-                          w-[100px] max-w-[100px] min-h-[42px] px-4 py-2 justify-center text-[0.72rem] font-semibold no-underline transition-all duration-200
-                          sm:px-3.5 sm:py-2 sm:text-[0.78rem]
-                          {{ $defaultCategory === $catLower
-                               ? 'bg-[#BFA28C] text-white border-[#BFA28C] shadow-[0_4px_14px_rgba(191,162,140,0.35)]'
-                               : 'bg-[#EDE4DA] text-[#6B4F3A] hover:bg-[#BFA28C] hover:text-white hover:border-[#BFA28C] hover:shadow-[0_4px_14px_rgba(191,162,140,0.25)] hover:-translate-y-px' }}">
-                    {{ $cat->nama }}
-                </a>
-            @endforeach
+            @php $catLower = strtolower($cat->nama); @endphp
 
+            <a href="{{ route('product') }}?category={{ $catLower }}"
+                class="cat-tab-prod group inline-flex shrink-0 cursor-pointer items-center justify-center gap-[6px] rounded-full border-[1.5px] border-transparent
+                    w-[100px] max-w-[100px] min-h-[42px] px-4 py-2 text-center text-[0.72rem] font-semibold no-underline transition-all duration-200
+                    sm:px-3.5 sm:py-2 sm:text-[0.78rem]
+                    {{ $defaultCategory === $catLower
+                        ? 'bg-[#BFA28C] text-white border-[#BFA28C] shadow-[0_4px_14px_rgba(191,162,140,0.35)]'
+                        : 'bg-[#EDE4DA] text-[#6B4F3A] hover:bg-[#BFA28C] hover:text-white hover:border-[#BFA28C] hover:shadow-[0_4px_14px_rgba(191,162,140,0.25)] hover:-translate-y-px' }}">
+                {{ $cat->nama }}
+            </a>
+            @endforeach
         </div>
 
         {{-- Arrow Kanan --}}
         <button id="cat-next-prod"
             class="hidden shrink-0 h-9 w-9 items-center justify-center rounded-full bg-white border border-[#e2d4c5] shadow-sm text-[#6B4F3A] transition hover:bg-[#EDE4DA] hover:shadow-md"
             onclick="scrollCatProd(1)">
-            <svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M9 5l6 6-6 6"/></svg>
+            <svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                <path d="M9 5l6 6-6 6" />
+            </svg>
         </button>
 
     </div>
 </section>
 
 <script>
-(function() {
-    const MAX_VISIBLE = 10;
-    const container = document.getElementById('categoryTabsProd');
-    const tabs = Array.from(container.querySelectorAll('.cat-tab-prod'));
-    const prevBtn = document.getElementById('cat-prev-prod');
-    const nextBtn = document.getElementById('cat-next-prod');
-    let currentOffset = 0;
+    (function() {
+        const MAX_VISIBLE = 10;
+        const tabs = Array.from(document.querySelectorAll('.cat-tab-prod'));
+        const prevBtn = document.getElementById('cat-prev-prod');
+        const nextBtn = document.getElementById('cat-next-prod');
 
-    function updateVisibility() {
-        tabs.forEach((tab, i) => {
-            tab.style.display = (i >= currentOffset && i < currentOffset + MAX_VISIBLE) ? '' : 'none';
-        });
-        const needArrows = tabs.length > MAX_VISIBLE;
-        prevBtn.style.display = needArrows ? 'inline-flex' : 'none';
-        nextBtn.style.display = needArrows ? 'inline-flex' : 'none';
-        prevBtn.disabled = currentOffset === 0;
-        prevBtn.style.opacity = currentOffset === 0 ? '0.4' : '1';
-        nextBtn.disabled = currentOffset + MAX_VISIBLE >= tabs.length;
-        nextBtn.style.opacity = currentOffset + MAX_VISIBLE >= tabs.length ? '0.4' : '1';
-    }
+        let currentOffset = 0;
 
-    window.scrollCatProd = function(dir) {
-        currentOffset = Math.max(
-            0,
-            Math.min(currentOffset + (dir * MAX_VISIBLE), tabs.length - MAX_VISIBLE)
-        );
+        function updateVisibility() {
+            tabs.forEach((tab, i) => {
+                tab.style.display =
+                    i >= currentOffset && i < currentOffset + MAX_VISIBLE ?
+                    'inline-flex' :
+                    'none';
+            });
+
+            const needArrows = tabs.length > MAX_VISIBLE;
+            const atStart = currentOffset === 0;
+            const atEnd = currentOffset + MAX_VISIBLE >= tabs.length;
+
+            prevBtn.style.display = needArrows ? 'inline-flex' : 'none';
+            nextBtn.style.display = needArrows ? 'inline-flex' : 'none';
+
+            prevBtn.disabled = atStart;
+            nextBtn.disabled = atEnd;
+
+            prevBtn.style.opacity = atStart ? '0.4' : '1';
+            nextBtn.style.opacity = atEnd ? '0.4' : '1';
+        }
+
+        window.scrollCatProd = function(dir) {
+            const totalPages = Math.ceil(tabs.length / MAX_VISIBLE);
+            const currentPage = Math.floor(currentOffset / MAX_VISIBLE);
+            const nextPage = Math.max(0, Math.min(currentPage + dir, totalPages - 1));
+
+            currentOffset = nextPage * MAX_VISIBLE;
+
+            updateVisibility();
+        };
+
         updateVisibility();
-    };
-
-    updateVisibility();
-})();
+    })();
 </script>
-
 <section class="mx-auto max-w-7xl px-4 pb-14 sm:px-6 [font-family:Poppins,sans-serif]">
     @if(count($displayProducts) > 0)
     <div id="product-grid"
@@ -232,5 +245,5 @@
     @endif
 </section>
 
-    <x-product-modal />
+<x-product-modal />
 @endsection
