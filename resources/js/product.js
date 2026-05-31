@@ -79,8 +79,17 @@ function openModal(product) {
         const btn = document.createElement('button');
         btn.type = 'button';
         btn.textContent = size;
-        btn.className = 'size-btn rounded-xl border-[1.5px] border-[#DDD0C4] bg-[#FBF7F3] px-4 py-2 text-xs font-semibold text-[#7A5A43] transition-all duration-150 hover:border-[#B08B68] hover:bg-[#F0E4D8] [font-family:Poppins,sans-serif]';
-        btn.onclick = () => selectSize(btn, size);
+        
+        const stockCount = parseInt(product.stock[size]) || 0;
+        
+        if (stockCount === 0) {
+            btn.className = 'size-btn rounded-xl border-[1.5px] border-[#e2e2e2] bg-[#f5f5f5] px-4 py-2 text-xs font-semibold text-[#a0a0a0] cursor-not-allowed [font-family:Poppins,sans-serif]';
+            btn.disabled = true;
+        } else {
+            btn.className = 'size-btn rounded-xl border-[1.5px] border-[#DDD0C4] bg-[#FBF7F3] px-4 py-2 text-xs font-semibold text-[#7A5A43] transition-all duration-150 hover:border-[#B08B68] hover:bg-[#F0E4D8] [font-family:Poppins,sans-serif] cursor-pointer';
+            btn.onclick = () => selectSize(btn, size);
+        }
+        
         sizeContainer.appendChild(btn);
     });
 

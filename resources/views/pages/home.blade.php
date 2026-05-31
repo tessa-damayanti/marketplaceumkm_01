@@ -284,14 +284,25 @@
         sizesContainer.innerHTML = '';
 
         product.sizes.forEach(size => {
-            sizesContainer.innerHTML += `
+            const stockCount = parseInt(product.stock[size]) || 0;
+            if (stockCount === 0) {
+                sizesContainer.innerHTML += `
                     <button
-                        type="button"
-                        onclick="selectSize(this, '${size}')"
-                        class="size-btn rounded-2xl border border-[#d8c3af] bg-[#fbf7f2] px-5 py-3 text-[#6d5644] transition hover:border-[#b08b68] hover:bg-[#efe3d5]">
+                        type="button" disabled
+                        class="size-btn rounded-2xl border border-[#e2e2e2] bg-[#f5f5f5] px-5 py-3 text-[#a0a0a0] cursor-not-allowed">
                         ${size}
                     </button>
                 `;
+            } else {
+                sizesContainer.innerHTML += `
+                    <button
+                        type="button"
+                        onclick="selectSize(this, '${size}')"
+                        class="size-btn rounded-2xl border border-[#d8c3af] bg-[#fbf7f2] px-5 py-3 text-[#6d5644] transition hover:border-[#b08b68] hover:bg-[#efe3d5] cursor-pointer">
+                        ${size}
+                    </button>
+                `;
+            }
         });
 
         const modal = document.getElementById('productModal');
