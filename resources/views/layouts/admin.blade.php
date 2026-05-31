@@ -42,6 +42,7 @@
   <script>
     // ADMIN TOAST
     let adminToastTimer = null;
+
     function showAdminToast(title, message, type = 'success') {
       const toast = document.getElementById('admin-toast');
       const icon = document.getElementById('admin-toast-icon');
@@ -89,7 +90,9 @@
     let katIdCounter = 5;
 
     // HELPERS
-    function rp(n) { return 'Rp' + Number(n).toLocaleString('id-ID'); }
+    function rp(n) {
+      return 'Rp' + Number(n).toLocaleString('id-ID');
+    }
 
     const produkImages = {
       'Kemeja Stripe': 'https://i.pinimg.com/1200x/b1/cc/2f/b1cc2fb9a73cb56f46e167b47d4febbf.jpg',
@@ -129,14 +132,25 @@
       return `<span class="inline-flex items-center rounded-full ${colors[s] || colors['Menunggu Verifikasi']} px-3 py-1 text-sm font-medium">${s}</span>`;
     }
 
-    function openAdminModal(id) { document.getElementById(id).classList.add('open'); }
-    function closeAdminModal(id) { document.getElementById(id).classList.remove('open'); }
+    function openAdminModal(id) {
+      document.getElementById(id).classList.add('open');
+    }
+
+    function closeAdminModal(id) {
+      document.getElementById(id).classList.remove('open');
+    }
 
     window.openModal = openAdminModal;
     window.closeModal = closeAdminModal;
 
-    function confirmLogout(event) { event.preventDefault(); openAdminModal('modal-logout'); }
-    function proceedLogout() { window.location.href = "{{ route('home') }}"; }
+    function confirmLogout(event) {
+      event.preventDefault();
+      openAdminModal('modal-logout');
+    }
+
+    function proceedLogout() {
+      window.location.href = "{{ route('home') }}";
+    }
 
     function toggleMobileSidebar() {
       const sidebar = document.getElementById('admin-sidebar');
@@ -171,6 +185,14 @@
     }
 
     // PRODUK
+    let produkCurrentPage = 1;
+    const produkPerPage = 8;
+
+    function searchProduk() {
+      produkCurrentPage = 1;
+      renderProdukTable();
+    }
+
     function renderProdukTable() {
       if (!document.getElementById('produk-tbody')) return;
       const filterKat = document.getElementById('produk-filter-kat')?.value || '';
@@ -180,9 +202,19 @@
       if (filterKat) list = list.filter(p => p.kategori === filterKat);
       if (searchQuery) list = list.filter(p => p.nama.toLowerCase().includes(searchQuery));
 
-      document.getElementById('produk-tbody').innerHTML = list.map((p, index) => `
+      const totalItems = list.length;
+      const totalPages = Math.ceil(totalItems / produkPerPage) || 1;
+      if (produkCurrentPage > totalPages) produkCurrentPage = totalPages;
+      if (produkCurrentPage < 1) produkCurrentPage = 1;
+
+      const startIdx = (produkCurrentPage - 1) * produkPerPage;
+      const paginatedList = list.slice(startIdx, startIdx + produkPerPage);
+
+      document.getElementById('produk-tbody').innerHTML = paginatedList.map((p, index) => {
+        const seqNum = startIdx + index + 1;
+        return `
         <tr>
-          <td class="id-cell">${index + 1}</td>
+          <td class="id-cell">${seqNum}</td>
           <td class="action-cell">${renderThumb(p.nama, 'foto-cell', p.image || '')}</td>
           <td>${p.nama}</td>
           <td>${p.kategori}</td>
@@ -193,7 +225,31 @@
               <button class="icon-btn icon-btn-delete" data-tooltip="Hapus" type="button" onclick="openHapusProduk('${p.id}')">${deleteIcon}</button>
             </div>
           </td>
-        </tr>`).join('');
+        </tr>`;
+      }).join('');
+
+      const infoEl = document.getElementById('produk-pagi-info');
+      if (infoEl) {
+        const endIdx = Math.min(startIdx + produkPerPage, totalItems);
+        infoEl.textContent = totalItems === 0 ? '0 dari 0' : `${startIdx + 1} - ${endIdx} dari ${totalItems}`;
+      }
+
+      const pagiContainer = document.querySelector('#page-produk .pagi-btns');
+      if (pagiContainer) {
+        let btnsHtml = `<button class="pagi-btn" ${produkCurrentPage === 1 ? 'disabled style="opacity:0.5;cursor:not-allowed;"' : ''} onclick="produkCurrentPage--; renderProdukTable()">
+          <svg class="h-3 w-3" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg>
+        </button>`;
+
+        for (let i = 1; i <= totalPages; i++) {
+          btnsHtml += `<button class="pagi-btn ${i === produkCurrentPage ? 'active' : ''}" onclick="produkCurrentPage = ${i}; renderProdukTable()">${i}</button>`;
+        }
+
+        btnsHtml += `<button class="pagi-btn" ${produkCurrentPage === totalPages ? 'disabled style="opacity:0.5;cursor:not-allowed;"' : ''} onclick="produkCurrentPage++; renderProdukTable()">
+          <svg class="h-3 w-3" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 5l6 6-6 6"/></svg>
+        </button>`;
+
+        pagiContainer.innerHTML = btnsHtml;
+      }
     }
 
     function toggleProdukKategoriFilter(e) {
@@ -223,12 +279,13 @@
 
       document.getElementById('produk-filter-kat-menu')?.classList.add('hidden');
       document.getElementById('produk-filter-kat-icon')?.classList.remove('rotate-180');
+      produkCurrentPage = 1;
       renderProdukTable();
     }
 
     function populateKategoriSelect() {
       const select = document.getElementById('prod-kat');
-      if(select) {
+      if (select) {
         select.innerHTML = kategoriList.map(k => `<option value="${k.id}">${k.nama}</option>`).join('');
       }
     }
@@ -254,7 +311,7 @@
       document.getElementById('prod-modal-title').textContent = 'Edit Produk';
       document.getElementById('prod-nama').value = p.nama;
       document.getElementById('prod-kat').value = p.kategori_id || '';
-      document.getElementById('prod-harga').value = p.harga ? 'Rp ' + p.harga.toLocaleString('id-ID') : '';
+      document.getElementById('prod-harga').value = p.harga ? 'Rp' + Number(p.harga).toLocaleString('id-ID') : '';
       document.getElementById('prod-desk').value = p.deskripsi;
       selectedProdukImage = p.image || '';
       document.getElementById('upload-hint').textContent = 'Foto tersimpan';
@@ -268,13 +325,16 @@
     function formatRupiahInput(input) {
       let value = input.value.replace(/\D/g, '');
       if (value) {
-        input.value = 'Rp ' + parseInt(value).toLocaleString('id-ID');
+        input.value = 'Rp' + parseInt(value).toLocaleString('id-ID');
       } else {
         input.value = '';
       }
     }
 
-    function openHapusProduk(id) { deletingProdukId = id; openAdminModal('modal-hapus-produk'); }
+    function openHapusProduk(id) {
+      deletingProdukId = id;
+      openAdminModal('modal-hapus-produk');
+    }
 
     async function saveProduk() {
       const nama = document.getElementById('prod-nama').value.trim();
@@ -282,11 +342,20 @@
       const harga = parseInt(document.getElementById('prod-harga').value.replace(/\D/g, '')) || 0;
       const desk = document.getElementById('prod-desk').value.trim();
       const fileInput = document.getElementById('file-upload');
-      
+
       let isValid = true;
-      if (!nama) { document.getElementById('err-prod-nama').style.display = 'block'; isValid = false; }
-      if (!harga || harga <= 0) { document.getElementById('err-prod-harga').style.display = 'block'; isValid = false; }
-      if (!desk) { document.getElementById('err-prod-desk').style.display = 'block'; isValid = false; }
+      if (!nama) {
+        document.getElementById('err-prod-nama').style.display = 'block';
+        isValid = false;
+      }
+      if (!harga || harga <= 0) {
+        document.getElementById('err-prod-harga').style.display = 'block';
+        isValid = false;
+      }
+      if (!desk) {
+        document.getElementById('err-prod-desk').style.display = 'block';
+        isValid = false;
+      }
       if (!isValid) return;
 
       const formData = new FormData();
@@ -301,7 +370,7 @@
       const isEdit = !!editingProdukId;
       const url = isEdit ? `/admin/produk/${editingProdukId}` : `/admin/produk`;
       const csrf = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-      
+
       try {
         const res = await fetch(url, {
           method: 'POST',
@@ -311,9 +380,9 @@
           },
           body: formData
         });
-        
+
         const data = await res.json();
-        
+
         if (res.status === 422 && data.errors && data.errors.nama) {
           const errEl = document.getElementById('err-prod-nama');
           if (errEl) {
@@ -324,8 +393,15 @@
         }
 
         if (data.success) {
-          // Refresh the page to get the updated list from server
-          window.location.reload();
+          if (isEdit) {
+            const idx = produkList.findIndex(x => String(x.id) === String(editingProdukId));
+            if (idx > -1) produkList[idx] = data.produk;
+          } else {
+            produkList.push(data.produk);
+          }
+          closeAdminModal('modal-tambah-produk');
+          renderProdukTable();
+          showAdminToast('Berhasil', isEdit ? 'Produk berhasil diperbarui!' : 'Produk berhasil ditambahkan!', 'success');
         } else {
           showAdminToast('Gagal', 'Terjadi kesalahan.', 'error');
         }
@@ -415,7 +491,7 @@
         let btnsHtml = `<button class="pagi-btn" ${katCurrentPage === 1 ? 'disabled style="opacity:0.5;cursor:not-allowed;"' : ''} onclick="katCurrentPage--; renderKategoriTable()">
           <svg class="h-3 w-3" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg>
         </button>`;
-        
+
         for (let i = 1; i <= totalPages; i++) {
           btnsHtml += `<button class="pagi-btn ${i === katCurrentPage ? 'active' : ''}" onclick="katCurrentPage = ${i}; renderKategoriTable()">${i}</button>`;
         }
@@ -423,21 +499,22 @@
         btnsHtml += `<button class="pagi-btn" ${katCurrentPage === totalPages ? 'disabled style="opacity:0.5;cursor:not-allowed;"' : ''} onclick="katCurrentPage++; renderKategoriTable()">
           <svg class="h-3 w-3" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 5l6 6-6 6"/></svg>
         </button>`;
-        
+
         pagiContainer.innerHTML = btnsHtml;
       }
     }
 
-    function setKatModalMode(mode) { 
-      editingKatId = null; 
-      document.getElementById('kat-modal-title').textContent = 'Tambah Kategori'; 
-      document.getElementById('kat-nama').value = ''; 
+    function setKatModalMode(mode) {
+      editingKatId = null;
+      document.getElementById('kat-modal-title').textContent = 'Tambah Kategori';
+      document.getElementById('kat-nama').value = '';
       const errEl = document.getElementById('err-kat-nama');
       if (errEl) {
         errEl.textContent = 'Nama kategori wajib diisi.';
         errEl.style.display = 'none';
       }
     }
+
     function openEditKat(id) {
       const k = kategoriList.find(x => String(x.id) === String(id));
       if (!k) return;
@@ -451,7 +528,11 @@
       }
       openAdminModal('modal-tambah-kat');
     }
-    function openHapusKat(id) { deletingKatId = id; openAdminModal('modal-hapus-kat'); }
+
+    function openHapusKat(id) {
+      deletingKatId = id;
+      openAdminModal('modal-hapus-kat');
+    }
     async function saveKategori() {
       const nama = document.getElementById('kat-nama').value.trim();
       const errEl = document.getElementById('err-kat-nama');
@@ -462,7 +543,7 @@
         }
         return;
       }
-      
+
       const isEdit = !!editingKatId;
       const url = isEdit ? `/admin/kategori/${editingKatId}` : `/admin/kategori`;
       const method = isEdit ? 'PUT' : 'POST';
@@ -476,9 +557,11 @@
             'X-CSRF-TOKEN': csrf,
             'Accept': 'application/json'
           },
-          body: JSON.stringify({ nama })
+          body: JSON.stringify({
+            nama
+          })
         });
-        
+
         const data = await res.json();
 
         if (res.status === 422 && data.errors && data.errors.nama) {
@@ -532,13 +615,29 @@
     }
 
     // STOK
+    let stokCurrentPage = 1;
+    const stokPerPage = 8;
+
+    function searchStok() {
+      stokCurrentPage = 1;
+      renderStokTable();
+    }
+
     function renderStokTable() {
       if (!document.getElementById('stok-tbody')) return;
       const searchQuery = document.getElementById('stok-search')?.value.toLowerCase() || '';
       let list = produkList;
       if (searchQuery) list = list.filter(p => p.nama.toLowerCase().includes(searchQuery));
 
-      document.getElementById('stok-tbody').innerHTML = list.map(p => `
+      const totalItems = list.length;
+      const totalPages = Math.ceil(totalItems / stokPerPage) || 1;
+      if (stokCurrentPage > totalPages) stokCurrentPage = totalPages;
+      if (stokCurrentPage < 1) stokCurrentPage = 1;
+
+      const startIdx = (stokCurrentPage - 1) * stokPerPage;
+      const paginatedList = list.slice(startIdx, startIdx + stokPerPage);
+
+      document.getElementById('stok-tbody').innerHTML = paginatedList.map(p => `
         <tr>
           <td>${p.nama}</td>
           <td style="text-align:center;">${p.stok.S}</td>
@@ -547,6 +646,29 @@
           <td style="text-align:center;">${p.stok.XL}</td>
           <td class="action-cell"><button class="icon-btn icon-btn-edit" data-tooltip="Edit Stok" onclick="openEditStok('${p.id}')">${editIcon}</button></td>
         </tr>`).join('');
+
+      const infoEl = document.getElementById('stok-pagi-info');
+      if (infoEl) {
+        const endIdx = Math.min(startIdx + stokPerPage, totalItems);
+        infoEl.textContent = totalItems === 0 ? '0 dari 0' : `${startIdx + 1} - ${endIdx} dari ${totalItems}`;
+      }
+
+      const pagiContainer = document.querySelector('#page-stok .pagi-btns');
+      if (pagiContainer) {
+        let btnsHtml = `<button class="pagi-btn" ${stokCurrentPage === 1 ? 'disabled style="opacity:0.5;cursor:not-allowed;"' : ''} onclick="stokCurrentPage--; renderStokTable()">
+          <svg class="h-3 w-3" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg>
+        </button>`;
+
+        for (let i = 1; i <= totalPages; i++) {
+          btnsHtml += `<button class="pagi-btn ${i === stokCurrentPage ? 'active' : ''}" onclick="stokCurrentPage = ${i}; renderStokTable()">${i}</button>`;
+        }
+
+        btnsHtml += `<button class="pagi-btn" ${stokCurrentPage === totalPages ? 'disabled style="opacity:0.5;cursor:not-allowed;"' : ''} onclick="stokCurrentPage++; renderStokTable()">
+          <svg class="h-3 w-3" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 5l6 6-6 6"/></svg>
+        </button>`;
+
+        pagiContainer.innerHTML = btnsHtml;
+      }
     }
 
     function openEditStok(id) {
@@ -561,19 +683,19 @@
     async function saveStok() {
       const p = produkList.find(x => String(x.id) === String(editingStokId));
       if (!p) return;
-      
+
       const payload = {};
       let hasError = false;
       ['s', 'm', 'l', 'xl'].forEach(sz => {
         let val = parseInt(document.getElementById('stok-' + sz).value);
         if (isNaN(val) || val < 0) {
-           val = 0; // enforce no negative
+          val = 0;
         }
         payload[sz.toUpperCase()] = val;
       });
 
       const csrf = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-      
+
       try {
         const res = await fetch(`/admin/stok/${editingStokId}`, {
           method: 'PUT',
@@ -587,7 +709,10 @@
 
         const data = await res.json();
         if (data.success) {
-          window.location.reload();
+          p.stok = { ...p.stok, ...payload };
+          closeAdminModal('modal-stok');
+          renderStokTable();
+          showAdminToast('Berhasil', 'Stok berhasil diperbarui.');
         } else {
           showAdminToast('Gagal', 'Terjadi kesalahan saat menyimpan stok.', 'error');
         }
@@ -634,7 +759,8 @@
         const matchSearch = !searchQuery || o.nama.toLowerCase().includes(searchQuery) || o.id.toLowerCase().includes(searchQuery);
         let matchDate = true;
         if (dateFrom || dateTo) {
-          const parts = o.tanggal.split('-'); const tglISO = parts[2] + '-' + parts[1] + '-' + parts[0];
+          const parts = o.tanggal.split('-');
+          const tglISO = parts[2] + '-' + parts[1] + '-' + parts[0];
           if (dateFrom && tglISO < dateFrom) matchDate = false;
           if (dateTo && tglISO > dateTo) matchDate = false;
         }
@@ -795,7 +921,14 @@
 
 
     window.addEventListener('resize', setupPesananDateInputs);
-    document.addEventListener('DOMContentLoaded', () => { setupPesananDateInputs(); renderDashboard(); renderProdukTable(); renderKategoriTable(); renderStokTable(); renderPesananTable(); });
+    document.addEventListener('DOMContentLoaded', () => {
+      setupPesananDateInputs();
+      renderDashboard();
+      renderProdukTable();
+      renderKategoriTable();
+      renderStokTable();
+      renderPesananTable();
+    });
   </script>
 </body>
 

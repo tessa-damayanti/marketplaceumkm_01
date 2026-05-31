@@ -11,7 +11,7 @@
     <div class="produk-header flex flex-wrap items-center justify-between gap-4 px-5 py-4">
       <div class="produk-filter-row flex min-w-0 flex-1 flex-wrap items-center gap-3">
         <div class="search-wrap">
-          <input type="text" id="produk-search" onkeyup="renderProdukTable()" placeholder="Cari produk..."
+          <input type="text" id="produk-search" onkeyup="searchProduk()" placeholder="Cari produk..."
             class="search-input">
         </div>
         <div class="produk-filter-select relative min-w-[190px]">

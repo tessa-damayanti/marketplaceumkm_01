@@ -81,14 +81,14 @@ class DashboardController extends Controller
 
     public function storeKategori(Request $request)
     {
-        $request->validate(['nama' => 'required|string|max:255|unique:kategoris,nama']);
+        $request->validate(['nama' => 'required|string|max:25|unique:kategoris,nama']);
         $kat = Kategori::create(['nama' => $request->nama]);
         return response()->json(['success' => true, 'data' => ['id' => $kat->id, 'nama' => $kat->nama]]);
     }
 
     public function updateKategori(Request $request, $id)
     {
-        $request->validate(['nama' => 'required|string|max:255|unique:kategoris,nama,' . $id]);
+        $request->validate(['nama' => 'required|string|max:25|unique:kategoris,nama,' . $id]);
         $kat = Kategori::findOrFail($id);
         $kat->update(['nama' => $request->nama]);
         return response()->json(['success' => true, 'data' => ['id' => $kat->id, 'nama' => $kat->nama]]);
@@ -140,7 +140,27 @@ class DashboardController extends Controller
             ]);
         }
 
-        return response()->json(['success' => true]);
+        $produk->load(['kategori', 'stoks.ukuran']);
+
+        $stokArray = ['S' => 0, 'M' => 0, 'L' => 0, 'XL' => 0];
+        foreach ($produk->stoks as $stok) {
+            if ($stok->ukuran) {
+                $stokArray[$stok->ukuran->nama_ukuran] = $stok->jumlah_stok;
+            }
+        }
+
+        $produkData = [
+            'id' => $produk->id,
+            'nama' => $produk->nama,
+            'kategori_id' => $produk->kategori_id,
+            'kategori' => $produk->kategori ? $produk->kategori->nama : '',
+            'harga' => $produk->harga,
+            'deskripsi' => $produk->deskripsi,
+            'image' => $produk->image,
+            'stok' => $stokArray
+        ];
+
+        return response()->json(['success' => true, 'produk' => $produkData]);
     }
 
     public function updateProduk(Request $request, $id)
@@ -171,7 +191,27 @@ class DashboardController extends Controller
 
         $produk->update($data);
 
-        return response()->json(['success' => true]);
+        $produk->load(['kategori', 'stoks.ukuran']);
+
+        $stokArray = ['S' => 0, 'M' => 0, 'L' => 0, 'XL' => 0];
+        foreach ($produk->stoks as $stok) {
+            if ($stok->ukuran) {
+                $stokArray[$stok->ukuran->nama_ukuran] = $stok->jumlah_stok;
+            }
+        }
+
+        $produkData = [
+            'id' => $produk->id,
+            'nama' => $produk->nama,
+            'kategori_id' => $produk->kategori_id,
+            'kategori' => $produk->kategori ? $produk->kategori->nama : '',
+            'harga' => $produk->harga,
+            'deskripsi' => $produk->deskripsi,
+            'image' => $produk->image,
+            'stok' => $stokArray
+        ];
+
+        return response()->json(['success' => true, 'produk' => $produkData]);
     }
 
     public function destroyProduk($id)

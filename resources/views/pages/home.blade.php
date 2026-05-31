@@ -250,11 +250,6 @@
 
 @push('scripts')
 <script>
-    let currentQty = 1;
-    let currentStock = 1;
-    let selectedSize = null;
-    let currentProduct = null;
-
     const isBuyerLoggedIn = document.querySelector('meta[name="is-buyer"]').content === 'true';
 
     function requireBuyerLogin() {

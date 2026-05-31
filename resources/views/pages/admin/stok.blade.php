@@ -11,7 +11,7 @@
       class="surface data-surface overflow-hidden rounded-2xl border border-[#e2d4c5] bg-white shadow-[0_12px_28px_rgba(92,68,50,0.08)]">
       <div class="flex flex-wrap items-center gap-4 px-5 py-4">
         <div class="search-wrap">
-          <input type="text" id="stok-search" onkeyup="renderStokTable()" placeholder="Cari produk..."
+          <input type="text" id="stok-search" onkeyup="searchStok()" placeholder="Cari produk..."
             class="search-input">
         </div>
       </div>
