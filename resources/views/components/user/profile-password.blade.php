@@ -31,7 +31,7 @@
                     </svg>
                 </button>
             </div>
-            <p id="old-error" class="mt-2 hidden text-sm text-red-500">Password harus terdiri dari 6 karakter</p>
+            <p id="old-error" class="mt-1 hidden text-xs font-semibold text-red-500">Password harus terdiri dari 6 karakter</p>
         </div>
 
         {{-- Password Baru --}}
@@ -49,7 +49,7 @@
                     </svg>
                 </button>
             </div>
-            <p id="new-error" class="mt-2 hidden text-sm text-red-500">Password harus terdiri dari 6 karakter</p>
+            <p id="new-error" class="mt-1 hidden text-xs font-semibold text-red-500">Password harus terdiri dari 6 karakter</p>
         </div>
 
         {{-- Konfirmasi Password Baru --}}
@@ -67,14 +67,14 @@
                     </svg>
                 </button>
             </div>
-            <p id="confirm-error" class="mt-2 hidden text-sm text-red-500">Konfirmasi password tidak cocok</p>
+            <p id="confirm-error" class="mt-1 hidden text-xs font-semibold text-red-500">Konfirmasi password tidak cocok</p>
         </div>
 
 
         <div class="flex justify-end pt-4">
             <button type="submit"
                 class="relative z-10 rounded-xl bg-[#BFA28C] px-8 py-3 font-bold text-white transition hover:bg-[#A88A72]">
-                Simpan Password
+                Simpan
             </button>
         </div>
     </form>

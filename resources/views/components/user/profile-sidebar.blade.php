@@ -6,14 +6,14 @@
         <div class="h-14 w-14 overflow-hidden rounded-full ring-4 ring-[#f4ece3] shadow-sm">
             <img
                 id="sidebarProfileImage"
-                src="{{ asset('images/1.png') }}"
+                src="{{ Auth::user()->foto_profile ? asset('storage/' . Auth::user()->foto_profile) : asset('images/1.png') }}"
                 class="h-full w-full object-cover"
                 alt="Foto Profil"
             >
         </div>
 
         <h3 id="sidebarProfileName" class="text-base font-bold text-[#5c4432]">
-            Halo, Nikita Willy
+            Halo, {{ Auth::user()->nama_lengkap ?: Auth::user()->username }}
         </h3>
 
     </div>

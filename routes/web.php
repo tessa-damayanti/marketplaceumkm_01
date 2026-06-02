@@ -7,7 +7,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\CheckoutController;
-
+use App\Http\Controllers\ProfileController;
 // Public routes
 Route::get('/', [ProductController::class, 'home'])->name('home');
 Route::get('/product', [ProductController::class, 'index'])->name('product');
@@ -28,12 +28,8 @@ Route::post('/cart/add', [CartController::class, 'add'])->name('cart.add');
 Route::post('/cart/remove', [CartController::class, 'remove'])->name('cart.remove');
 Route::post('/cart/update', [CartController::class, 'update'])->name('cart.update');
 
-Route::get('/profile', function () {
-    if (session('role') !== 'buyer') {
-        return redirect()->route('login')->with('error', 'Silakan login terlebih dahulu untuk mengakses profil.');
-    }
-    return view('pages.profile');
-})->name('profile');
+Route::get('/profile', [ProfileController::class, 'index'])->name('profile');
+Route::put('/profile', [ProfileController::class, 'update'])->name('profile.update');
 Route::post('/login', [LoginController::class, 'loginSubmit'])->name('login.submit');
 Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 

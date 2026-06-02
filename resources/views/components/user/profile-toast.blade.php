@@ -49,4 +49,10 @@ function showToast(title, message) {
         toast.classList.remove('opacity-100', 'translate-y-0');
     }, 2000);
 }
+
+@if(session('success'))
+    document.addEventListener('DOMContentLoaded', () => {
+        showToast('Berhasil', '{{ session('success') }}');
+    });
+@endif
 </script>

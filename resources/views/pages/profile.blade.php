@@ -226,8 +226,7 @@
             document.body.style.overflow = '';
         }
         document.addEventListener('DOMContentLoaded', () => {
-            // Set Riwayat sebagai tab aktif secara default
-            switchTab('riwayat');
+            switchTab('akun');
         });
     </script>
 @endpush

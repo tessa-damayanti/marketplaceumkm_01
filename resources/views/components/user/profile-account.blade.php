@@ -5,10 +5,10 @@
         Perbarui informasi diri Anda agar pengiriman pesanan lebih akurat.
     </p>
 
-    <form action="#" method="POST" enctype="multipart/form-data" class="grid grid-cols-1 md:grid-cols-3 gap-8"
-        onsubmit="saveProfile(event)">
+    <form action="{{ route('profile.update') }}" method="POST" enctype="multipart/form-data" class="grid grid-cols-1 md:grid-cols-3 gap-8">
 
         @csrf
+        @method('PUT')
 
         <div class="col-span-1 md:border-r md:border-[#f4ece3] md:pr-8">
             <label class="mb-4 block text-sm font-bold text-[#5c4432]">
@@ -16,7 +16,7 @@
             </label>
 
             <div class="relative inline-block mt-2">
-                <img id="profilePreview" src="{{ asset('images/1.png') }}"
+                <img id="profilePreview" src="{{ Auth::user()->foto_profile ? asset('storage/' . Auth::user()->foto_profile) : asset('images/1.png') }}"
                     class="h-36 w-36 rounded-full object-cover shadow-sm ring-4 ring-[#f4ece3]" alt="Foto Profil">
 
                 <label for="profilePhoto"
@@ -40,27 +40,33 @@
                 <label class="mb-2 block text-sm font-bold text-[#5c4432]">
                     Nama Lengkap
                 </label>
-                <input id="profileName" name="name" type="text" value="Nikita Willy"
+                <input id="profileName" name="name" type="text" value="{{ old('name', Auth::user()->nama_lengkap) }}"
                     class="w-full rounded-2xl border border-[#f2e4d8] px-5 py-3.5 text-[#7b6858] focus:outline-none focus:border-[#a16223] transition-all">
-                <p id="name-error" class="mt-1 hidden text-xs font-semibold text-red-500">Nama wajib diisi</p>
+                @error('name')
+                    <p class="mt-1 text-xs font-semibold text-red-500">{{ $message }}</p>
+                @enderror
             </div>
 
             <div>
                 <label class="mb-2 block text-sm font-bold text-[#5c4432]">
                     No WhatsApp
                 </label>
-                <input id="profilePhone" name="phone" type="text" value="0812-3456-7890"
+                <input id="profilePhone" name="phone" type="text" value="{{ old('phone', Auth::user()->no_wa) }}"
                     class="w-full rounded-2xl border border-[#f2e4d8] px-5 py-3.5 text-[#7b6858] focus:outline-none focus:border-[#a16223] transition-all">
-                <p id="phone-error" class="mt-1 hidden text-xs font-semibold text-red-500">No WhatsApp wajib diisi</p>
+                @error('phone')
+                    <p class="mt-1 text-xs font-semibold text-red-500">{{ $message }}</p>
+                @enderror
             </div>
 
             <div>
                 <label class="mb-2 block text-sm font-bold text-[#5c4432]">
                     Email
                 </label>
-                <input id="profileEmail" name="email" type="email" value="nikita@example.com"
-                    class="w-full rounded-2xl border border-[#f2e4d8] px-5 py-3.5 text-[#7b6858] focus:outline-none focus:border-[#a16223] transition-all">
-                <p id="email-error" class="mt-1 hidden text-xs font-semibold text-red-500">Email wajib diisi</p>
+                <input id="profileEmail" name="email" type="email" value="{{ Auth::user()->email }}" readonly
+                    class="w-full rounded-2xl border border-[#f2e4d8] px-5 py-3.5 text-[#7b6858] bg-gray-50 focus:outline-none focus:border-[#a16223] transition-all">
+                @error('email')
+                    <p class="mt-1 text-xs font-semibold text-red-500">{{ $message }}</p>
+                @enderror
             </div>
 
             <div>
@@ -68,8 +74,10 @@
                     Alamat
                 </label>
                 <textarea id="profileAddress" name="address" rows="4"
-                    class="w-full rounded-2xl border border-[#f2e4d8] px-5 py-3.5 text-[#7b6858] focus:outline-none focus:border-[#a16223] transition-all">Jl. Melati No. 12, Bandung</textarea>
-                <p id="address-error" class="mt-1 hidden text-xs font-semibold text-red-500">Alamat wajib diisi</p>
+                    class="w-full rounded-2xl border border-[#f2e4d8] px-5 py-3.5 text-[#7b6858] focus:outline-none focus:border-[#a16223] transition-all">{{ old('address', Auth::user()->alamat) }}</textarea>
+                @error('address')
+                    <p class="mt-1 text-xs font-semibold text-red-500">{{ $message }}</p>
+                @enderror
             </div>
 
             <div class="flex justify-end">
@@ -94,77 +102,4 @@
         preview.src = URL.createObjectURL(file);
     }
 
-    function saveProfile(event) {
-        event.preventDefault();
-
-        const nameInput = document.getElementById('profileName');
-        const phoneInput = document.getElementById('profilePhone');
-        const emailInput = document.getElementById('profileEmail');
-        const addressInput = document.getElementById('profileAddress');
-
-        const nameError = document.getElementById('name-error');
-        const phoneError = document.getElementById('phone-error');
-        const emailError = document.getElementById('email-error');
-        const addressError = document.getElementById('address-error');
-
-        let isValid = true;
-
-        // Validasi Nama
-        if (!nameInput.value.trim()) {
-            nameInput.classList.add('border-red-500');
-            nameError.classList.remove('hidden');
-            isValid = false;
-        } else {
-            nameInput.classList.remove('border-red-500');
-            nameError.classList.add('hidden');
-        }
-
-        // Validasi Phone
-        if (!phoneInput.value.trim()) {
-            phoneInput.classList.add('border-red-500');
-            phoneError.classList.remove('hidden');
-            isValid = false;
-        } else {
-            phoneInput.classList.remove('border-red-500');
-            phoneError.classList.add('hidden');
-        }
-
-        // Validasi Email
-        if (!emailInput.value.trim()) {
-            emailInput.classList.add('border-red-500');
-            emailError.classList.remove('hidden');
-            isValid = false;
-        } else {
-            emailInput.classList.remove('border-red-500');
-            emailError.classList.add('hidden');
-        }
-
-        // Validasi Alamat
-        if (!addressInput.value.trim()) {
-            addressInput.classList.add('border-red-500');
-            addressError.classList.remove('hidden');
-            isValid = false;
-        } else {
-            addressInput.classList.remove('border-red-500');
-            addressError.classList.add('hidden');
-        }
-
-        if (!isValid) return;
-
-        const name = nameInput.value;
-        const preview = document.getElementById('profilePreview').src;
-
-        const sidebarName = document.getElementById('sidebarProfileName');
-        const sidebarImage = document.getElementById('sidebarProfileImage');
-
-        if (sidebarName) {
-            sidebarName.innerText = 'Halo, ' + name;
-        }
-
-        if (sidebarImage) {
-            sidebarImage.src = preview;
-        }
-
-        showToast('Berhasil', 'Profil berhasil diperbarui.');
-    }
 </script>
