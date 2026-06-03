@@ -130,7 +130,6 @@ class DashboardController extends Controller
 
         $produk = Produk::create($data);
 
-        // Inisialisasi stok 0 untuk ukuran S, M, L, XL
         $ukurans = \App\Models\Ukuran::all();
         foreach ($ukurans as $ukuran) {
             \App\Models\Stok::create([
