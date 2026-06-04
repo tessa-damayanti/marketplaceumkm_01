@@ -300,6 +300,11 @@
             return false;
         }
 
+        if (password.length < 6) {
+            setError('password', 'password-msg', 'Password minimal 6 karakter');
+            return false;
+        }
+
         clearError('password', 'password-msg');
         return true;
     }

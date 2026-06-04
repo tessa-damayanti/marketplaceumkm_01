@@ -48,7 +48,6 @@ class CheckoutController extends Controller
             return response()->json([
                 'snap_token' => $snapToken,
             ]);
-
         } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()], 500);
         }
