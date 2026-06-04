@@ -26,7 +26,6 @@ class LoginController extends Controller
         ]);
 
         $user = \App\Models\User::create([
-            'name' => $request->username,
             'username' => $request->username,
             'email' => $request->email,
             'password' => \Illuminate\Support\Facades\Hash::make($request->password),
