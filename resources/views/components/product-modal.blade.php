@@ -130,4 +130,5 @@
     <input type="hidden" name="size" id="cart_size">
     <input type="hidden" name="qty" id="cart_qty">
     <input type="hidden" name="stock" id="cart_stock">
+    <input type="hidden" name="stok_id" id="cart_stok_id">
 </form>

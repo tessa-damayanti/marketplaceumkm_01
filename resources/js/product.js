@@ -114,6 +114,15 @@ function closeModal() {
     panel.style.opacity = '0';
     panel.style.transform = 'translateY(18px) scale(0.98)';
 
+    // Hapus parameter 'show' dari URL jika ada
+    if (window.history.replaceState) {
+        const url = new URL(window.location.href);
+        if (url.searchParams.has('show')) {
+            url.searchParams.delete('show');
+            window.history.replaceState({}, '', url.toString());
+        }
+    }
+
     setTimeout(() => {
         overlay.style.display = 'none';
         document.body.style.overflow = '';
@@ -174,6 +183,18 @@ function addToCart() {
     document.getElementById('cart_size').value = selectedSize;
     document.getElementById('cart_qty').value = currentQty;
     document.getElementById('cart_stock').value = currentProduct.stock[selectedSize];
+    if (document.getElementById('cart_stok_id')) {
+        document.getElementById('cart_stok_id').value = currentProduct.stok_ids[selectedSize];
+    }
+
+    // Hapus parameter 'show' dari URL agar setelah reload modal tidak otomatis terbuka kembali
+    if (window.history.replaceState) {
+        const url = new URL(window.location.href);
+        if (url.searchParams.has('show')) {
+            url.searchParams.delete('show');
+            window.history.replaceState({}, '', url.toString());
+        }
+    }
 
     document.getElementById('cartForm').submit();
 }
@@ -188,7 +209,8 @@ function buyNow() {
 
     const checkoutUrl = document.body.dataset.checkoutUrl;
     const price = String(currentProduct.price).replace(/\./g, '');
-    const url = `${checkoutUrl}?name=${encodeURIComponent(currentProduct.name)}&price=${price}&qty=${currentQty}&size=${encodeURIComponent(selectedSize)}&image=${encodeURIComponent(currentProduct.image)}`;
+    const stokId = currentProduct.stok_ids ? currentProduct.stok_ids[selectedSize] : '';
+    const url = `${checkoutUrl}?name=${encodeURIComponent(currentProduct.name)}&price=${price}&qty=${currentQty}&size=${encodeURIComponent(selectedSize)}&image=${encodeURIComponent(currentProduct.image)}&stok_id=${stokId}`;
 
     window.location.href = url;
 }
@@ -199,6 +221,18 @@ function showSizeError() {
 
 document.addEventListener('DOMContentLoaded', () => {
     initCardAnimations();
+
+    // Auto-open product modal if show param is present in URL
+    const urlParams = new URLSearchParams(window.location.search);
+    const showProduct = urlParams.get('show');
+    if (showProduct) {
+        const targetName = showProduct.toLowerCase();
+        const cards = document.querySelectorAll('.product-card');
+        const card = Array.from(cards).find(c => c.getAttribute('data-name') === targetName);
+        if (card) {
+            openModalFromElement(card);
+        }
+    }
 
     const sortButton = document.getElementById('sortButton');
     const sortMenu = document.getElementById('sortMenu');

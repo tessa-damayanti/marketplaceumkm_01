@@ -17,15 +17,19 @@
             </div>
 
             <!-- Gambar -->
-            <img
-                src="{{ $item['image'] }}"
-                alt="{{ $item['name'] }}"
-                class="h-[72px] w-[72px] sm:h-[82px] sm:w-[82px] flex-shrink-0 rounded-[14px] object-cover">
+            <a href="{{ route('product') }}?show={{ urlencode($item['name']) }}" class="flex-shrink-0 hover:opacity-90 transition">
+                <img
+                    src="{{ $item['image'] }}"
+                    alt="{{ $item['name'] }}"
+                    class="h-[72px] w-[72px] sm:h-[82px] sm:w-[82px] rounded-[14px] object-cover">
+            </a>
 
             <!-- Info Produk -->
             <div class="min-w-0 flex-1">
                 <h2 class="text-sm sm:text-base font-semibold text-[#5c4432] leading-snug">
-                    {{ $item['name'] }}
+                    <a href="{{ route('product') }}?show={{ urlencode($item['name']) }}" class="hover:text-[#8f7561] transition">
+                        {{ $item['name'] }}
+                    </a>
                 </h2>
                 <p class="mt-1 text-xs text-[#7b6858]">
                     Ukuran : {{ $item['size'] }}

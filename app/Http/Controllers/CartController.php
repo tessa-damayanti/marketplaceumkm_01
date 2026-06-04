@@ -3,50 +3,86 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\Keranjang;
+use App\Models\Stok;
+use Illuminate\Support\Facades\Auth;
 
 class CartController extends Controller
 {
     public function index()
     {
-        $cartItems = session()->get('cart', []);
+        if (!Auth::check()) {
+            return redirect()->route('login')->with('error', 'Silakan login terlebih dahulu.');
+        }
+
+        $dbCart = Keranjang::with(['stok.produk.kategori', 'stok.ukuran'])
+            ->where('user_id', Auth::id())
+            ->get();
+
+        $cartItems = [];
+        foreach ($dbCart as $item) {
+            if (!$item->stok || !$item->stok->produk) {
+                continue;
+            }
+            $p = $item->stok->produk;
+            $catName = $p->kategori ? $p->kategori->nama : 'Lainnya';
+            
+            $cartItems[$item->id] = [
+                'id' => $item->id,
+                'stok_id' => $item->stok_id,
+                'name' => $p->nama,
+                'category' => $catName,
+                'image' => $p->image ? asset('images/' . $p->image) : 'https://i.pinimg.com/1200x/b1/cc/2f/b1cc2fb9a73cb56f46e167b47d4febbf.jpg',
+                'price' => (int) $p->harga,
+                'size' => $item->stok->ukuran ? $item->stok->ukuran->nama_ukuran : 'M',
+                'qty' => $item->jumlah,
+                'stock' => $item->stok->jumlah_stok,
+            ];
+        }
+
         return view('pages.cart', compact('cartItems'));
     }
 
     public function add(Request $request)
     {
-        $request->validate([
-            'name' => 'required|string',
-            'category' => 'required|string',
-            'image' => 'required|string',
-            'price' => 'required|integer',
-            'size' => 'required|string',
-            'qty' => 'required|integer|min:1',
-            'stock' => 'required|integer|min:1',
-        ]);
-
-        $cart = session()->get('cart', []);
-
-        $key = md5($request->name . '-' . $request->size);
-
-        if (isset($cart[$key])) {
-            $cart[$key]['qty'] += $request->qty;
-
-            if ($cart[$key]['qty'] > $cart[$key]['stock']) {
-                $cart[$key]['qty'] = $cart[$key]['stock'];
-            }
-        } else {
-            $cart[$key] = [
-                'name' => $request->name,
-                'category' => $request->category,
-                'image' => $request->image,
-                'price' => (int) $request->price,
-                'size' => $request->size,
-                'qty' => (int) $request->qty,
-                'stock' => (int) $request->stock,
-            ];
+        if (!Auth::check()) {
+            return redirect()->route('login')->with('error', 'Silakan login terlebih dahulu.');
         }
 
-        session()->put('cart', $cart);
+        $request->validate([
+            'stok_id' => 'required|exists:stoks,id',
+            'qty' => 'required|integer|min:1',
+        ]);
+
+        $stok = Stok::with('produk')->findOrFail($request->stok_id);
+        $userId = Auth::id();
+
+        // Memeriksa produk dengan stok yang dipilih sudah ada di keranjang
+        $cartItem = Keranjang::where('user_id', $userId)
+            ->where('stok_id', $request->stok_id)
+            ->first();
+
+        if ($cartItem) {
+            $newQty = $cartItem->jumlah + $request->qty;
+            if ($newQty > $stok->jumlah_stok) {
+                $newQty = $stok->jumlah_stok;
+            }
+            $cartItem->update([
+                'jumlah' => $newQty,
+                'subtotal' => $newQty * $stok->produk->harga,
+            ]);
+        } else {
+            $qty = $request->qty;
+            if ($qty > $stok->jumlah_stok) {
+                $qty = $stok->jumlah_stok;
+            }
+            Keranjang::create([
+                'user_id' => $userId,
+                'stok_id' => $request->stok_id,
+                'jumlah' => $qty,
+                'subtotal' => $qty * $stok->produk->harga,
+            ]);
+        }
 
         if ($request->redirect_to === 'cart') {
             return redirect()
@@ -59,36 +95,52 @@ class CartController extends Controller
 
     public function remove(Request $request)
     {
-        $cart = session()->get('cart', []);
-
-        if (isset($cart[$request->key])) {
-            unset($cart[$request->key]);
-            session()->put('cart', $cart);
+        if (!Auth::check()) {
+            return redirect()->route('login')->with('error', 'Silakan login terlebih dahulu.');
         }
+
+        Keranjang::where('user_id', Auth::id())
+            ->where('id', $request->key)
+            ->delete();
 
         return redirect()->route('cart');
     }
 
     public function update(Request $request)
     {
-        $cart = session()->get('cart', []);
+        if (!Auth::check()) {
+            return redirect()->route('login')->with('error', 'Silakan login terlebih dahulu.');
+        }
 
-        if (isset($cart[$request->key])) {
+        $cartItem = Keranjang::with('stok.produk')
+            ->where('user_id', Auth::id())
+            ->where('id', $request->key)
+            ->first();
+
+        if ($cartItem) {
+            $stokMax = $cartItem->stok->jumlah_stok;
+            
             if ($request->action === 'plus') {
-                if ($cart[$request->key]['qty'] < $cart[$request->key]['stock']) {
-                    $cart[$request->key]['qty']++;
+                if ($cartItem->jumlah < $stokMax) {
+                    $newQty = $cartItem->jumlah + 1;
+                    $cartItem->update([
+                        'jumlah' => $newQty,
+                        'subtotal' => $newQty * $cartItem->stok->produk->harga,
+                    ]);
                 } else {
                     return back()->with('limit_reached', $request->key);
                 }
             }
 
             if ($request->action === 'minus') {
-                if ($cart[$request->key]['qty'] > 1) {
-                    $cart[$request->key]['qty']--;
+                if ($cartItem->jumlah > 1) {
+                    $newQty = $cartItem->jumlah - 1;
+                    $cartItem->update([
+                        'jumlah' => $newQty,
+                        'subtotal' => $newQty * $cartItem->stok->produk->harga,
+                    ]);
                 }
             }
-
-            session()->put('cart', $cart);
         }
 
         return redirect()->route('cart');

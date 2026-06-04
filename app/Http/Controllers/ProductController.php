@@ -20,9 +20,12 @@ class ProductController extends Controller
             }
 
             $stokArray = ['S' => 0, 'M' => 0, 'L' => 0, 'XL' => 0];
+            $stokIds = [];
             foreach ($p->stoks as $stok) {
                 if ($stok->ukuran) {
-                    $stokArray[$stok->ukuran->nama_ukuran] = $stok->jumlah_stok;
+                    $namaUkuran = $stok->ukuran->nama_ukuran;
+                    $stokArray[$namaUkuran] = $stok->jumlah_stok;
+                    $stokIds[$namaUkuran] = $stok->id;
                 }
             }
 
@@ -33,6 +36,7 @@ class ProductController extends Controller
                 'desc' => $p->deskripsi,
                 'sizes' => ['S', 'M', 'L', 'XL'],
                 'stock' => $stokArray,
+                'stok_ids' => $stokIds,
                 'price' => number_format($p->harga, 0, ',', '.'),
                 'sold' => $p->id <= 20 ? (($p->id * 7) % 45) + 5 : 0
             ];

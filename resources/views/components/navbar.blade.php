@@ -37,9 +37,12 @@
                         <circle cx="18" cy="20" r="1.5"></circle>
                         <path d="M3 4h2l2.2 9.2a1 1 0 0 0 1 .8h8.8a1 1 0 0 0 1-.8L20 7H7"></path>
                     </svg>
-                    @if(session('cart') && count(session('cart')) > 0)
+                    @php
+                        $cartCount = auth()->check() ? \App\Models\Keranjang::where('user_id', auth()->id())->count() : 0;
+                    @endphp
+                    @if($cartCount > 0)
                     <span class="absolute -top-2 -right-2 flex h-5 w-5 items-center justify-center rounded-full bg-[#5c4432] text-[10px] font-bold text-white">
-                        {{ count(session('cart')) }}
+                        {{ $cartCount }}
                     </span>
                     @endif
                 </a>

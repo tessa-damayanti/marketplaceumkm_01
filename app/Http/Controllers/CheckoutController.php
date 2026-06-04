@@ -59,10 +59,10 @@ class CheckoutController extends Controller
         $request->validate(['order_id' => 'required|string']);
 
         try {
-            $s = Transaction::status($request->order_id);
+            $s = (array) Transaction::status($request->order_id);
             return response()->json([
-                'transaction_status' => $s->transaction_status,
-                'fraud_status'       => $s->fraud_status ?? null,
+                'transaction_status' => $s['transaction_status'] ?? null,
+                'fraud_status'       => $s['fraud_status'] ?? null,
             ]);
         } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()], 500);

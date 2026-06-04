@@ -52,7 +52,7 @@
 <div id="cart-toast"
     class="pointer-events-none fixed right-6 top-6 z-[999] translate-y-3 opacity-0 transition-all duration-500">
     <div
-        class="flex min-w-[320px] max-w-[360px] items-start gap-3 rounded-[24px] border border-white/60 bg-[#fffaf6]/95 px-5 py-4 shadow-[0_24px_60px_rgba(92,68,50,0.18)] backdrop-blur">
+        class="flex min-w-[320px] max-w-[360px] items-start gap-3 rounded-[24px] bg-[#fffaf6] px-5 py-4 shadow-[0_24px_60px_rgba(92,68,50,0.18)]" style="border:none;outline:none;">
         <div class="mt-0.5 flex h-10 w-10 items-center justify-center rounded-2xl bg-[#dff1e3] text-[#5e936c]">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
                 stroke="currentColor" stroke-width="2">
@@ -367,7 +367,8 @@
             size: selectedSize,
             qty: currentQty,
             stock: currentProduct.stock[selectedSize],
-            image: currentProduct.image
+            image: currentProduct.image,
+            stok_id: currentProduct.stok_ids ? currentProduct.stok_ids[selectedSize] : ''
         };
 
         Object.entries(fields).forEach(([k, v]) => {
@@ -390,12 +391,14 @@
             return;
         }
 
+        const stokId = currentProduct.stok_ids ? currentProduct.stok_ids[selectedSize] : '';
         const url =
             `{{ route('checkout') }}?name=${encodeURIComponent(currentProduct.name)}` +
             `&price=${currentProduct.price}` +
             `&qty=${currentQty}` +
             `&size=${encodeURIComponent(selectedSize)}` +
-            `&image=${encodeURIComponent(currentProduct.image)}`;
+            `&image=${encodeURIComponent(currentProduct.image)}` +
+            `&stok_id=${stokId}`;
 
         window.location.href = url;
     }

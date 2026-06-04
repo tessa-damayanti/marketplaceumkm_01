@@ -12,11 +12,25 @@
             'image' => request('image') ?: '',
         ]];
     } else {
-        $allCartItems = session('cart', []);
-        $selected     = request('selected');
-        $cartItems    = (is_array($selected) && count($selected) > 0)
-            ? collect($allCartItems)->filter(fn($v, $k) => in_array($k, $selected))->all()
-            : $allCartItems;
+        $selected = request('selected');
+        $query = \App\Models\Keranjang::with(['stok.produk.kategori', 'stok.ukuran'])
+            ->where('user_id', auth()->id());
+        if (is_array($selected) && count($selected) > 0) {
+            $query->whereIn('id', $selected);
+        }
+        $dbCart = $query->get();
+
+        $cartItems = [];
+        foreach ($dbCart as $item) {
+            if (!$item->stok || !$item->stok->produk) continue;
+            $cartItems[$item->id] = [
+                'name' => $item->stok->produk->nama,
+                'price' => (int) $item->stok->produk->harga,
+                'qty' => $item->jumlah,
+                'size' => $item->stok->ukuran ? $item->stok->ukuran->nama_ukuran : 'M',
+                'image' => $item->stok->produk->image ? asset('images/' . $item->stok->produk->image) : 'https://i.pinimg.com/1200x/b1/cc/2f/b1cc2fb9a73cb56f46e167b47d4febbf.jpg',
+            ];
+        }
     }
 
     $grandTotal       = collect($cartItems)->sum(fn($i) => (int) $i['price'] * (int) $i['qty']);
