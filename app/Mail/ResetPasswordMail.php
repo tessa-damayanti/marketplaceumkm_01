@@ -13,12 +13,12 @@ class ResetPasswordMail extends Mailable
 {
     use Queueable, SerializesModels;
 
-    public $resetUrl;
+    public string $resetUrl;
 
     /**
      * Create a new message instance.
      */
-    public function __construct($resetUrl)
+    public function __construct(string $resetUrl)
     {
         $this->resetUrl = $resetUrl;
     }

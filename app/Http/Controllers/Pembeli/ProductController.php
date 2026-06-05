@@ -1,6 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Pembeli;
+
+use App\Http\Controllers\Controller;
 
 use Illuminate\Http\Request;
 use App\Models\Kategori;
@@ -27,7 +29,7 @@ class ProductController extends Controller
                     $stokArray[$namaUkuran] = $stok->jumlah_stok;
                     $stokIds[$namaUkuran] = $stok->id;
                 }
-            }
+            }   
 
             $mapped[$cat][] = [
                 'name' => $p->nama,
@@ -110,3 +112,4 @@ class ProductController extends Controller
         return view('pages.product', compact('displayProducts', 'defaultCategory', 'search', 'categories'));
     }
 }
+

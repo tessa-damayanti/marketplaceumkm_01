@@ -1,6 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Pembeli;
+
+use App\Http\Controllers\Controller;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -66,3 +68,4 @@ class ProfileController extends Controller
         return redirect()->route('profile')->with('success', 'Profil berhasil diperbarui.');
     }
 }
+

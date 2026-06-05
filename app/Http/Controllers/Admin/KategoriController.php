@@ -1,0 +1,53 @@
+<?php
+namespace App\Http\Controllers\Admin;
+
+use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
+use App\Models\Kategori;
+
+class KategoriController extends Controller
+{
+    public function kategori()
+    {
+        return view('pages.admin.kategori', [
+            'kategori' => $this->getKategoriData(),
+        ]);
+    }
+
+    private function getKategoriData()
+    {
+        return Kategori::orderBy('id', 'asc')->get()->map(function ($k) {
+            return ['id' => $k->id, 'nama' => $k->nama];
+        })->toArray();
+    }
+
+    public function storeKategori(Request $request)
+    {
+        $request->validate(['nama' => 'required|string|max:25|unique:kategoris,nama']);
+        $kat = Kategori::create(['nama' => $request->nama]);
+        return response()->json(['success' => true, 'data' => ['id' => $kat->id, 'nama' => $kat->nama]]);
+    }
+
+    public function updateKategori(Request $request, $id)
+    {
+        $request->validate(['nama' => 'required|string|max:25|unique:kategoris,nama,' . $id]);
+        $kat = Kategori::findOrFail($id);
+        $kat->update(['nama' => $request->nama]);
+        return response()->json(['success' => true, 'data' => ['id' => $kat->id, 'nama' => $kat->nama]]);
+    }
+
+    public function destroyKategori($id)
+    {
+        $kat = Kategori::findOrFail($id);
+        
+        if ($kat->produks()->count() > 0) {
+            return response()->json([
+                'success' => false, 
+                'message' => 'Kategori gagal dihapus karena masih memiliki produk di dalamnya. Silakan pindahkan atau hapus produk terlebih dahulu.'
+            ], 400);
+        }
+
+        $kat->delete();
+        return response()->json(['success' => true]);
+    }
+}

@@ -1,13 +1,17 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\LoginController;
+use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\KategoriController;
-use App\Http\Controllers\DashboardController;
-use App\Http\Controllers\CartController;
-use App\Http\Controllers\ProductController;
-use App\Http\Controllers\CheckoutController;
-use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\KategoriController as AdminKategoriController;
+use App\Http\Controllers\Admin\ProdukController as AdminProdukController;
+use App\Http\Controllers\Admin\StokController;
+use App\Http\Controllers\Admin\PesananController;
+use App\Http\Controllers\Pembeli\CartController;
+use App\Http\Controllers\Pembeli\ProductController;
+use App\Http\Controllers\Pembeli\CheckoutController;
+use App\Http\Controllers\Pembeli\ProfileController;
 // Public routes
 Route::get('/', [ProductController::class, 'home'])->name('home');
 Route::get('/product', [ProductController::class, 'index'])->name('product');
@@ -47,17 +51,17 @@ Route::post('/reset-password', [LoginController::class, 'resetPasswordSubmit'])-
 //Admin Routes
 Route::prefix('admin')->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('admin.dashboard');
-    Route::get('/produk', [DashboardController::class, 'produk'])->name('admin.produk');
-    Route::get('/kategori', [DashboardController::class, 'kategori'])->name('admin.kategori');
-    Route::post('/kategori', [DashboardController::class, 'storeKategori'])->name('admin.kategori.store');
-    Route::put('/kategori/{id}', [DashboardController::class, 'updateKategori'])->name('admin.kategori.update');
-    Route::delete('/kategori/{id}', [DashboardController::class, 'destroyKategori'])->name('admin.kategori.destroy');
-    Route::post('/produk', [DashboardController::class, 'storeProduk'])->name('admin.produk.store');
-    Route::post('/produk/{id}', [DashboardController::class, 'updateProduk'])->name('admin.produk.update');
-    Route::delete('/produk/{id}', [DashboardController::class, 'destroyProduk'])->name('admin.produk.destroy');
-    Route::get('/stok', [DashboardController::class, 'stok'])->name('admin.stok');
-    Route::put('/stok/{produk_id}', [DashboardController::class, 'updateStok'])->name('admin.stok.update');
-    Route::get('/pesanan', [DashboardController::class, 'pesanan'])->name('admin.pesanan');
+    Route::get('/produk', [AdminProdukController::class, 'produk'])->name('admin.produk');
+    Route::get('/kategori', [AdminKategoriController::class, 'kategori'])->name('admin.kategori');
+    Route::post('/kategori', [AdminKategoriController::class, 'storeKategori'])->name('admin.kategori.store');
+    Route::put('/kategori/{id}', [AdminKategoriController::class, 'updateKategori'])->name('admin.kategori.update');
+    Route::delete('/kategori/{id}', [AdminKategoriController::class, 'destroyKategori'])->name('admin.kategori.destroy');
+    Route::post('/produk', [AdminProdukController::class, 'storeProduk'])->name('admin.produk.store');
+    Route::post('/produk/{id}', [AdminProdukController::class, 'updateProduk'])->name('admin.produk.update');
+    Route::delete('/produk/{id}', [AdminProdukController::class, 'destroyProduk'])->name('admin.produk.destroy');
+    Route::get('/stok', [StokController::class, 'stok'])->name('admin.stok');
+    Route::put('/stok/{produk_id}', [StokController::class, 'updateStok'])->name('admin.stok.update');
+    Route::get('/pesanan', [PesananController::class, 'pesanan'])->name('admin.pesanan');
 });
 
 // Legacy — redirect old routes
