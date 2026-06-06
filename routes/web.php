@@ -34,6 +34,7 @@ Route::post('/cart/update', [CartController::class, 'update'])->name('cart.updat
 
 Route::get('/profile', [ProfileController::class, 'index'])->name('profile');
 Route::put('/profile', [ProfileController::class, 'update'])->name('profile.update');
+Route::put('/profile/password', [ProfileController::class, 'updatePassword'])->name('profile.password.update');
 Route::post('/login', [LoginController::class, 'loginSubmit'])->name('login.submit');
 Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 

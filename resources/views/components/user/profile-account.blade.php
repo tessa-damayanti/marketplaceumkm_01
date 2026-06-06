@@ -15,9 +15,9 @@
                 Foto Profil
             </label>
 
-            <div class="relative inline-block mt-2">
+            <div class="relative inline-block mt-2 flex-shrink-0">
                 <img id="profilePreview" src="{{ Auth::user()->foto_profile ? asset('storage/' . Auth::user()->foto_profile) : asset('images/1.png') }}"
-                    class="h-36 w-36 rounded-full object-cover shadow-sm ring-4 ring-[#f4ece3]" alt="Foto Profil">
+                    class="h-36 w-36 aspect-square rounded-full object-cover shadow-sm ring-4 ring-[#f4ece3]" alt="Foto Profil">
 
                 <label for="profilePhoto"
                     class="absolute bottom-1 right-1 flex h-10 w-10 cursor-pointer items-center justify-center rounded-full bg-[#a16223] text-white shadow-md transition hover:bg-[#86511b]">
@@ -40,7 +40,7 @@
                 <label class="mb-2 block text-sm font-bold text-[#5c4432]">
                     Nama Lengkap
                 </label>
-                <input id="profileName" name="name" type="text" value="{{ old('name', Auth::user()->nama_lengkap) }}"
+                <input id="profileName" name="name" type="text" value="{{ old('name', Auth::user()->nama_lengkap ?? Auth::user()->username) }}"
                     class="w-full rounded-2xl border border-[#f2e4d8] px-5 py-3.5 text-[#7b6858] focus:outline-none focus:border-[#a16223] transition-all">
                 @error('name')
                     <p class="mt-1 text-xs font-semibold text-red-500">{{ $message }}</p>

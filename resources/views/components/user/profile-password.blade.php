@@ -13,8 +13,9 @@
         Untuk keamanan akun Anda, gunakan password yang kuat dan jangan membagikannya kepada siapa pun.
     </p>
 
-    <form action="#" method="POST" class="max-w-3xl space-y-6" onsubmit="savePassword(event)">
+    <form action="{{ route('profile.password.update') }}" method="POST" class="max-w-3xl space-y-6">
         @csrf
+        @method('PUT')
 
         {{-- Password Lama --}}
         <div>
@@ -23,7 +24,7 @@
             </label>
             <div class="relative">
                 <input id="oldPassword" name="old_password" type="password" placeholder="Masukkan password lama"
-                    class="w-full rounded-2xl border border-[#f2e4d8] px-5 py-3.5 pr-12 text-[#7b6858] focus:outline-none focus:border-[#a16223] transition-all">
+                    class="w-full rounded-2xl border @error('old_password') border-red-500 bg-red-50 @else border-[#f2e4d8] @enderror px-5 py-3.5 pr-12 text-[#7b6858] focus:outline-none focus:border-[#a16223] transition-all">
                 <button type="button" onclick="togglePassword('oldPassword', 'eyeOld')" class="absolute right-4 top-1/2 -translate-y-1/2 text-[#7b6858] hover:text-[#5c4432]">
                     <svg id="eyeOld" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
@@ -31,7 +32,9 @@
                     </svg>
                 </button>
             </div>
-            <p id="old-error" class="mt-1 hidden text-xs font-semibold text-red-500">Password harus terdiri dari 6 karakter</p>
+            @error('old_password')
+                <p class="mt-1 text-xs font-semibold text-red-500">{{ $message }}</p>
+            @enderror
         </div>
 
         {{-- Password Baru --}}
@@ -41,7 +44,7 @@
             </label>
             <div class="relative">
                 <input id="newPassword" name="new_password" type="password" placeholder="Masukkan password baru"
-                    class="w-full rounded-2xl border border-[#f2e4d8] px-5 py-3.5 pr-12 text-[#7b6858] focus:outline-none focus:border-[#a16223] transition-all">
+                    class="w-full rounded-2xl border @error('new_password') border-red-500 bg-red-50 @else border-[#f2e4d8] @enderror px-5 py-3.5 pr-12 text-[#7b6858] focus:outline-none focus:border-[#a16223] transition-all">
                 <button type="button" onclick="togglePassword('newPassword', 'eyeNew')" class="absolute right-4 top-1/2 -translate-y-1/2 text-[#7b6858] hover:text-[#5c4432]">
                     <svg id="eyeNew" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
@@ -49,7 +52,9 @@
                     </svg>
                 </button>
             </div>
-            <p id="new-error" class="mt-1 hidden text-xs font-semibold text-red-500">Password harus terdiri dari 6 karakter</p>
+            @error('new_password')
+                <p class="mt-1 text-xs font-semibold text-red-500">{{ $message }}</p>
+            @enderror
         </div>
 
         {{-- Konfirmasi Password Baru --}}
@@ -58,8 +63,8 @@
                 Konfirmasi Password Baru
             </label>
             <div class="relative">
-                <input id="confirmPassword" name="confirm_password" type="password" placeholder="Masukkan ulang password baru"
-                    class="w-full rounded-2xl border border-[#f2e4d8] px-5 py-3.5 pr-12 text-[#7b6858] focus:outline-none focus:border-[#a16223] transition-all">
+                <input id="confirmPassword" name="new_password_confirmation" type="password" placeholder="Masukkan ulang password baru"
+                    class="w-full rounded-2xl border @error('new_password') border-red-500 bg-red-50 @else border-[#f2e4d8] @enderror px-5 py-3.5 pr-12 text-[#7b6858] focus:outline-none focus:border-[#a16223] transition-all">
                 <button type="button" onclick="togglePassword('confirmPassword', 'eyeConfirm')" class="absolute right-4 top-1/2 -translate-y-1/2 text-[#7b6858] hover:text-[#5c4432]">
                     <svg id="eyeConfirm" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
@@ -67,7 +72,6 @@
                     </svg>
                 </button>
             </div>
-            <p id="confirm-error" class="mt-1 hidden text-xs font-semibold text-red-500">Konfirmasi password tidak cocok</p>
         </div>
 
 
@@ -91,59 +95,6 @@
         } else {
             input.type = 'password';
             icon.innerHTML = `<path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /><path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />`;
-        }
-    }
-
-    function savePassword(event) {
-        event.preventDefault();
-
-        const oldInput = document.getElementById('oldPassword');
-        const newInput = document.getElementById('newPassword');
-        const confirmInput = document.getElementById('confirmPassword');
-
-        const oldError = document.getElementById('old-error');
-        const newError = document.getElementById('new-error');
-        const confirmError = document.getElementById('confirm-error');
-
-        let isValid = true;
-
-        if (!oldInput.value.trim() || oldInput.value.length < 6) {
-            oldInput.classList.add('border-red-500', 'bg-red-50');
-            oldError.classList.remove('hidden');
-            isValid = false;
-        } else {
-            oldInput.classList.remove('border-red-500', 'bg-red-50');
-            oldError.classList.add('hidden');
-        }
-
-        if (!newInput.value.trim() || newInput.value.length < 6) {
-            newInput.classList.add('border-red-500', 'bg-red-50');
-            newError.classList.remove('hidden');
-            isValid = false;
-        } else {
-            newInput.classList.remove('border-red-500', 'bg-red-50');
-            newError.classList.add('hidden');
-        }
-
-        if (!confirmInput.value.trim() || confirmInput.value !== newInput.value) {
-            confirmInput.classList.add('border-red-500', 'bg-red-50');
-            confirmError.classList.remove('hidden');
-            isValid = false;
-        } else {
-            confirmInput.classList.remove('border-red-500', 'bg-red-50');
-            confirmError.classList.add('hidden');
-        }
-
-        if (!isValid) return;
-
-        oldInput.value = '';
-        newInput.value = '';
-        confirmInput.value = '';
-
-        if(typeof showToast === 'function') {
-            showToast('Berhasil', 'Password berhasil diperbarui.');
-        } else {
-            alert('Password berhasil diperbarui.');
         }
     }
 </script>

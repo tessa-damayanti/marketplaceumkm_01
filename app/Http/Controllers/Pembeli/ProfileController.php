@@ -67,5 +67,33 @@ class ProfileController extends Controller
 
         return redirect()->route('profile')->with('success', 'Profil berhasil diperbarui.');
     }
+
+    public function updatePassword(Request $request)
+    {
+        if (session('role') !== 'buyer') {
+            return redirect()->route('login')->with('error', 'Silakan login terlebih dahulu.');
+        }
+
+        $request->validate([
+            'old_password' => 'required',
+            'new_password' => 'required|min:6|confirmed',
+        ], [
+            'old_password.required' => 'Password lama wajib diisi.',
+            'new_password.required' => 'Password baru wajib diisi.',
+            'new_password.min' => 'Password baru minimal 6 karakter.',
+            'new_password.confirmed' => 'Konfirmasi password tidak cocok.',
+        ]);
+
+        $user = User::find(Auth::id());
+
+        if (!\Illuminate\Support\Facades\Hash::check($request->old_password, $user->password)) {
+            return back()->withErrors(['old_password' => 'Password lama tidak sesuai.']);
+        }
+
+        $user->password = \Illuminate\Support\Facades\Hash::make($request->new_password);
+        $user->save();
+
+        return redirect()->route('profile')->with('success', 'Password berhasil diperbarui.');
+    }
 }
 
