@@ -39,5 +39,3 @@
     class="w-full rounded-2xl bg-[#BFA28C] py-3 text-base font-bold text-white shadow-md transition hover:bg-[#A88A72] active:scale-[0.98] sm:py-4 sm:text-lg">
     Bayar Sekarang
 </button>
-
-</script>
