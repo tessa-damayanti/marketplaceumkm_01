@@ -17,6 +17,8 @@ return new class extends Migration
             $table->dateTime('tanggal_pesanan');
             $table->integer('total_harga');
             $table->string('metode_pembayaran');
+            $table->string('status_pembayaran')->default('pending');
+            $table->string('snap_token')->nullable();
             $table->timestamps();
         });
     }

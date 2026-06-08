@@ -17,7 +17,6 @@ return new class extends Migration
             $table->foreignId('stok_id')->constrained('stoks')->onDelete('cascade');
             $table->integer('harga_satuan');
             $table->integer('jumlah');
-            $table->string('status_pembayaran');
             $table->timestamps();
         });
     }

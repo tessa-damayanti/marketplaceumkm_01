@@ -59,7 +59,7 @@ class CartController extends Controller
         $stok = Stok::with('produk')->findOrFail($request->stok_id);
         $userId = Auth::id();
 
-        // Memeriksa produk dengan stok yang dipilih sudah ada di keranjang
+        
         $cartItem = Keranjang::where('user_id', $userId)
             ->where('stok_id', $request->stok_id)
             ->first();
