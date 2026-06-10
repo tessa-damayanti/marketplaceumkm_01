@@ -1,8 +1,6 @@
 <?php
-
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\LoginController;
-use App\Http\Controllers\KategoriController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\KategoriController as AdminKategoriController;
 use App\Http\Controllers\Admin\ProdukController as AdminProdukController;
@@ -12,6 +10,7 @@ use App\Http\Controllers\Pembeli\CartController;
 use App\Http\Controllers\Pembeli\ProductController;
 use App\Http\Controllers\Pembeli\CheckoutController;
 use App\Http\Controllers\Pembeli\ProfileController;
+
 // Public routes
 Route::get('/', [ProductController::class, 'home'])->name('home');
 Route::get('/product', [ProductController::class, 'index'])->name('product');
@@ -24,7 +23,6 @@ Route::get('/checkout', function () {
 })->name('checkout');
 Route::post('/checkout/charge',  [CheckoutController::class, 'charge'])->name('checkout.charge');
 Route::post('/checkout/status',  [CheckoutController::class, 'checkStatus'])->name('checkout.status');
-
 
 // Cart
 Route::get('/cart', [CartController::class, 'index'])->name('cart');
@@ -65,6 +63,5 @@ Route::prefix('admin')->group(function () {
     Route::get('/pesanan', [PesananController::class, 'pesanan'])->name('admin.pesanan');
 });
 
-// Legacy — redirect old routes
+// 
 Route::get('/dashboard', fn() => redirect()->route('admin.dashboard'));
-Route::get('/kategori', [KategoriController::class, 'index'])->name('kategori.index');

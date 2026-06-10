@@ -9,6 +9,10 @@ class DashboardController extends Controller
 {
     public function index()
     {
+        if (session('role') !== 'admin') {
+            return redirect()->route('login')->with('error', 'Silakan login sebagai admin terlebih dahulu.');
+        }
+
         return view('pages.admin.dashboard', [
             'produk' => $this->getProdukData(),
             'kategori' => $this->getKategoriData(),

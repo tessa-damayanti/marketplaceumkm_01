@@ -149,7 +149,18 @@
     }
 
     function proceedLogout() {
-      window.location.href = "{{ route('home') }}";
+      const form = document.createElement('form');
+      form.method = 'POST';
+      form.action = "{{ route('logout') }}";
+      
+      const csrf = document.createElement('input');
+      csrf.type = 'hidden';
+      csrf.name = '_token';
+      csrf.value = "{{ csrf_token() }}";
+      
+      form.appendChild(csrf);
+      document.body.appendChild(form);
+      form.submit();
     }
 
     function toggleMobileSidebar() {

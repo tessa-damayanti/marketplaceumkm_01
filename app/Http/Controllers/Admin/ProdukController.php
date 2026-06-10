@@ -9,6 +9,10 @@ class ProdukController extends Controller
 {
     public function produk()
     {
+        if (session('role') !== 'admin') {
+            return redirect()->route('login')->with('error', 'Silakan login sebagai admin terlebih dahulu.');
+        }
+
         return view('pages.admin.produk', [
             'produk' => $this->getProdukData(),
             'kategori' => $this->getKategoriData(),
@@ -50,8 +54,12 @@ class ProdukController extends Controller
 
     public function storeProduk(Request $request)
     {
+        if (session('role') !== 'admin') {
+            return redirect()->route('login')->with('error', 'Silakan login sebagai admin terlebih dahulu.');
+        }
+
         $request->validate([
-            'nama' => 'required|string|max:255|unique:produks,nama',
+            'nama' => 'required|string|max:30|unique:produks,nama',
             'kategori_id' => 'required|exists:kategoris,id',
             'harga' => 'required|integer',
             'deskripsi' => 'required|string',
@@ -103,8 +111,12 @@ class ProdukController extends Controller
 
     public function updateProduk(Request $request, $id)
     {
+        if (session('role') !== 'admin') {
+            return redirect()->route('login')->with('error', 'Silakan login sebagai admin terlebih dahulu.');
+        }
+
         $request->validate([
-            'nama' => 'required|string|max:255|unique:produks,nama,' . $id,
+            'nama' => 'required|string|max:30|unique:produks,nama,' . $id,
             'kategori_id' => 'required|exists:kategoris,id',
             'harga' => 'required|integer',
             'deskripsi' => 'required|string',
@@ -153,6 +165,10 @@ class ProdukController extends Controller
 
     public function destroyProduk($id)
     {
+        if (session('role') !== 'admin') {
+            return redirect()->route('login')->with('error', 'Silakan login sebagai admin terlebih dahulu.');
+        }
+
         $produk = Produk::findOrFail($id);
         $produk->delete();
         return response()->json(['success' => true]);

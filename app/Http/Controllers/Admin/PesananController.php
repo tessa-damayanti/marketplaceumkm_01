@@ -8,6 +8,10 @@ class PesananController extends Controller
 {
     public function pesanan()
     {
+        if (session('role') !== 'admin') {
+            return redirect()->route('login')->with('error', 'Silakan login sebagai admin terlebih dahulu.');
+        }
+
         return view('pages.admin.pesanan', [
             'pesanan' => $this->getPesananData(),
         ]);

@@ -9,6 +9,10 @@ class StokController extends Controller
 {
     public function stok()
     {
+        if (session('role') !== 'admin') {
+            return redirect()->route('login')->with('error', 'Silakan login sebagai admin terlebih dahulu.');
+        }
+
         return view('pages.admin.stok', [
             'produk' => $this->getProdukData(),
         ]);
@@ -42,6 +46,10 @@ class StokController extends Controller
 
     public function updateStok(Request $request, $produk_id)
     {
+        if (session('role') !== 'admin') {
+            return redirect()->route('login')->with('error', 'Silakan login sebagai admin terlebih dahulu.');
+        }
+
         $request->validate([
             'S' => 'required|integer|min:0',
             'M' => 'required|integer|min:0',
