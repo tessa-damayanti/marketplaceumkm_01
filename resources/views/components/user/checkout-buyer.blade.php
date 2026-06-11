@@ -1,7 +1,7 @@
 @props(['buyerName', 'buyerPhone', 'buyerAddress'])
 
 <div class="border-b border-[#e5d8ca] p-5 md:border-b-0 md:border-r sm:p-8">
-    <h2 class="mb-5 text-xl font-bold text-[#5c4432] sm:mb-7 sm:text-2xl">Informasi Pembeli</h2>
+    <h2 class="mb-5 text-xl font-bold text-[#5c4432] sm:mb-7 sm:text-2xl">Informasi Pengiriman</h2>
 
     <div class="space-y-5">
         <div>

@@ -1,7 +1,8 @@
 @php
-    $buyerName    = session('buyer_name',    'Nikita Willy');
-    $buyerPhone   = session('buyer_phone',   '0812-3456-7890');
-    $buyerAddress = session('buyer_address', 'Jl. Melati No. 12, Bandung');
+    $user = auth()->user();
+    $buyerName    = session('buyer_name',    $user ? $user->nama_lengkap : '');
+    $buyerPhone   = session('buyer_phone',   $user ? $user->no_wa : '');
+    $buyerAddress = session('buyer_address', $user ? $user->alamat : '');
 
     if (request('name')) {
         $cartItems = [[
