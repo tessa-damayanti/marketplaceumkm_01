@@ -1,7 +1,38 @@
+@php
+    // Badge mapping: status_pembayaran → class CSS
+    $badgeMap = [
+        'pending'    => ['bg' => 'bg-[#fff1bd]', 'text' => 'text-[#b45a00]'],
+        'settlement' => ['bg' => 'bg-[#dcfce7]', 'text' => 'text-[#15803d]'],
+        'cancel'     => ['bg' => 'bg-[#fee2e2]', 'text' => 'text-[#dc2626]'],
+        'expire'     => ['bg' => 'bg-[#f3f4f6]', 'text' => 'text-[#6b7280]'],
+    ];
+@endphp
+
 <div id="tab-riwayat" class="block">
     <h2 class="mb-6 text-3xl font-bold text-[#5c4432]">
         Riwayat Pembelian
     </h2>
+
+    <!-- Tab Status Berdasarkan Permintaan User -->
+    <div class="mb-6">
+        <div class="flex w-full gap-1">
+            <button onclick="filterHistoryTab('all')" id="btn-subtab-all" class="subtab-btn flex-1 rounded-lg border py-2 text-xs font-bold transition-all duration-200" style="background:#e8ded3; color:#5c4432; border-color:#BFA28C;">
+                Semua
+            </button>
+            <button onclick="filterHistoryTab('pending')" id="btn-subtab-pending" class="subtab-btn flex-1 rounded-lg border py-2 text-xs font-medium transition-all duration-200" style="background:transparent; color:#8b6f58; border-color:#e8ded3;">
+                Menunggu Pembayaran
+            </button>
+            <button onclick="filterHistoryTab('settlement')" id="btn-subtab-settlement" class="subtab-btn flex-1 rounded-lg border py-2 text-xs font-medium transition-all duration-200" style="background:transparent; color:#8b6f58; border-color:#e8ded3;">
+                Pembayaran Berhasil
+            </button>
+            <button onclick="filterHistoryTab('cancel')" id="btn-subtab-cancel" class="subtab-btn flex-1 rounded-lg border py-2 text-xs font-medium transition-all duration-200" style="background:transparent; color:#8b6f58; border-color:#e8ded3;">
+                Pembayaran Dibatalkan
+            </button>
+            <button onclick="filterHistoryTab('expire')" id="btn-subtab-expire" class="subtab-btn flex-1 rounded-lg border py-2 text-xs font-medium transition-all duration-200" style="background:transparent; color:#8b6f58; border-color:#e8ded3;">
+                Pembayaran Kadaluwarsa
+            </button>
+        </div>
+    </div>
 
     <div class="overflow-hidden rounded-[18px] bg-white shadow-[0_6px_22px_rgba(92,68,50,0.08)]">
         <div class="overflow-x-auto">
@@ -10,155 +41,85 @@
                 <tr class="border-b border-[#eee5dc] bg-[#fcfaf8] text-sm font-bold text-[#5c4432]">
                     <th class="px-6 py-5 whitespace-nowrap">ID. Pesanan</th>
                     <th class="px-6 py-5 whitespace-nowrap">Produk</th>
-                    <th class="px-6 py-5 text-center whitespace-nowrap">Status Pembayaran</th>
+                    <th class="px-6 py-5 text-center whitespace-nowrap col-status">Status Pembayaran</th>
                     <th class="px-6 py-5 whitespace-nowrap">Total</th>
                     <th class="px-6 py-5 text-center whitespace-nowrap">Aksi</th>
                 </tr>
-            </thead>
+                </thead>
 
-            <tbody class="text-sm text-[#5c4432]">
-                <!-- ROW 1 -->
-                <tr class="border-b border-[#eee5dc]">
-                    <td class="px-6 py-6 font-bold whitespace-nowrap">VL-250212-001</td>
+                <tbody class="text-sm text-[#5c4432]">
+                    @forelse ($pesanans as $pesanan)
+                        @php
+                            $badge   = $badgeMap[$pesanan->status_pembayaran] ?? ['bg' => 'bg-[#f3f4f6]', 'text' => 'text-[#6b7280]'];
+                            $details = $pesanan->detailPesanans;
+                            $first   = $details->first();
+                            $extraCount = $details->count() - 1;
 
-                    <td class="px-6 py-6">
-                        <div class="flex items-center gap-4">
-                            <div
-                                class="h-16 w-16 shrink-0 overflow-hidden rounded-xl border border-[#f1e8df] bg-[#fcfaf8]">
-                                <img src="https://i.pinimg.com/1200x/b1/cc/2f/b1cc2fb9a73cb56f46e167b47d4febbf.jpg"
-                                    alt="Kemeja Stripe" class="h-full w-full object-cover">
-                            </div>
+                            // Gambar produk pertama
+                            $firstImg = 'https://i.pinimg.com/1200x/b1/cc/2f/b1cc2fb9a73cb56f46e167b47d4febbf.jpg';
+                            $firstName = '-';
+                            if ($first && $first->stok && $first->stok->produk) {
+                                $firstName = $first->stok->produk->nama;
+                                if ($first->stok->produk->image) {
+                                    $firstImg = asset('images/' . $first->stok->produk->image);
+                                }
+                            }
+                        @endphp
+                        <tr class="border-b border-[#eee5dc] order-row" data-status="{{ $pesanan->status_pembayaran }}">
+                            <td class="px-6 py-6 font-bold whitespace-nowrap">{{ $pesanan->order_id ?? 'PSN-' . str_pad($pesanan->id, 3, '0', STR_PAD_LEFT) }}</td>
 
-                            <div class="min-w-0">
-                                <p class="text-base font-bold text-[#5c4432]">Kemeja Stripe</p>
-                                <p class="mt-1 text-sm text-[#7b6858]">+2 produk lainnya</p>
-                            </div>
-                        </div>
-                    </td>
+                            <td class="px-6 py-6">
+                                <div class="flex items-center gap-4">
+                                    <div class="h-16 w-16 shrink-0 overflow-hidden rounded-xl border border-[#f1e8df] bg-[#fcfaf8]">
+                                        <img src="{{ $firstImg }}" alt="{{ $firstName }}" class="h-full w-full object-cover">
+                                    </div>
+                                    <div class="min-w-0">
+                                        <p class="text-base font-bold text-[#5c4432]">{{ $firstName }}</p>
+                                        @if ($extraCount > 0)
+                                            <p class="mt-1 text-sm text-[#7b6858]">+{{ $extraCount }} produk lainnya</p>
+                                        @endif
+                                    </div>
+                                </div>
+                            </td>
 
-                    <td class="px-6 py-6 text-center">
-                        <span
-                            class="inline-flex whitespace-nowrap rounded-full bg-[#fff1bd] px-5 py-2 text-sm font-semibold text-[#b45a00]">
-                            Menunggu Verifikasi
-                        </span>
-                    </td>
+                            <td class="px-6 py-6 text-center col-status">
+                                <span class="inline-flex whitespace-nowrap rounded-full {{ $badge['bg'] }} px-5 py-2 text-sm font-semibold {{ $badge['text'] }}">
+                                    {{ $pesanan->status_label }}
+                                </span>
+                            </td>
 
-                    <td class="px-6 py-6 text-base font-bold whitespace-nowrap text-[#5c4432]">
-                        Rp362.000
-                    </td>
+                            <td class="px-6 py-6 text-base font-bold whitespace-nowrap text-[#5c4432]">
+                                Rp{{ number_format($pesanan->total_harga, 0, ',', '.') }}
+                            </td>
 
-                    <td class="px-6 py-6">
-                        <div class="flex justify-center">
-                            <button onclick="openOrderDetail('VL-250212-001')"
-                                class="whitespace-nowrap rounded-xl border-0 bg-[#BFA28C] px-5 py-2.5 text-sm font-semibold text-white transition-all hover:bg-[#A88A72] hover:shadow-[0_5px_14px_rgba(191,162,140,0.2)]">
-                                Detail
-                            </button>
-                        </div>
-                    </td>
-                </tr>
+                            <td class="px-6 py-6">
+                                <div class="flex justify-center">
+                                    <button
+                                        data-order-id="{{ $pesanan->id }}"
+                                        onclick="openOrderDetail(this.dataset.orderId)"
+                                        class="whitespace-nowrap rounded-xl border-0 bg-[#BFA28C] px-4 py-2 text-sm font-semibold text-white transition-all hover:bg-[#A88A72] hover:shadow-[0_5px_14px_rgba(191,162,140,0.2)]">
+                                        Detail
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                    @empty
+                        <!-- Empty state handled below -->
+                    @endforelse
 
-                <!-- ROW 2 -->
-                <tr class="border-b border-[#eee5dc]">
-                    <td class="px-6 py-6 font-bold whitespace-nowrap">VL-250209-002</td>
-
-                    <td class="px-6 py-6">
-                        <div class="flex items-center gap-4">
-                            <div
-                                class="h-16 w-16 shrink-0 overflow-hidden rounded-xl border border-[#f1e8df] bg-[#fcfaf8]">
-                                <img src="https://i.pinimg.com/736x/99/55/47/9955473e19a196b4eaa1533b10922b6a.jpg"
-                                    alt="Gaun Biru Wrap" class="h-full w-full object-cover">
-                            </div>
-
-                            <div class="min-w-0">
-                                <p class="text-base font-bold text-[#5c4432]">Gaun Biru Wrap</p>
-                            </div>
-                        </div>
-                    </td>
-
-                    <td class="px-6 py-6 text-center">
-                        <span
-                            class="inline-flex whitespace-nowrap rounded-full bg-[#dcfce7] px-5 py-2 text-sm font-semibold text-[#15803d]">
-                            Pembayaran Valid
-                        </span>
-                    </td>
-
-                    <td class="px-6 py-6 text-base font-bold whitespace-nowrap text-[#5c4432]">
-                        Rp170.000
-                    </td>
-
-                    <td class="px-6 py-6">
-                        <div class="flex justify-center">
-                            <button onclick="openOrderDetail('VL-250209-002')"
-                                class="whitespace-nowrap rounded-xl border-0 bg-[#BFA28C] px-5 py-2.5 text-sm font-semibold text-white transition-all hover:bg-[#A88A72] hover:shadow-[0_5px_14px_rgba(191,162,140,0.2)]">
-                                Detail
-                            </button>
-                        </div>
-                    </td>
-                </tr>
-
-                <!-- ROW 3 -->
-                <tr class="border-b border-[#eee5dc]">
-                    <td class="px-6 py-6 font-bold whitespace-nowrap">VL-250206-003</td>
-
-                    <td class="px-6 py-6">
-                        <div class="flex items-center gap-4">
-                            <div
-                                class="h-16 w-16 shrink-0 overflow-hidden rounded-xl border border-[#f1e8df] bg-[#fcfaf8]">
-                                <img src="https://i.pinimg.com/736x/78/2a/3d/782a3d260721c8f3d515966337443416.jpg"
-                                    alt="Cardigan Rajut Pink" class="h-full w-full object-cover">
-                            </div>
-
-                            <div class="min-w-0">
-                                <p class="text-base font-bold text-[#5c4432]">Cardigan Rajut Pink</p>
-                            </div>
-                        </div>
-                    </td>
-
-                    <td class="px-6 py-6 text-center">
-                        <span
-                            class="inline-flex whitespace-nowrap rounded-full bg-[#fee2e2] px-5 py-2 text-sm font-semibold text-[#dc2626]">
-                            Pembayaran Ditolak
-                        </span>
-                    </td>
-
-                    <td class="px-6 py-6 text-base font-bold whitespace-nowrap text-[#5c4432]">
-                        Rp90.000
-                    </td>
-
-                    <td class="px-6 py-6">
-                        <div class="flex justify-center">
-                            <button onclick="openOrderDetail('VL-250206-003')"
-                                class="whitespace-nowrap rounded-xl border-0 bg-[#BFA28C] px-5 py-2.5 text-sm font-semibold text-white transition-all hover:bg-[#A88A72] hover:shadow-[0_5px_14px_rgba(191,162,140,0.2)]">
-                                Detail
-                            </button>
-                        </div>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
+                    <tr id="empty-history-row" class="{{ $pesanans->isEmpty() ? '' : 'hidden' }}">
+                        <td id="empty-history-cell" colspan="5" class="px-6 py-12 text-center text-[#8b7a6d]">
+                            Belum ada riwayat pembelian.
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
 
         <div class="flex items-center justify-between border-t border-[#eee5dc] px-6 py-4">
             <p class="text-xs text-[#8b6f58]">
-                1 - 3 dari 3
+                {{ $pesanans->count() }} pesanan
             </p>
-
-            <div class="flex items-center gap-1.5">
-                <button
-                    class="flex h-8 w-8 items-center justify-center rounded-[10px] border border-[#f1e8df] text-sm text-[#8b6f58] transition hover:bg-[#fcfaf8]">
-                    ‹
-                </button>
-
-                <button
-                    class="flex h-8 w-8 items-center justify-center rounded-[10px] bg-[#BFA28C] text-sm font-bold text-white transition hover:bg-[#A88A72]">
-                    1
-                </button>
-
-                <button
-                    class="flex h-8 w-8 items-center justify-center rounded-[10px] border border-[#f1e8df] text-sm text-[#8b6f58] transition hover:bg-[#fcfaf8]">
-                    ›
-                </button>
-            </div>
         </div>
     </div>
 </div>

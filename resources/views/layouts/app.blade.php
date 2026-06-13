@@ -38,6 +38,7 @@
     @endif
 
     @stack('scripts')
+    <x-user.checkout-toast />
 </body>
 
 </html>

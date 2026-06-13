@@ -124,7 +124,7 @@
 
     function statusBadge(s) {
       const colors = {
-        'Pembayaran Valid': 'bg-[#dcfce7] text-[#15803d]',
+        'Pembayaran Berhasil': 'bg-[#dcfce7] text-[#15803d]',
         'Pembayaran Ditolak': 'bg-[#fee2e2] text-[#dc2626]',
         'Konfirmasi Ulang': 'bg-[#e0e7ff] text-[#4338ca]',
         'Menunggu Verifikasi': 'bg-[#fff1bd] text-[#b45a00]'
@@ -802,7 +802,7 @@
 
       viewingPesananId = id;
       const total = o.items.reduce((s, i) => s + i.harga * i.qty, 0);
-      const statusOptions = ['Menunggu Verifikasi', 'Pembayaran Valid', 'Pembayaran Ditolak', 'Konfirmasi Ulang'];
+      const statusOptions = ['Menunggu Verifikasi', 'Pembayaran Berhasil', 'Pembayaran Ditolak', 'Konfirmasi Ulang'];
 
       document.getElementById('pesanan-modal-content').innerHTML = `
         <div class="modal-header">
@@ -846,7 +846,7 @@
         return `
                 <div class="flex items-center gap-4 rounded-xl bg-[#fbf8f5] p-3 border border-[#f0e7dd]">
                   <div class="h-16 w-16 shrink-0 overflow-hidden rounded-lg border border-[#f0e7dd] bg-white">
-                    <img src="${getProdukImage(item.produk, p?.image)}" class="h-full w-full object-cover">
+                    <img src="${getProdukImage(item.produk, item.image)}" class="h-full w-full object-cover">
                   </div>
                   <div class="flex-1 min-w-0">
                     <div class="font-medium text-[#5c4432] text-sm truncate">${item.produk}</div>
@@ -939,6 +939,45 @@
       renderKategoriTable();
       renderStokTable();
       renderPesananTable();
+
+      // Auto-polling untuk admin pesanan
+      const pendingOrders = pesananList.filter(o => o.status === 'Menunggu Pembayaran');
+      if (pendingOrders.length > 0) {
+        setInterval(async () => {
+          let shouldReload = false;
+          const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') ?? '';
+          
+          for (const order of pendingOrders) {
+            try {
+              const formData = new FormData();
+              // Gunakan raw_order_id untuk pengecekan ke Midtrans
+              formData.append('order_id', order.raw_order_id);
+              
+              const res = await fetch('/checkout/status', {
+                method: 'POST',
+                headers: {
+                  'X-CSRF-TOKEN': csrfToken,
+                  'Accept': 'application/json'
+                },
+                body: formData
+              });
+
+              if (res.ok) {
+                const data = await res.json();
+                if (data.transaction_status && !['pending', '404'].includes(data.transaction_status)) {
+                  shouldReload = true;
+                  break;
+                }
+              }
+            } catch (e) {
+              console.warn('Polling status error', e);
+            }
+          }
+          if (shouldReload) {
+            window.location.reload();
+          }
+        }, 5000);
+      }
     });
   </script>
 </body>

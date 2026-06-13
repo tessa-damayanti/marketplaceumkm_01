@@ -63,6 +63,18 @@
         <form id="checkout-form" action="{{ route('checkout.charge') }}" method="POST">
             @csrf
             <input type="hidden" name="grand_total" value="{{ $grandTotal }}">
+
+            {{-- Kirim item yang dibeli --}}
+            @if(request('name') && request('stok_id'))
+                {{-- Beli Langsung: kirim stok_id + qty --}}
+                <input type="hidden" name="stok_id" value="{{ request('stok_id') }}">
+                <input type="hidden" name="qty" value="{{ request('qty', 1) }}">
+            @else
+                {{-- Checkout dari Keranjang: kirim cart_ids[] --}}
+                @foreach(array_keys($cartItems) as $cartId)
+                    <input type="hidden" name="cart_ids[]" value="{{ $cartId }}">
+                @endforeach
+            @endif
             <div class="grid md:grid-cols-[1fr_1.05fr]">
                 <x-user.checkout-buyer :buyerName="$buyerName" :buyerPhone="$buyerPhone" :buyerAddress="$buyerAddress" />
                 <div class="p-5 sm:p-8">
@@ -73,14 +85,13 @@
     </div>
 </div>
 
-<x-user.checkout-toast />
 @endsection
 
 @push('scripts')
 <script src="https://app.sandbox.midtrans.com/snap/snap.js" data-client-key="{{ config('midtrans.client_key') }}"></script>
 <script>
 const CHARGE_URL = '{{ route("checkout.charge") }}';
-const HOME_URL   = '{{ route("home") }}';
+const PROFILE_URL = '{{ route("profile") }}';
 const CSRF       = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
 
 const payBtn = document.getElementById('pay-btn');
@@ -125,10 +136,10 @@ document.getElementById('checkout-form').addEventListener('submit', async functi
         if (res.ok && data.snap_token) {
             window.snap.pay(data.snap_token, {
                 onSuccess: function(result){
-                    showAlert('Pembayaran berhasil! Terima kasih.', 'success', () => { window.location.href = HOME_URL; });
+                    showAlert('Pembayaran berhasil! Terima kasih.', 'success', () => { window.location.href = PROFILE_URL; });
                 },
                 onPending: function(result){
-                    showAlert('Menunggu pembayaran Anda!', 'success', () => { window.location.href = HOME_URL; });
+                    showAlert('Menunggu pembayaran Anda!', 'success', () => { window.location.href = PROFILE_URL; });
                 },
                 onError: function(result){
                     showAlert('Pembayaran gagal!', 'error');

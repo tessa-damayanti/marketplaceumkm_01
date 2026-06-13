@@ -12,6 +12,15 @@ class ProductController extends Controller
     private function getAllProducts(): array
     {
         $dbProduks = \App\Models\Produk::with(['kategori', 'stoks.ukuran'])->get();
+
+        // Hitung total terjual per produk (hanya dari pesanan settlement/berhasil)
+        $soldMap = \App\Models\DetailPesanan::selectRaw('stoks.produk_id, SUM(detail_pesanans.jumlah) as total_terjual')
+            ->join('stoks', 'stoks.id', '=', 'detail_pesanans.stok_id')
+            ->join('pesanans', 'pesanans.id', '=', 'detail_pesanans.pesanan_id')
+            ->where('pesanans.status_pembayaran', 'settlement')
+            ->groupBy('stoks.produk_id')
+            ->pluck('total_terjual', 'stoks.produk_id');
+
         $mapped = [];
 
         foreach ($dbProduks as $p) {
@@ -32,15 +41,15 @@ class ProductController extends Controller
             }   
 
             $mapped[$cat][] = [
-                'name' => $p->nama,
+                'name'     => $p->nama,
                 'category' => $catName,
-                'image' => $p->image ? asset('images/' . $p->image) : 'https://i.pinimg.com/1200x/b1/cc/2f/b1cc2fb9a73cb56f46e167b47d4febbf.jpg',
-                'desc' => $p->deskripsi,
-                'sizes' => ['S', 'M', 'L', 'XL'],
-                'stock' => $stokArray,
+                'image'    => $p->image ? asset('images/' . $p->image) : 'https://i.pinimg.com/1200x/b1/cc/2f/b1cc2fb9a73cb56f46e167b47d4febbf.jpg',
+                'desc'     => $p->deskripsi,
+                'sizes'    => ['S', 'M', 'L', 'XL'],
+                'stock'    => $stokArray,
                 'stok_ids' => $stokIds,
-                'price' => number_format($p->harga, 0, ',', '.'),
-                'sold' => $p->id <= 20 ? (($p->id * 7) % 45) + 5 : 0
+                'price'    => number_format($p->harga, 0, ',', '.'),
+                'sold'     => (int) ($soldMap[$p->id] ?? 0),
             ];
         }
 

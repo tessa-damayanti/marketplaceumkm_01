@@ -45,13 +45,13 @@
             <div class="rounded-xl bg-[#fbf8f5] p-5">
                 <div class="grid grid-cols-[140px_1fr] gap-y-3 text-sm">
                     <p class="font-bold text-[#5c4432]">Nama</p>
-                    <p class="text-[#8b7a6d]">Nikita Willy</p>
+                    <p id="modal-buyer-name" class="text-[#8b7a6d]">-</p>
 
                     <p class="font-bold text-[#5c4432]">No. WhatsApp</p>
-                    <p class="text-[#8b7a6d]">0812 3456 7890</p>
+                    <p id="modal-buyer-phone" class="text-[#8b7a6d]">-</p>
 
                     <p class="font-bold text-[#5c4432]">Alamat</p>
-                    <p class="text-[#8b7a6d]">Jl. Ahmad Yani No. 22, Kota Bandung, Jawa Barat 40111</p>
+                    <p id="modal-buyer-address" class="text-[#8b7a6d]">-</p>
                 </div>
             </div>
 
@@ -72,6 +72,11 @@
 
                 <p id="modal-total" class="text-2xl font-extrabold text-[#5c4432]"></p>
             </div>
+        </div>
+
+        <!-- FOOTER / ACTIONS -->
+        <div id="modal-footer" class="border-t border-[#f1e8df] px-7 py-4 bg-[#fbf8f5] flex justify-end gap-3 hidden">
+            <!-- Dinamis via JS -->
         </div>
     </div>
 </div>
@@ -95,6 +100,27 @@
                         Ya, Keluar
                     </button>
                 </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+{{-- Modal Konfirmasi Batal Pesanan --}}
+<div id="modal-confirm-cancel" class="fixed inset-0 z-[9999] hidden items-center justify-center bg-black/40">
+    <div class="w-[380px] max-w-[calc(100%-32px)] animate-fade-up-soft rounded-[20px] bg-white shadow-[0_20px_50px_rgba(0,0,0,0.15)] transition-transform">
+        <div class="px-6 py-7">
+            <p class="text-center text-sm font-semibold leading-relaxed text-[#1a1a1a]">
+                Apakah Anda yakin ingin membatalkan pesanan ini?
+            </p>
+            <div class="mt-5 flex justify-center gap-[10px]">
+                <button id="btn-cancel-modal-close"
+                    class="rounded-xl border border-[#d8c3af] bg-white px-7 py-2.5 text-sm font-bold text-[#5c4432] transition hover:bg-[#fcf8f3] hover:border-[#c7b09b]">
+                    Kembali
+                </button>
+                <button id="btn-cancel-modal-submit"
+                    class="rounded-xl bg-[#ef4444] px-7 py-2.5 text-sm font-semibold text-white transition hover:brightness-105">
+                    Ya, Batalkan
+                </button>
             </div>
         </div>
     </div>

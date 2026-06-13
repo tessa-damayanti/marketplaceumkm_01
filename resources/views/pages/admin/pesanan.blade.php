@@ -33,13 +33,13 @@
             <li class="pesanan-status-option cursor-pointer border-b border-[#f0e7dd] bg-[#fbf8f5] px-4 py-2.5 text-sm font-medium text-[#BFA28C] transition-colors hover:bg-[#BFA28C] hover:text-white"
               onclick="selectPesananStatusFilter('')">Semua Status</li>
             <li class="pesanan-status-option cursor-pointer border-b border-[#f0e7dd] px-4 py-2.5 text-sm font-medium text-[#5c4432] transition-colors hover:bg-[#BFA28C] hover:text-white"
-              onclick="selectPesananStatusFilter('Menunggu Verifikasi')">Menunggu Verifikasi</li>
+              onclick="selectPesananStatusFilter('Menunggu Pembayaran')">Menunggu Pembayaran</li>
             <li class="pesanan-status-option cursor-pointer border-b border-[#f0e7dd] px-4 py-2.5 text-sm font-medium text-[#5c4432] transition-colors hover:bg-[#BFA28C] hover:text-white"
-              onclick="selectPesananStatusFilter('Pembayaran Valid')">Pembayaran Valid</li>
+              onclick="selectPesananStatusFilter('Pembayaran Berhasil')">Pembayaran Berhasil</li>
             <li class="pesanan-status-option cursor-pointer border-b border-[#f0e7dd] px-4 py-2.5 text-sm font-medium text-[#5c4432] transition-colors hover:bg-[#BFA28C] hover:text-white"
-              onclick="selectPesananStatusFilter('Pembayaran Ditolak')">Pembayaran Ditolak</li>
+              onclick="selectPesananStatusFilter('Pembayaran Dibatalkan')">Pembayaran Dibatalkan</li>
             <li class="pesanan-status-option cursor-pointer px-4 py-2.5 text-sm font-medium text-[#5c4432] transition-colors hover:bg-[#BFA28C] hover:text-white"
-              onclick="selectPesananStatusFilter('Konfirmasi Ulang')">Konfirmasi Ulang</li>
+              onclick="selectPesananStatusFilter('Pembayaran Kedaluwarsa')">Pembayaran Kedaluwarsa</li>
           </ul>
           <input type="hidden" id="pesanan-filter-status" value="">
         </div>

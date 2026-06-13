@@ -1,5 +1,6 @@
 <?php
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Pembeli\CheckoutController as BuyerCheckoutController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\KategoriController as AdminKategoriController;
@@ -24,6 +25,9 @@ Route::get('/checkout', function () {
 Route::post('/checkout/charge',  [CheckoutController::class, 'charge'])->name('checkout.charge');
 Route::post('/checkout/status',  [CheckoutController::class, 'checkStatus'])->name('checkout.status');
 
+// Midtrans Webhook — CSRF dinonaktifkan via VerifyCsrfToken $except
+Route::post('/payment/notification', [BuyerCheckoutController::class, 'notification'])->name('payment.notification');
+
 // Cart
 Route::get('/cart', [CartController::class, 'index'])->name('cart');
 Route::post('/cart/add', [CartController::class, 'add'])->name('cart.add');
@@ -33,6 +37,8 @@ Route::post('/cart/update', [CartController::class, 'update'])->name('cart.updat
 Route::get('/profile', [ProfileController::class, 'index'])->name('profile');
 Route::put('/profile', [ProfileController::class, 'update'])->name('profile.update');
 Route::put('/profile/password', [ProfileController::class, 'updatePassword'])->name('profile.password.update');
+Route::post('/profile/order/{id}/cancel', [ProfileController::class, 'cancelOrder'])->name('profile.order.cancel');
+Route::post('/profile/order/{id}/snap-token', [ProfileController::class, 'refreshSnapToken'])->name('profile.order.snap-token');
 Route::post('/login', [LoginController::class, 'loginSubmit'])->name('login.submit');
 Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 
