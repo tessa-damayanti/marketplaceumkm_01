@@ -10,6 +10,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap"
     rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   @vite(['resources/css/app.css', 'resources/css/admin-dashboard.css', 'resources/js/app.js'])
 </head>
 
@@ -181,6 +182,7 @@
       document.getElementById('dash-orders-tbody').innerHTML = recent.map(o => `
         <tr>
           <td class="id-cell">${o.id}</td>
+          <td>${o.tanggal}</td>
           <td>
             <div class="flex items-center gap-3">
               <div class="h-8 w-8 rounded-full border border-[#e2d4c5] bg-[#fbf8f5] flex items-center justify-center overflow-hidden shrink-0">
@@ -189,10 +191,76 @@
               <span class="font-medium text-[#5c4432]">${o.nama}</span>
             </div>
           </td>
-          <td>${o.items.map(i => i.produk).join(', ')}</td>
           <td>${statusBadge(o.status)}</td>
-          <td>${rp(o.items.reduce((s, i) => s + i.harga * i.qty, 0))}</td>
+          <td>${rp(o.total ?? o.items.reduce((s, i) => s + i.harga * i.qty, 0))}</td>
         </tr>`).join('');
+
+      renderSalesChart();
+    }
+
+    let salesChartInstance = null;
+    function renderSalesChart() {
+      const ctx = document.getElementById('salesChart');
+      if (!ctx) return;
+
+      const dataPerBulan = {
+        'Jan': 0, 'Feb': 0, 'Mar': 0, 'Apr': 0,
+        'Mei': 0, 'Jun': 0, 'Jul': 0, 'Agt': 0,
+        'Sep': 0, 'Okt': 0, 'Nov': 0, 'Des': 0
+      };
+
+      const namaBulan = Object.keys(dataPerBulan);
+
+      pesananList.forEach(p => {
+        if (p.status !== 'Pembayaran Berhasil') return;
+        
+        const parts = p.tanggal.split('-');
+        if (parts.length === 3) {
+          const indexBulan = parseInt(parts[1], 10) - 1;
+          if (indexBulan >= 0 && indexBulan < 12) {
+            dataPerBulan[namaBulan[indexBulan]] += 1; // 1 pesanan dihitung 1
+          }
+        }
+      });
+
+      if (salesChartInstance) salesChartInstance.destroy();
+
+      salesChartInstance = new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: Object.keys(dataPerBulan),
+          datasets: [{
+            label: 'Pesanan Terjual',
+            data: Object.values(dataPerBulan),
+            backgroundColor: '#5c4432', // Warna coklat tema seperti semula
+            borderRadius: 4,
+            barThickness: 24
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { display: false }
+          },
+          scales: {
+            y: {
+              beginAtZero: true,
+              suggestedMax: 100, // Paksa chart memiliki batas atas minimal 100 agar step 20 terlihat
+              grid: { color: '#f0e7dd' },
+              ticks: { 
+                color: '#9a8575', 
+                font: { family: 'Plus Jakarta Sans', weight: 'bold' },
+                stepSize: 20 // Sumbu Y akan menampilkan kelipatan 20, 40, 60 dst
+              }
+            },
+            x: {
+              grid: { display: false },
+              ticks: { color: '#9a8575', font: { family: 'Plus Jakarta Sans', weight: 'bold' } }
+            }
+          }
+        }
+      });
     }
 
     // PRODUK
@@ -758,6 +826,9 @@
     }
 
     // PESANAN
+    let pesananCurrentPage = 1;
+    const pesananPerPage = 8;
+
     function renderPesananTable() {
       if (!document.getElementById('pesanan-tbody')) return;
       const filterStatus = document.getElementById('pesanan-filter-status')?.value || '';
@@ -778,7 +849,14 @@
         return matchStatus && matchSearch && matchDate;
       });
 
-      document.getElementById('pesanan-tbody').innerHTML = list.length ? list.map(o => `
+      const totalItems = list.length;
+      const totalPages = Math.ceil(totalItems / pesananPerPage) || 1;
+      if (pesananCurrentPage > totalPages) pesananCurrentPage = totalPages;
+
+      const startIdx = (pesananCurrentPage - 1) * pesananPerPage;
+      const paginatedList = list.slice(startIdx, startIdx + pesananPerPage);
+
+      document.getElementById('pesanan-tbody').innerHTML = paginatedList.length ? paginatedList.map(o => `
         <tr>
           <td class="px-6 py-4 text-center">${o.id}</td>
           <td class="px-6 py-4">${o.tanggal}</td>
@@ -794,7 +872,20 @@
           <td class="px-6 py-4">${rp(o.items.reduce((s, i) => s + i.harga * i.qty, 0))}</td>
           <td class="px-6 py-4 text-center"><button onclick="openDetailPesanan('${o.id}')" class="inline-flex items-center justify-center rounded-xl border border-[#d8c3af] bg-[#a78d78] px-4 py-2 text-sm font-normal text-white transition hover:bg-[#8f7561]">Detail</button></td>
         </tr>`).join('') : `<tr><td colspan="6" class="px-6 py-6 text-center text-[#b7a08c]">Tidak ada pesanan ditemukan.</td></tr>`;
+
+      const endIdx = Math.min(startIdx + pesananPerPage, totalItems);
+      const infoEl = document.getElementById('pesanan-pagi-info');
+      if (infoEl) infoEl.textContent = totalItems === 0 ? '0 pesanan' : `${startIdx + 1} - ${endIdx} dari ${totalItems}`;
+
+      const prevBtn = document.getElementById('pesanan-pagi-prev');
+      const nextBtn = document.getElementById('pesanan-pagi-next');
+      if (prevBtn) prevBtn.disabled = pesananCurrentPage <= 1;
+      if (nextBtn) nextBtn.disabled = pesananCurrentPage >= totalPages;
     }
+
+    function pesananPrevPage() { if (pesananCurrentPage > 1) { pesananCurrentPage--; renderPesananTable(); } }
+    function pesananNextPage() { pesananCurrentPage++; renderPesananTable(); }
+
 
     function openDetailPesanan(id) {
       const o = pesananList.find(x => x.id === id);
@@ -825,7 +916,7 @@
               <div class="detail-field-value">${o.hp}</div>
             </div>
             <div class="detail-field">
-              <div class="detail-field-label">Tanggal Pesanan</div>
+              <div class="detail-field-label">Tanggal</div>
               <div class="detail-field-value">${o.tanggal}</div>
             </div>
             <div class="detail-field">

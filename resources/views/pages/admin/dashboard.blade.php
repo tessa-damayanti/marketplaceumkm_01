@@ -46,12 +46,26 @@
       </x-admin.metric-card>
     </div>
 
-    <div class="grid grid-cols-1 gap-6 lg:grid-cols-3">
+    <div class="flex flex-col gap-8">
 
-      <!-- Table Section -->
-      <div class="lg:col-span-2">
-        <div
-          class="surface data-surface h-full overflow-hidden rounded-2xl border border-[#e2d4c5] bg-white shadow-[0_12px_28px_rgba(92,68,50,0.06)]">
+      <!-- Section Statistik (Atas) -->
+      <div class="w-full">
+        <div class="flex flex-col overflow-hidden rounded-2xl border border-[#e2d4c5] bg-white shadow-[0_12px_28px_rgba(92,68,50,0.06)]">
+          <!-- Header -->
+          <div class="border-b border-[#e2d4c5] bg-[#f0e7dd] px-6 py-4">
+            <h2 class="text-lg font-extrabold tracking-tight text-[#5c4432]">Statistik Penjualan</h2>
+          </div>
+          <div class="flex flex-col p-6">
+            <div class="relative w-full flex flex-col justify-center min-h-[300px]">
+              <canvas id="salesChart"></canvas>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Table Section (Bawah) -->
+      <div class="w-full">
+        <div class="surface data-surface overflow-hidden rounded-2xl border border-[#e2d4c5] bg-white shadow-[0_12px_28px_rgba(92,68,50,0.06)]">
           <div class="flex items-center justify-between px-6 py-5">
             <div class="text-xl font-bold tracking-tight text-[#5c4432]">Pesanan Terbaru</div>
             <a href="{{ route('admin.pesanan') }}"
@@ -64,8 +78,8 @@
               <thead>
                 <tr>
                   <th>ID</th>
+                  <th>Tanggal</th>
                   <th>Nama</th>
-                  <th>Produk</th>
                   <th>Status</th>
                   <th>Total</th>
                 </tr>
@@ -73,59 +87,9 @@
               <tbody id="dash-orders-tbody"></tbody>
             </table>
           </div>
-          <x-admin.pagination infoId="dash-pagi-info" infoText="1 - 5 dari 6" />
         </div>
       </div>
 
-      <!-- Section -->
-      <div class="lg:col-span-1">
-        <div
-          class="flex h-full flex-col overflow-hidden rounded-2xl border border-[#e2d4c5] bg-white shadow-[0_12px_28px_rgba(92,68,50,0.06)]">
-
-          <!-- Header -->
-          <div class="border-b border-[#e2d4c5] bg-[#f0e7dd] px-6 py-4">
-            <h2 class="text-lg font-extrabold tracking-tight text-[#5c4432]">Statistik Penjualan</h2>
-          </div>
-
-          <div class="flex flex-1 flex-col p-6">
-            <div class="relative flex flex-1 flex-col items-center justify-center py-6">
-              <div class="relative flex items-center justify-center">
-
-                <svg class="h-52 w-52 transform -rotate-90 drop-shadow-sm">
-                  <circle cx="104" cy="104" r="92" stroke="#f0e7dd" stroke-width="16" fill="transparent" />
-                  <circle cx="104" cy="104" r="92" stroke="#5c4432" stroke-width="16" fill="transparent"
-                    stroke-dasharray="578" stroke-dashoffset="520" stroke-linecap="round" />
-                </svg>
-                <div class="absolute flex flex-col items-center">
-                  <span class="text-6xl font-extrabold text-[#5c4432]">6</span>
-                  <span class="text-[12px] font-bold uppercase tracking-[0.2em] text-[#9a8575]">Terjual</span>
-                </div>
-              </div>
-            </div>
-
-            <div class="mt-auto space-y-6 pt-6">
-              <div>
-                <div class="mb-2 flex justify-between text-xs font-bold">
-                  <span class="text-[#7b6858]">Stok Tersedia</span>
-                  <span class="text-[#5c4432]">117</span>
-                </div>
-                <div class="h-2.5 w-full rounded-full bg-[#f0e7dd]">
-                  <div class="h-2.5 rounded-full bg-[#d8c3af]" style="width: 85%"></div>
-                </div>
-              </div>
-              <div>
-                <div class="mb-2 flex justify-between text-xs font-bold">
-                  <span class="text-[#7b6858]">Barang Terjual</span>
-                  <span class="text-[#5c4432]">6</span>
-                </div>
-                <div class="h-2.5 w-full rounded-full bg-[#f0e7dd]">
-                  <div class="h-2.5 rounded-full bg-[#5c4432]" style="width: 5%"></div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
     </div>
   </div>
 @endsection

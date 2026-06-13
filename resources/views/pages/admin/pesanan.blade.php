@@ -62,7 +62,7 @@
           <thead>
             <tr>
               <th>ID</th>
-              <th>Tanggal Pemesanan</th>
+              <th>Tanggal</th>
               <th>Nama</th>
               <th>Status</th>
               <th>Total</th>
@@ -73,7 +73,7 @@
         </table>
       </div>
 
-      <x-admin.pagination infoId="pesanan-pagi-info" infoText="1 - 6 dari 6" />
+      <x-admin.pagination infoId="pesanan-pagi-info" infoText="1 - 8 dari 0" prevId="pesanan-pagi-prev" nextId="pesanan-pagi-next" prevFn="pesananPrevPage()" nextFn="pesananNextPage()" />
 
     </div>
   </div>

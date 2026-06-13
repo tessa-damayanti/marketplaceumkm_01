@@ -83,7 +83,9 @@ class DashboardController extends Controller
                 'raw_order_id' => $p->order_id ?? 'PSN-' . str_pad($p->id, 3, '0', STR_PAD_LEFT),
                 'tanggal' => \Carbon\Carbon::parse($p->tanggal_pesanan)->format('d-m-Y'),
                 'nama'    => $p->user?->nama_lengkap ?? 'Pembeli',
-                'avatar'  => null,
+                'avatar'  => $p->user?->foto_profile
+                    ? asset('storage/' . $p->user->foto_profile)
+                    : null,
                 'hp'      => $p->user?->no_wa ?? '-',
                 'alamat'  => $p->user?->alamat ?? '-',
                 'status'  => $p->status_label,

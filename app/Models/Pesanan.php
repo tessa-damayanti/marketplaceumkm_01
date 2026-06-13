@@ -50,19 +50,8 @@ class Pesanan extends Model
     public static function generateOrderId(): string
     {
         $dateStr = now()->format('ymd');
-        
-        $latest = self::where('order_id', 'like', "PSN-{$dateStr}-%")
-                      ->orderBy('order_id', 'desc')
-                      ->first();
-                      
-        if ($latest) {
-            $lastSequence = (int) substr($latest->order_id, -4);
-            $nextSequence = $lastSequence + 1;
-        } else {
-            $nextSequence = 1;
-        }
-        
-        return "PSN-{$dateStr}-" . str_pad($nextSequence, 4, '0', STR_PAD_LEFT);
+        $kodeAcak = strtoupper(substr(uniqid(), -4));
+        return "PSN-{$dateStr}-{$kodeAcak}";
     }
 
     public static function syncPendingStatuses(): void
@@ -113,7 +102,6 @@ class Pesanan extends Model
                     \Illuminate\Support\Facades\Log::info('[SyncStatus] ' . $orderId . ' diupdate ke: ' . $newStatus);
                 }
             } catch (\Throwable $e) {
-                // Tangkap semua error termasuk ErrorException dari library Midtrans
                 \Illuminate\Support\Facades\Log::warning('[SyncStatus] Gagal cek ' . ($orderId ?? '?') . ': ' . $e->getMessage());
             }
         }
