@@ -186,12 +186,7 @@ class CheckoutController extends Controller
      */
     private function processOrder(array $items, int $totalHarga, User $user, Request $request): array
     {
-        // Update profile user sesuai data pengiriman yang diinput saat checkout
-        $user->update([
-            'nama_lengkap' => $request->buyer_name,
-            'no_wa'        => $request->buyer_phone,
-            'alamat'       => $request->buyer_address,
-        ]);
+        // Hapus update profile, data pengiriman disimpan khusus di pesanan ini
 
         $orderId = Pesanan::generateOrderId();
 
@@ -204,6 +199,9 @@ class CheckoutController extends Controller
             'metode_pembayaran' => 'midtrans',
             'status_pembayaran' => 'pending',
             'snap_token'        => null,
+            'nama_penerima'     => $request->buyer_name,
+            'no_wa_penerima'    => $request->buyer_phone,
+            'alamat_penerima'   => $request->buyer_address,
         ]);
 
         // 2. Buat detail pesanan dan kurangi stok

@@ -45,12 +45,12 @@ class PesananController extends Controller
                 'id'      => $p->order_id ?? 'PSN-' . str_pad($p->id, 3, '0', STR_PAD_LEFT),
                 'raw_order_id' => $p->order_id ?? 'PSN-' . str_pad($p->id, 3, '0', STR_PAD_LEFT),
                 'tanggal' => \Carbon\Carbon::parse($p->tanggal_pesanan)->format('d-m-Y'),
-                'nama'    => $p->user?->nama_lengkap ?? 'Pembeli',
+                'nama'    => $p->nama_penerima ?? $p->user?->nama_lengkap ?? 'Pembeli',
                 'avatar'  => $p->user?->foto_profile
                     ? asset('storage/' . $p->user->foto_profile)
                     : null,
-                'hp'      => $p->user?->no_wa ?? '-',
-                'alamat'  => $p->user?->alamat ?? '-',
+                'hp'      => $p->no_wa_penerima ?? $p->user?->no_wa ?? '-',
+                'alamat'  => $p->alamat_penerima ?? $p->user?->alamat ?? '-',
                 'status'  => $p->status_label,
                 'total'   => $p->total_harga,
                 'items'   => $items,

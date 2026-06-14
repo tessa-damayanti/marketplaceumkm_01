@@ -202,10 +202,10 @@ class ProfileController extends Controller
                 ],
                 'item_details'     => $itemDetails,
                 'customer_details' => [
-                    'first_name' => $user?->nama_lengkap ?? '-',
-                    'phone'      => $user?->no_wa ?? '-',
+                    'first_name' => $pesanan->nama_penerima ?? $user?->nama_lengkap ?? '-',
+                    'phone'      => $pesanan->no_wa_penerima ?? $user?->no_wa ?? '-',
                     'billing_address' => [
-                        'address' => $user?->alamat ?? '-',
+                        'address' => $pesanan->alamat_penerima ?? $user?->alamat ?? '-',
                     ],
                 ],
             ];

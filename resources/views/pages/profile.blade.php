@@ -91,9 +91,9 @@
             'badgeBg'        => $badge['bg'],
             'badgeText'      => $badge['text'],
             'total'          => 'Rp' . number_format($pesanan->total_harga, 0, ',', '.'),
-            'buyer_name'     => $pesanan->buyer_name ?? $pesanan->user?->nama_lengkap ?? '-',
-            'buyer_phone'    => $pesanan->buyer_phone ?? $pesanan->user?->no_wa ?? '-',
-            'buyer_address'  => $pesanan->buyer_address ?? $pesanan->user?->alamat ?? '-',
+            'buyer_name'     => $pesanan->nama_penerima ?? $pesanan->user?->nama_lengkap ?? '-',
+            'buyer_phone'    => $pesanan->no_wa_penerima ?? $pesanan->user?->no_wa ?? '-',
+            'buyer_address'  => $pesanan->alamat_penerima ?? $pesanan->user?->alamat ?? '-',
             'items'          => $items,
         ];
     }
@@ -319,7 +319,7 @@
                         footer.appendChild(btnCancel);
                         footer.appendChild(btnPay);
 
-                    } else if (order.raw_status === 'cancel' || order.raw_status === 'expire') {
+                    } else if (order.raw_status === 'cancel' || order.raw_status === 'expire' || order.raw_status === 'settlement') {
                         footer.classList.remove('hidden');
                         footer.classList.add('flex');
 
