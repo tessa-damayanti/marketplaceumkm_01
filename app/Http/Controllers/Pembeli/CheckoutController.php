@@ -56,9 +56,16 @@ class CheckoutController extends Controller
         $user   = Auth::user();
         $userId = $user->id;
 
-        //Kumpulkan item yang akan dibeli
-        // Format: [ ['stok_id' => X, 'qty' => Y, 'harga' => Z, 'nama' => '', 'ukuran' => '']]
-        $result = $this->collectItems($request, $userId);
+        // Kumpulkan item checkout (Menerapkan Polimorfisme)
+        if ($request->has('cart_ids') && is_array($request->cart_ids) && count($request->cart_ids) > 0) {
+            $strategy = new \App\Models\CheckoutKeranjang();
+        } elseif ($request->has('stok_id')) {
+            $strategy = new \App\Models\CheckoutLangsung();
+        } else {
+            return response()->json(['error' => 'Tidak ada item yang dipilih untuk checkout.'], 422);
+        }
+
+        $result = $strategy->collectItems($request, $userId);
 
         if (isset($result['error'])) {
             return response()->json(['error' => $result['error']], $result['code']);
@@ -86,99 +93,6 @@ class CheckoutController extends Controller
         return response()->json(['snap_token' => $snapToken]);
     }
 
-    /**
-     * Kumpulkan item yang akan dibeli dari keranjang atau beli sekarang.
-     * Mengembalikan array item, atau array ['error' => ..., 'code' => ...] jika gagal.
-     */
-    private function collectItems(Request $request, int $userId): array
-    {
-        //Checkout dari keranjang
-        if ($request->has('cart_ids') && is_array($request->cart_ids) && count($request->cart_ids) > 0) {
-            return $this->collectFromCart($request, $userId);
-        }
-
-        //Beli sekarang
-        if ($request->has('stok_id')) {
-            return $this->collectBuyNow($request);
-        }
-
-        return ['error' => 'Tidak ada item yang dipilih untuk checkout.', 'code' => 422];
-    }
-
-    /**
-     * Kumpulkan item dari keranjang.
-     */
-    private function collectFromCart(Request $request, int $userId): array
-    {
-        $keranjangItems = Keranjang::with(['stok.produk', 'stok.ukuran'])
-            ->where('user_id', $userId)
-            ->whereIn('id', $request->cart_ids)
-            ->get();
-
-        if ($keranjangItems->isEmpty()) {
-            return ['error' => 'Tidak ada item keranjang yang valid.', 'code' => 422];
-        }
-
-        $items = [];
-
-        foreach ($keranjangItems as $k) {
-            if (!$k->stok || !$k->stok->produk) continue;
-
-            // Validasi stok mencukupi saat checkout
-            if ($k->jumlah > $k->stok->jumlah_stok) {
-                return [
-                    'error' => 'Stok ' . $k->stok->produk->nama . ' (' . ($k->stok->ukuran?->nama_ukuran ?? '-') . ') tidak mencukupi. Stok tersedia: ' . $k->stok->jumlah_stok,
-                    'code'  => 422,
-                ];
-            }
-
-            $items[] = [
-                'keranjang_id' => $k->id,
-                'stok_id'      => $k->stok_id,
-                'qty'          => $k->jumlah,
-                'harga'        => (int) $k->stok->produk->harga,
-                'nama'         => $k->stok->produk->nama,
-                'ukuran'       => $k->stok->ukuran ? $k->stok->ukuran->nama_ukuran : '-',
-            ];
-        }
-
-        if (empty($items)) {
-            return ['error' => 'Item checkout tidak valid.', 'code' => 422];
-        }
-
-        return $items;
-    }
-
-    /**
-     * Kumpulkan item dari beli sekarang (langsung dari halaman produk).
-     */
-    private function collectBuyNow(Request $request): array
-    {
-        $request->validate([
-            'stok_id' => 'required|exists:stoks,id',
-            'qty'     => 'required|integer|min:1',
-        ]);
-
-        $stok = Stok::with(['produk', 'ukuran'])->findOrFail($request->stok_id);
-
-        if (!$stok->produk) {
-            return ['error' => 'Produk tidak ditemukan.', 'code' => 422];
-        }
-
-        $qty = (int) $request->qty;
-        if ($qty > $stok->jumlah_stok) {
-            return ['error' => 'Stok tidak mencukupi.', 'code' => 422];
-        }
-
-        return [[
-            'keranjang_id' => null,
-            'stok_id'      => $stok->id,
-            'qty'          => $qty,
-            'harga'        => (int) $stok->produk->harga,
-            'nama'         => $stok->produk->nama,
-            'ukuran'       => $stok->ukuran ? $stok->ukuran->nama_ukuran : '-',
-        ]];
-    }
 
     /**
      * Proses pembuatan pesanan, detail, pengurangan stok, dan generate Snap Token.
@@ -257,11 +171,10 @@ class CheckoutController extends Controller
     }
 
     //Webhook handler dipanggil otomatis oleh server Midtrans setiap kali status transaksi berubah.
-
     public function notification(Request $request)
     {
         $this->boot();
-
+        
         try {
             $notif    = new Notification();
             $orderId  = $notif->order_id;
