@@ -516,7 +516,23 @@
         }
 
         document.addEventListener('DOMContentLoaded', function() {
-            switchTab('akun');
+            const urlParams = new URLSearchParams(window.location.search);
+            const tabParam = urlParams.get('tab');
+            const pageParam = urlParams.get('page');
+            
+            if (tabParam && ['akun', 'riwayat', 'password'].includes(tabParam)) {
+                switchTab(tabParam);
+            } else if (pageParam) {
+                switchTab('riwayat');
+            } else {
+                switchTab('akun');
+            }
+
+            // Bersihkan URL dari parameter (?page=... &tab=...) agar terlihat rapi seperti di admin
+            if (window.history.replaceState && window.location.search) {
+                const cleanUrl = window.location.protocol + "//" + window.location.host + window.location.pathname;
+                window.history.replaceState({path: cleanUrl}, '', cleanUrl);
+            }
 
             // Auto-polling untuk pesanan pending agar status terupdate otomatis tanpa webhook
             const pendingOrders = Object.values(orders).filter(o => o.raw_status === 'pending');

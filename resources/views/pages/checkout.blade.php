@@ -91,7 +91,7 @@
 <script src="https://app.sandbox.midtrans.com/snap/snap.js" data-client-key="{{ config('midtrans.client_key') }}"></script>
 <script>
 const CHARGE_URL = '{{ route("checkout.charge") }}';
-const PROFILE_URL = '{{ route("profile") }}';
+const PROFILE_URL = '{{ route("profile") }}?tab=riwayat';
 const CSRF       = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
 
 const payBtn = document.getElementById('pay-btn');

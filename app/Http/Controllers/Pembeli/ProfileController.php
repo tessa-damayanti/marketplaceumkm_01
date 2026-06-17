@@ -27,8 +27,9 @@ class ProfileController extends Controller
 
         $pesanans = Pesanan::with(['detailPesanans.stok.produk', 'detailPesanans.stok.ukuran'])
             ->where('user_id', $user->id)
+            ->where('created_at', '>=', now()->subMonths(3))
             ->orderByDesc('created_at')
-            ->get();
+            ->paginate(10);
 
         return view('pages.profile', compact('user', 'pesanans'));
     }

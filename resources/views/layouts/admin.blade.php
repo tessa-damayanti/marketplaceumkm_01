@@ -319,9 +319,7 @@
           <svg class="h-3 w-3" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg>
         </button>`;
 
-        for (let i = 1; i <= totalPages; i++) {
-          btnsHtml += `<button class="pagi-btn ${i === produkCurrentPage ? 'active' : ''}" onclick="produkCurrentPage = ${i}; renderProdukTable()">${i}</button>`;
-        }
+        btnsHtml += `<button class="pagi-btn active">${produkCurrentPage}</button>`;
 
         btnsHtml += `<button class="pagi-btn" ${produkCurrentPage === totalPages ? 'disabled style="opacity:0.5;cursor:not-allowed;"' : ''} onclick="produkCurrentPage++; renderProdukTable()">
           <svg class="h-3 w-3" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 5l6 6-6 6"/></svg>
@@ -571,9 +569,7 @@
           <svg class="h-3 w-3" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg>
         </button>`;
 
-        for (let i = 1; i <= totalPages; i++) {
-          btnsHtml += `<button class="pagi-btn ${i === katCurrentPage ? 'active' : ''}" onclick="katCurrentPage = ${i}; renderKategoriTable()">${i}</button>`;
-        }
+        btnsHtml += `<button class="pagi-btn active">${katCurrentPage}</button>`;
 
         btnsHtml += `<button class="pagi-btn" ${katCurrentPage === totalPages ? 'disabled style="opacity:0.5;cursor:not-allowed;"' : ''} onclick="katCurrentPage++; renderKategoriTable()">
           <svg class="h-3 w-3" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 5l6 6-6 6"/></svg>
@@ -738,9 +734,7 @@
           <svg class="h-3 w-3" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg>
         </button>`;
 
-        for (let i = 1; i <= totalPages; i++) {
-          btnsHtml += `<button class="pagi-btn ${i === stokCurrentPage ? 'active' : ''}" onclick="stokCurrentPage = ${i}; renderStokTable()">${i}</button>`;
-        }
+        btnsHtml += `<button class="pagi-btn active">${stokCurrentPage}</button>`;
 
         btnsHtml += `<button class="pagi-btn" ${stokCurrentPage === totalPages ? 'disabled style="opacity:0.5;cursor:not-allowed;"' : ''} onclick="stokCurrentPage++; renderStokTable()">
           <svg class="h-3 w-3" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 5l6 6-6 6"/></svg>
@@ -881,6 +875,9 @@
       const nextBtn = document.getElementById('pesanan-pagi-next');
       if (prevBtn) prevBtn.disabled = pesananCurrentPage <= 1;
       if (nextBtn) nextBtn.disabled = pesananCurrentPage >= totalPages;
+
+      const activeBtn = document.querySelector('#page-pesanan .pagi-btn.active');
+      if (activeBtn) activeBtn.textContent = pesananCurrentPage;
     }
 
     function pesananPrevPage() { if (pesananCurrentPage > 1) { pesananCurrentPage--; renderPesananTable(); } }

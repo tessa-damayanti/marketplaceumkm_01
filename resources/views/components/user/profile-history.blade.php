@@ -115,11 +115,46 @@
                 </tbody>
             </table>
         </div>
+        @if ($pesanans->hasPages())
+            <div class="flex items-center justify-between border-t border-[#f0e7dd] bg-white px-6 py-4">
+                <span class="text-xs font-semibold text-[#9a8575]">
+                    {{ $pesanans->firstItem() ?? 0 }} - {{ $pesanans->lastItem() ?? 0 }} dari {{ $pesanans->total() }}
+                </span>
+                <div class="flex items-center gap-1.5">
+                    {{-- Tombol Prev --}}
+                    @if ($pesanans->onFirstPage())
+                        <span class="flex h-7 w-7 cursor-not-allowed items-center justify-center rounded-lg border border-[#f0e7dd] text-[#d8c3af]">
+                            <svg class="h-3 w-3" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6" /></svg>
+                        </span>
+                    @else
+                        <a href="{{ $pesanans->previousPageUrl() }}" class="flex h-7 w-7 items-center justify-center rounded-lg border border-[#f0e7dd] bg-white text-[#9a8575] transition-colors hover:bg-[#fbf8f5] hover:text-[#BFA28C]">
+                            <svg class="h-3 w-3" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6" /></svg>
+                        </a>
+                    @endif
 
-        <div class="flex items-center justify-between border-t border-[#eee5dc] px-6 py-4">
-            <p class="text-xs text-[#8b6f58]">
-                {{ $pesanans->count() }} pesanan
-            </p>
-        </div>
+                    {{-- Halaman Saat Ini (Hanya menampilkan 1 kotak aktif) --}}
+                    <span class="flex h-7 w-7 items-center justify-center rounded-lg bg-[#BFA28C] text-xs font-bold text-white shadow-sm">
+                        {{ $pesanans->currentPage() }}
+                    </span>
+
+                    {{-- Tombol Next --}}
+                    @if ($pesanans->hasMorePages())
+                        <a href="{{ $pesanans->nextPageUrl() }}" class="flex h-7 w-7 items-center justify-center rounded-lg border border-[#f0e7dd] bg-white text-[#9a8575] transition-colors hover:bg-[#fbf8f5] hover:text-[#BFA28C]">
+                            <svg class="h-3 w-3" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 5l6 6-6 6" /></svg>
+                        </a>
+                    @else
+                        <span class="flex h-7 w-7 cursor-not-allowed items-center justify-center rounded-lg border border-[#f0e7dd] text-[#d8c3af]">
+                            <svg class="h-3 w-3" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 5l6 6-6 6" /></svg>
+                        </span>
+                    @endif
+                </div>
+            </div>
+        @elseif ($pesanans->count() > 0)
+            <div class="flex items-center justify-between border-t border-[#f0e7dd] bg-white px-6 py-4">
+                <span class="text-xs font-semibold text-[#9a8575]">
+                    1 - {{ $pesanans->count() }} dari {{ $pesanans->count() }}
+                </span>
+            </div>
+        @endif
     </div>
 </div>

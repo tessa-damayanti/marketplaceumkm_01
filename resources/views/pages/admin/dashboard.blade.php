@@ -65,7 +65,7 @@
 
       <!-- Table Section (Bawah) -->
       <div class="w-full">
-        <div class="surface data-surface overflow-hidden rounded-2xl border border-[#e2d4c5] bg-white shadow-[0_12px_28px_rgba(92,68,50,0.06)]">
+        <div class="flex flex-col overflow-hidden rounded-2xl border border-[#e2d4c5] bg-white shadow-[0_12px_28px_rgba(92,68,50,0.06)]">
           <div class="flex items-center justify-between px-6 py-5">
             <div class="text-xl font-bold tracking-tight text-[#5c4432]">Pesanan Terbaru</div>
             <a href="{{ route('admin.pesanan') }}"
