@@ -14,7 +14,8 @@
                     data-price="{{ $item['price'] }}"
                     data-qty="{{ $item['qty'] }}"
                     data-key="{{ $itemKey }}"
-                    @if($item['stock'] <= 0) disabled @endif>
+                    @if($item['stock'] <= 0) disabled @endif
+                    data-stok="{{ $item['stok_id'] }}">
             </div>
 
             <!-- Gambar -->

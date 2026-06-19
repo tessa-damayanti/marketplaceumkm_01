@@ -39,7 +39,7 @@
 
             <!-- BUYER INFO -->
             <h4 class="mb-4 text-lg font-extrabold text-[#5c4432]">
-                Informasi
+                Informasi Pengiriman
             </h4>
 
             <div class="rounded-xl bg-[#fbf8f5] p-5">

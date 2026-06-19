@@ -56,20 +56,66 @@ class CheckoutController extends Controller
 
         // Kumpulkan item checkout
         if ($request->has('cart_ids') && is_array($request->cart_ids) && count($request->cart_ids) > 0) {
-            $strategy = new \App\Models\CheckoutKeranjang();
+            $keranjangItems = Keranjang::with(['stok.produk', 'stok.ukuran'])
+                ->where('user_id', $userId)
+                ->whereIn('id', $request->cart_ids)
+                ->get();
+
+            if ($keranjangItems->isEmpty()) {
+                return response()->json(['error' => 'Tidak ada item keranjang yang valid.'], 422);
+            }
+
+            $items = [];
+            foreach ($keranjangItems as $k) {
+                if (!$k->stok || !$k->stok->produk) continue;
+
+                if ($k->jumlah > $k->stok->jumlah_stok) {
+                    return response()->json([
+                        'error' => 'Stok ' . $k->stok->produk->nama . ' (' . ($k->stok->ukuran?->nama_ukuran ?? '-') . ') tidak mencukupi. Stok tersedia: ' . $k->stok->jumlah_stok
+                    ], 422);
+                }
+
+                $items[] = [
+                    'keranjang_id' => $k->id,
+                    'stok_id'      => $k->stok->id,
+                    'qty'          => $k->jumlah,
+                    'harga'        => (int) $k->stok->produk->harga,
+                    'nama'         => $k->stok->produk->nama,
+                    'ukuran'       => $k->stok->ukuran ? $k->stok->ukuran->nama_ukuran : '-',
+                ];
+            }
+
+            if (empty($items)) {
+                return response()->json(['error' => 'Item checkout tidak valid.'], 422);
+            }
         } elseif ($request->has('stok_id')) {
-            $strategy = new \App\Models\CheckoutLangsung();
+            $request->validate([
+                'stok_id' => 'required|exists:stoks,id',
+                'qty'     => 'required|integer|min:1',
+            ]);
+
+            $stok = Stok::with(['produk', 'ukuran'])->findOrFail($request->stok_id);
+
+            if (!$stok->produk) {
+                return response()->json(['error' => 'Produk tidak ditemukan.'], 422);
+            }
+
+            $qty = (int) $request->qty;
+            if ($qty > $stok->jumlah_stok) {
+                return response()->json(['error' => 'Stok tidak mencukupi.'], 422);
+            }
+
+            $items = [[
+                'keranjang_id' => null,
+                'stok_id'      => $stok->id,
+                'qty'          => $qty,
+                'harga'        => (int) $stok->produk->harga,
+                'nama'         => $stok->produk->nama,
+                'ukuran'       => $stok->ukuran ? $stok->ukuran->nama_ukuran : '-',
+            ]];
         } else {
             return response()->json(['error' => 'Tidak ada item yang dipilih untuk checkout.'], 422);
         }
-
-        $result = $strategy->collectItems($request, $userId);
-
-        if (isset($result['error'])) {
-            return response()->json(['error' => $result['error']], $result['code']);
-        }
-
-        $items = $result;
 
         //Hitung total dan validasi
         $totalHarga = collect($items)->sum(fn($i) => $i['harga'] * $i['qty']);

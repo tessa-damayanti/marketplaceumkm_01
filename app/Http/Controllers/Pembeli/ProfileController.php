@@ -14,7 +14,7 @@ use Midtrans\Snap;
 
 class ProfileController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
         if (session('role') !== 'buyer') {
             return redirect()->route('login')->with('error', 'Silakan login terlebih dahulu untuk mengakses profil.');
@@ -25,13 +25,21 @@ class ProfileController extends Controller
         // Sinkronisasi status pembayaran
         Pesanan::syncPendingStatuses();
 
-        $pesanans = Pesanan::with(['detailPesanans.stok.produk', 'detailPesanans.stok.ukuran'])
-            ->where('user_id', $user->id)
-            ->where('created_at', '>=', now()->subMonths(3))
-            ->orderByDesc('created_at')
-            ->paginate(10);
+        $status = $request->query('status', 'all');
 
-        return view('pages.profile', compact('user', 'pesanans'));
+        $query = Pesanan::with(['detailPesanans.stok.produk', 'detailPesanans.stok.ukuran'])
+            ->where('user_id', $user->id)
+            ->where('created_at', '>=', now()->subMonths(3));
+
+        if ($status !== 'all') {
+            $query->where('status_pembayaran', $status);
+        }
+
+        $pesanans = $query->orderByDesc('created_at')
+            ->paginate(10)
+            ->appends($request->query());
+
+        return view('pages.profile', compact('user', 'pesanans', 'status'));
     }
 
     public function update(Request $request)

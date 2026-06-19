@@ -146,25 +146,7 @@
             const itemChecks = document.querySelectorAll('.item-check');
             
             const savedStates = JSON.parse(localStorage.getItem('cartCheckedStates')) || {};
-            
-            itemChecks.forEach((item) => {
-                if (item.disabled) {
-                    item.checked = false;
-                    return;
-                }
-                const key = item.dataset.key;
-                if (savedStates[key] === undefined) {
-                    item.checked = true;
-                } else {
-                    item.checked = savedStates[key];
-                }
-            });
-
-            const activeChecks = [...itemChecks].filter(cb => !cb.disabled);
-            const allChecked = activeChecks.length > 0 && activeChecks.every((cb) => cb.checked);
-            checkAll.checked = allChecked;
-
-            updateCartTotal();
+            const reorderedStoks = JSON.parse(localStorage.getItem('reordered_stoks'));
 
             function saveStates() {
                 const states = {};
@@ -173,6 +155,40 @@
                 });
                 localStorage.setItem('cartCheckedStates', JSON.stringify(states));
             }
+            
+            if (reorderedStoks && Array.isArray(reorderedStoks)) {
+                // Centang khusus item yang baru saja dibeli ulang
+                itemChecks.forEach((item) => {
+                    if (item.disabled) {
+                        item.checked = false;
+                    } else {
+                        const stokId = parseInt(item.dataset.stok);
+                        item.checked = reorderedStoks.includes(stokId);
+                    }
+                });
+                localStorage.removeItem('reordered_stoks');
+                saveStates(); 
+            } else {
+                // Perilaku default: baca dari savedStates atau centang semua yang aktif
+                itemChecks.forEach((item) => {
+                    if (item.disabled) {
+                        item.checked = false;
+                        return;
+                    }
+                    const key = item.dataset.key;
+                    if (savedStates[key] === undefined) {
+                        item.checked = true;
+                    } else {
+                        item.checked = savedStates[key];
+                    }
+                });
+            }
+
+            const activeChecks = [...itemChecks].filter(cb => !cb.disabled);
+            const allChecked = activeChecks.length > 0 && activeChecks.every((cb) => cb.checked);
+            if (checkAll) checkAll.checked = allChecked;
+
+            updateCartTotal();
 
             checkAll.addEventListener('change', function() {
                 itemChecks.forEach((item) => { 

@@ -54,7 +54,19 @@
 
 @section('content')
 <div class="min-h-screen px-5 py-8 md:px-10">
-    <div class="mx-auto max-w-6xl overflow-hidden rounded-[28px] border border-[#e5d8ca] bg-white shadow-[0_14px_45px_rgba(92,68,50,0.10)]">
+    <div class="mx-auto max-w-6xl">
+        
+        <!-- Back Button -->
+        <div class="mb-4">
+            <button type="button" onclick="window.history.back()" class="inline-flex items-center gap-2 text-sm text-[#8c7563] transition hover:text-[#A98B76]">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
+                </svg>
+                Kembali
+            </button>
+        </div>
+
+        <div class="overflow-hidden rounded-[28px] border border-[#e5d8ca] bg-white shadow-[0_14px_45px_rgba(92,68,50,0.10)]">
 
         <div class="border-b border-[#e5d8ca] bg-[#efe4d8] px-5 py-4 sm:px-8 sm:py-6">
             <h1 class="text-xl font-bold text-[#5c4432] sm:text-3xl">Beli Sekarang</h1>

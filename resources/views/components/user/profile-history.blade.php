@@ -16,19 +16,19 @@
     <!-- Tab Status Berdasarkan Permintaan User -->
     <div class="mb-6">
         <div class="flex w-full gap-1">
-            <button onclick="filterHistoryTab('all')" id="btn-subtab-all" class="subtab-btn flex-1 rounded-lg border py-2 text-xs font-bold transition-all duration-200" style="background:#e8ded3; color:#5c4432; border-color:#BFA28C;">
+            <button onclick="window.location.href='?tab=riwayat&status=all'" id="btn-subtab-all" class="subtab-btn flex-1 rounded-lg border py-2 text-xs transition-all duration-200 {{ $status === 'all' ? 'font-bold bg-[#e8ded3] text-[#5c4432] border-[#BFA28C]' : 'font-medium bg-transparent text-[#8b6f58] border-[#e8ded3]' }}">
                 Semua
             </button>
-            <button onclick="filterHistoryTab('pending')" id="btn-subtab-pending" class="subtab-btn flex-1 rounded-lg border py-2 text-xs font-medium transition-all duration-200" style="background:transparent; color:#8b6f58; border-color:#e8ded3;">
+            <button onclick="window.location.href='?tab=riwayat&status=pending'" id="btn-subtab-pending" class="subtab-btn flex-1 rounded-lg border py-2 text-xs transition-all duration-200 {{ $status === 'pending' ? 'font-bold bg-[#e8ded3] text-[#5c4432] border-[#BFA28C]' : 'font-medium bg-transparent text-[#8b6f58] border-[#e8ded3]' }}">
                 Menunggu Pembayaran
             </button>
-            <button onclick="filterHistoryTab('settlement')" id="btn-subtab-settlement" class="subtab-btn flex-1 rounded-lg border py-2 text-xs font-medium transition-all duration-200" style="background:transparent; color:#8b6f58; border-color:#e8ded3;">
+            <button onclick="window.location.href='?tab=riwayat&status=settlement'" id="btn-subtab-settlement" class="subtab-btn flex-1 rounded-lg border py-2 text-xs transition-all duration-200 {{ $status === 'settlement' ? 'font-bold bg-[#e8ded3] text-[#5c4432] border-[#BFA28C]' : 'font-medium bg-transparent text-[#8b6f58] border-[#e8ded3]' }}">
                 Pembayaran Berhasil
             </button>
-            <button onclick="filterHistoryTab('cancel')" id="btn-subtab-cancel" class="subtab-btn flex-1 rounded-lg border py-2 text-xs font-medium transition-all duration-200" style="background:transparent; color:#8b6f58; border-color:#e8ded3;">
+            <button onclick="window.location.href='?tab=riwayat&status=cancel'" id="btn-subtab-cancel" class="subtab-btn flex-1 rounded-lg border py-2 text-xs transition-all duration-200 {{ $status === 'cancel' ? 'font-bold bg-[#e8ded3] text-[#5c4432] border-[#BFA28C]' : 'font-medium bg-transparent text-[#8b6f58] border-[#e8ded3]' }}">
                 Pembayaran Dibatalkan
             </button>
-            <button onclick="filterHistoryTab('expire')" id="btn-subtab-expire" class="subtab-btn flex-1 rounded-lg border py-2 text-xs font-medium transition-all duration-200" style="background:transparent; color:#8b6f58; border-color:#e8ded3;">
+            <button onclick="window.location.href='?tab=riwayat&status=expire'" id="btn-subtab-expire" class="subtab-btn flex-1 rounded-lg border py-2 text-xs transition-all duration-200 {{ $status === 'expire' ? 'font-bold bg-[#e8ded3] text-[#5c4432] border-[#BFA28C]' : 'font-medium bg-transparent text-[#8b6f58] border-[#e8ded3]' }}">
                 Pembayaran Kadaluwarsa
             </button>
         </div>
@@ -41,7 +41,9 @@
                 <tr class="border-b border-[#eee5dc] bg-[#fcfaf8] text-sm font-bold text-[#5c4432]">
                     <th class="px-6 py-5 whitespace-nowrap">ID. Pesanan</th>
                     <th class="px-6 py-5 whitespace-nowrap">Produk</th>
+                    @if ($status === 'all')
                     <th class="px-6 py-5 text-center whitespace-nowrap col-status">Status Pembayaran</th>
+                    @endif
                     <th class="px-6 py-5 whitespace-nowrap">Total</th>
                     <th class="px-6 py-5 text-center whitespace-nowrap">Aksi</th>
                 </tr>
@@ -65,7 +67,7 @@
                                 }
                             }
                         @endphp
-                        <tr class="border-b border-[#eee5dc] order-row" data-status="{{ $pesanan->status_pembayaran }}">
+                        <tr class="border-b border-[#eee5dc] order-row">
                             <td class="px-6 py-6 font-bold whitespace-nowrap">{{ $pesanan->order_id ?? 'PSN-' . str_pad($pesanan->id, 3, '0', STR_PAD_LEFT) }}</td>
 
                             <td class="px-6 py-6">
@@ -82,11 +84,13 @@
                                 </div>
                             </td>
 
+                            @if ($status === 'all')
                             <td class="px-6 py-6 text-center col-status">
                                 <span class="inline-flex whitespace-nowrap rounded-full {{ $badge['bg'] }} px-5 py-2 text-sm font-semibold {{ $badge['text'] }}">
                                     {{ $pesanan->status_label }}
                                 </span>
                             </td>
+                            @endif
 
                             <td class="px-6 py-6 text-base font-bold whitespace-nowrap text-[#5c4432]">
                                 Rp{{ number_format($pesanan->total_harga, 0, ',', '.') }}
@@ -108,7 +112,7 @@
                     @endforelse
 
                     <tr id="empty-history-row" class="{{ $pesanans->isEmpty() ? '' : 'hidden' }}">
-                        <td id="empty-history-cell" colspan="5" class="px-6 py-12 text-center text-[#8b7a6d]">
+                        <td id="empty-history-cell" colspan="{{ $status === 'all' ? 5 : 4 }}" class="px-6 py-12 text-center text-[#8b7a6d]">
                             Belum ada riwayat pembelian.
                         </td>
                     </tr>

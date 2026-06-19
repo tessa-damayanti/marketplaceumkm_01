@@ -23,7 +23,7 @@
             {{-- Konten --}}
             <div class="lg:col-span-9">
                 <x-user.profile-account />
-                <x-user.profile-history :pesanans="$pesanans" />
+                <x-user.profile-history :pesanans="$pesanans" :status="$status" />
                 <x-user.profile-password />
             </div>
 
@@ -116,60 +116,6 @@
             console.error("Gagal melakukan parse orders-data:", e);
         }
 
-        function filterHistoryTab(status) {
-            const buttons = document.querySelectorAll('.subtab-btn');
-            buttons.forEach(btn => {
-                btn.style.background  = 'transparent';
-                btn.style.color       = '#8b6f58';
-                btn.style.borderColor = 'transparent';
-                btn.style.fontWeight  = '500';
-            });
-
-            const activeBtn = document.getElementById('btn-subtab-' + status);
-            if (activeBtn) {
-                activeBtn.style.background  = '#e8ded3';
-                activeBtn.style.color       = '#5c4432';
-                activeBtn.style.borderColor = '#BFA28C';
-                activeBtn.style.fontWeight  = '700';
-            }
-
-            const rows = document.querySelectorAll('.order-row');
-            let visibleCount = 0;
-
-            rows.forEach(row => {
-                const rowStatus = row.getAttribute('data-status');
-                if (status === 'all' || rowStatus === status) {
-                    row.classList.remove('hidden');
-                    visibleCount++;
-                } else {
-                    row.classList.add('hidden');
-                }
-            });
-
-            // Show/hide status column
-            const statusCols = document.querySelectorAll('.col-status');
-            statusCols.forEach(col => {
-                if (status === 'all') {
-                    col.classList.remove('hidden');
-                } else {
-                    col.classList.add('hidden');
-                }
-            });
-
-            // Handle empty state
-            const emptyRow = document.getElementById('empty-history-row');
-            const emptyCell = document.getElementById('empty-history-cell');
-            if (visibleCount === 0) {
-                if (emptyRow && emptyCell) {
-                    emptyCell.colSpan = (status === 'all') ? 5 : 4;
-                    emptyRow.classList.remove('hidden');
-                }
-            } else {
-                if (emptyRow) {
-                    emptyRow.classList.add('hidden');
-                }
-            }
-        }
 
         function switchTab(tabId) {
             const tabAkun     = document.getElementById('tab-akun');
@@ -207,10 +153,6 @@
             if (activeBtn) {
                 activeBtn.classList.remove(...inactive);
                 activeBtn.classList.add(...active);
-            }
-
-            if (tabId === 'riwayat') {
-                filterHistoryTab('all');
             }
         }
 
@@ -375,10 +317,10 @@
                     const data = await res.json();
                     if (res.ok && data.success) {
                         if (typeof window.showCustomAlert === 'function') {
-                            window.showCustomAlert('Pesanan berhasil dibatalkan.', 'success', () => { window.location.reload(); });
+                            window.showCustomAlert('Pesanan berhasil dibatalkan.', 'success', () => { window.location.href = '?tab=riwayat&status=all'; });
                         } else {
                             alert('Pesanan berhasil dibatalkan.');
-                            window.location.reload();
+                            window.location.href = '?tab=riwayat&status=all';
                         }
                     } else {
                         const errMsg = data.error || 'Gagal membatalkan pesanan.';
@@ -415,6 +357,8 @@
                         body: formData
                     });
                 }
+                const reorderedStoks = items.map(i => i.stok_id);
+                localStorage.setItem('reordered_stoks', JSON.stringify(reorderedStoks));
                 window.location.href = '/cart';
             } catch (err) {
                 console.error(err);
@@ -495,18 +439,18 @@
             window.snap.pay(snapToken, {
                 onSuccess: function(result){
                     if (typeof window.showCustomAlert === 'function') {
-                        window.showCustomAlert('Pembayaran berhasil! Terima kasih.', 'success', () => { window.location.reload(); });
+                        window.showCustomAlert('Pembayaran berhasil! Terima kasih.', 'success', () => { window.location.href = '?tab=riwayat&status=all'; });
                     } else {
                         alert('Pembayaran berhasil! Terima kasih.');
-                        window.location.reload();
+                        window.location.href = '?tab=riwayat&status=all';
                     }
                 },
                 onPending: function(result){
                     if (typeof window.showCustomAlert === 'function') {
-                        window.showCustomAlert('Menunggu pembayaran Anda!', 'success', () => { window.location.reload(); });
+                        window.showCustomAlert('Menunggu pembayaran Anda!', 'success', () => { window.location.href = '?tab=riwayat&status=all'; });
                     } else {
                         alert('Menunggu pembayaran Anda!');
-                        window.location.reload();
+                        window.location.href = '?tab=riwayat&status=all';
                     }
                 },
                 onError: function(result){
@@ -526,10 +470,11 @@
             const urlParams = new URLSearchParams(window.location.search);
             const tabParam = urlParams.get('tab');
             const pageParam = urlParams.get('page');
+            const statusParam = urlParams.get('status') || '{{ $status ?? "all" }}';
             
             if (tabParam && ['akun', 'riwayat', 'password'].includes(tabParam)) {
                 switchTab(tabParam);
-            } else if (pageParam) {
+            } else if (pageParam || urlParams.get('status')) {
                 switchTab('riwayat');
             } else {
                 switchTab('akun');
