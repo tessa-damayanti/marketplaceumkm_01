@@ -550,7 +550,7 @@ tbody tr:hover td {
 .search-input {
   width: 100%;
   min-height: 42px;
-  padding: 10px 16px;
+  padding: 10px 16px 10px 38px;
   border: 1px solid var(--border-strong);
   border-radius: 8px;
   background: #ffffff;
@@ -561,7 +561,14 @@ tbody tr:hover td {
 }
 
 .search-icon {
-  display: none;
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 20px;
+  height: 20px;
+  color: #9b8778;
+  pointer-events: none;
 }
 
 .search-input::placeholder {

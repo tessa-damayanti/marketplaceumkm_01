@@ -84,7 +84,7 @@
         $ordersData[$pesanan->id] = [
             'id'             => $pesanan->order_id ?? 'PSN-' . str_pad($pesanan->id, 3, '0', STR_PAD_LEFT),
             'raw_id'         => $pesanan->id,
-            'date'           => \Carbon\Carbon::parse($pesanan->tanggal_pesanan)->translatedFormat('d M Y, H:i') . ' WIB',
+            'date'           => \Carbon\Carbon::parse($pesanan->tanggal_pesanan)->setTimezone('Asia/Jakarta')->translatedFormat('d M Y, H:i') . ' WIB',
             'status'         => $label,
             'raw_status'     => $pesanan->status_pembayaran,
             'snap_token'     => $pesanan->snap_token,
@@ -466,6 +466,13 @@
 
                 if (res.ok && data.snap_token) {
                     snapToken = data.snap_token;
+                    // Update order_id di memory agar polling berikutnya pakai ID terbaru
+                    if (data.new_order_id) {
+                        const orderEntry = Object.values(orders).find(o => o.raw_id === rawId);
+                        if (orderEntry) {
+                            orderEntry.id = data.new_order_id;
+                        }
+                    }
                 } else {
                     console.warn('[payExistingOrder] Gagal refresh token, pakai token lama:', data.error);
                     // Lanjut dengan token lama jika ada

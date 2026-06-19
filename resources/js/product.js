@@ -310,3 +310,12 @@ window.increaseQty = increaseQty;
 window.decreaseQty = decreaseQty;
 window.addToCart = addToCart;
 window.buyNow = buyNow;
+
+window.addEventListener('pageshow', function (event) {
+    const historyTraversal = event.persisted ||
+        (typeof window.performance != 'undefined' &&
+         window.performance.navigation.type === 2);
+    if (historyTraversal) {
+        window.location.reload();
+    }
+});

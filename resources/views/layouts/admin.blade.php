@@ -126,11 +126,11 @@
     function statusBadge(s) {
       const colors = {
         'Pembayaran Berhasil': 'bg-[#dcfce7] text-[#15803d]',
-        'Pembayaran Ditolak': 'bg-[#fee2e2] text-[#dc2626]',
-        'Konfirmasi Ulang': 'bg-[#e0e7ff] text-[#4338ca]',
-        'Menunggu Verifikasi': 'bg-[#fff1bd] text-[#b45a00]'
+        'Pembayaran Dibatalkan': 'bg-[#fee2e2] text-[#dc2626]',
+        'Pembayaran Kedaluwarsa': 'bg-[#f3f4f6] text-[#6b7280]',
+        'Menunggu Pembayaran': 'bg-[#fff1bd] text-[#b45a00]',
       };
-      return `<span class="inline-flex items-center rounded-full ${colors[s] || colors['Menunggu Verifikasi']} px-3 py-1 text-sm font-medium">${s}</span>`;
+      return `<span class="inline-flex items-center rounded-full ${colors[s] || 'bg-[#fff1bd] text-[#b45a00]'} px-3 py-1 text-sm font-medium">${s}</span>`;
     }
 
     function openAdminModal(id) {

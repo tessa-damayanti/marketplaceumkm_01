@@ -49,14 +49,14 @@ class DashboardController extends Controller
 
     private function getKategoriData()
     {
-        return Kategori::orderBy('id', 'asc')->get()->map(function ($k) {
+        return Kategori::orderBy('id', 'asc')->get()->map(function (Kategori $k) {
             return ['id' => $k->id, 'nama' => $k->nama];
         })->toArray();
     }
 
     private function getPesananData()
     {
-        // Sinkronisasi status pesanan pending dari Midtrans untuk dashboard admin
+        // Sinkronisasi status pesanan
         Pesanan::syncPendingStatuses();
 
         $pesanans = Pesanan::with([
@@ -65,7 +65,7 @@ class DashboardController extends Controller
             'detailPesanans.stok.ukuran',
         ])->orderByDesc('created_at')->get();
 
-        return $pesanans->map(function ($p) {
+        return $pesanans->map(function (Pesanan$p) {
             $items = $p->detailPesanans->map(function ($d) {
                 return [
                     'produk' => $d->stok?->produk?->nama ?? '-',

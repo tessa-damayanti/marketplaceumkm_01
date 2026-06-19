@@ -6,7 +6,11 @@ use Illuminate\Database\Eloquent\Model;
 
 class Stok extends Model
 {
-    protected $fillable = ['produk_id', 'ukuran_id', 'jumlah_stok'];
+    protected $fillable = [
+        'produk_id',
+        'ukuran_id',
+        'jumlah_stok'
+    ];
     public function produk()
     {
         return $this->belongsTo(Produk::class, 'produk_id');

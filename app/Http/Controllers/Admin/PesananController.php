@@ -19,7 +19,7 @@ class PesananController extends Controller
 
     private function getPesananData()
     {
-        // Sinkronisasi status pesanan pending dari Midtrans untuk halaman pesanan
+        // Sinkronisasi status pesanan untuk halaman pesanan
         \App\Models\Pesanan::syncPendingStatuses();
 
         $pesanans = \App\Models\Pesanan::with([
@@ -44,7 +44,7 @@ class PesananController extends Controller
             return [
                 'id'      => $p->order_id ?? 'PSN-' . str_pad($p->id, 3, '0', STR_PAD_LEFT),
                 'raw_order_id' => $p->order_id ?? 'PSN-' . str_pad($p->id, 3, '0', STR_PAD_LEFT),
-                'tanggal' => \Carbon\Carbon::parse($p->tanggal_pesanan)->format('d-m-Y'),
+                'tanggal' => \Carbon\Carbon::parse($p->tanggal_pesanan)->setTimezone('Asia/Jakarta')->format('d-m-Y'),
                 'nama'    => $p->nama_penerima ?? $p->user?->nama_lengkap ?? 'Pembeli',
                 'avatar'  => $p->user?->foto_profile
                     ? asset('storage/' . $p->user->foto_profile)

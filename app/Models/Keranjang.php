@@ -6,7 +6,12 @@ use Illuminate\Database\Eloquent\Model;
 
 class Keranjang extends Model
 {
-    protected $fillable = ['user_id', 'stok_id', 'jumlah', 'subtotal'];
+    protected $fillable = [
+        'user_id',
+        'stok_id',
+        'jumlah',
+        'subtotal'
+    ];
     public function user()
     {
         return $this->belongsTo(User::class, 'user_id');

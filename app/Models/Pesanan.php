@@ -6,7 +6,19 @@ use Illuminate\Database\Eloquent\Model;
 
 class Pesanan extends Model
 {
-    protected $fillable = ['order_id', 'user_id', 'tanggal_pesanan', 'total_harga', 'metode_pembayaran', 'status_pembayaran', 'snap_token', 'nama_penerima', 'no_wa_penerima', 'alamat_penerima'];
+    protected $fillable = [
+        'order_id',
+        'user_id',
+        'tanggal_pesanan',
+        'total_harga',
+        'metode_pembayaran',
+        'status_pembayaran',
+        'snap_token',
+        'nama_penerima',
+        'no_wa_penerima',
+        'alamat_penerima'
+    ];
+
     public function user()
     {
         return $this->belongsTo(User::class, 'user_id');

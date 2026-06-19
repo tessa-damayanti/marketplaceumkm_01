@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Pembeli;
 
 use App\Http\Controllers\Controller;
-
 use Illuminate\Http\Request;
 use App\Models\Keranjang;
 use App\Models\Stok;
@@ -17,7 +16,7 @@ class CartController extends Controller
             return redirect()->route('login')->with('error', 'Silakan login terlebih dahulu.');
         }
 
-        $dbCart = Keranjang::with(['stok.produk.kategori', 'stok.ukuran'])
+        $dbCart = Keranjang::with(['stok.produk.kategori', 'stok.ukuran', 'stok.produk.stoks.ukuran'])
             ->where('user_id', Auth::id())
             ->get();
 
@@ -28,6 +27,18 @@ class CartController extends Controller
             }
             $p = $item->stok->produk;
             $catName = $p->kategori ? $p->kategori->nama : 'Lainnya';
+
+            // Mengumpulkan data ukuran dan stok untuk produk
+            $sizes = [];
+            foreach ($p->stoks as $stok) {
+                if ($stok->ukuran) {
+                    $sizes[] = [
+                        'stok_id' => $stok->id,
+                        'size' => $stok->ukuran->nama_ukuran,
+                        'stock' => $stok->jumlah_stok,
+                    ];
+                }
+            }
             
             $cartItems[$item->id] = [
                 'id' => $item->id,
@@ -39,6 +50,7 @@ class CartController extends Controller
                 'size' => $item->stok->ukuran ? $item->stok->ukuran->nama_ukuran : 'M',
                 'qty' => $item->jumlah,
                 'stock' => $item->stok->jumlah_stok,
+                'sizes' => $sizes,
             ];
         }
 
@@ -147,4 +159,6 @@ class CartController extends Controller
 
         return redirect()->route('cart');
     }
+
+
 }

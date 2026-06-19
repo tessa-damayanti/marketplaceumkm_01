@@ -13,7 +13,6 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Midtrans\Config;
-use Midtrans\Notification;
 use Midtrans\Snap;
 use Midtrans\Transaction;
 
@@ -36,7 +35,6 @@ class CheckoutController extends Controller
     }
 
     // Proses pemesanan dan generate Snap Token
-
     public function charge(Request $request)
     {
         if (!Auth::check()) {
@@ -56,7 +54,7 @@ class CheckoutController extends Controller
         $user   = Auth::user();
         $userId = $user->id;
 
-        // Kumpulkan item checkout (Menerapkan Polimorfisme)
+        // Kumpulkan item checkout
         if ($request->has('cart_ids') && is_array($request->cart_ids) && count($request->cart_ids) > 0) {
             $strategy = new \App\Models\CheckoutKeranjang();
         } elseif ($request->has('stok_id')) {
@@ -82,29 +80,30 @@ class CheckoutController extends Controller
             return response()->json(['error' => 'Total harga tidak sesuai. Silakan refresh halaman.'], 422);
         }
 
-        //Buat Pesanan dan Detail + Snap Token dalam satu transaksi
-        $snapToken = null;
-        $pesanan   = null;
+        // 1. Simpan pesanan dan kurangi stok
+        /** @var Pesanan $pesanan */
+        $pesanan = DB::transaction(fn () => $this->processOrder($items, $totalHarga, $user, $request));
 
-        DB::transaction(function () use ($items, $totalHarga, $user, $request, &$pesanan, &$snapToken) {
-            [$pesanan, $snapToken] = $this->processOrder($items, $totalHarga, $user, $request);
-        });
+        // 2. Generate Snap Token
+        $snapToken = $this->generateSnapToken($pesanan, $items, $request);
+
+        // 3. Simpan snap_token ke pesanan
+        $pesanan->update(['snap_token' => $snapToken]);
+
+        Log::info('[Checkout] Pesanan dibuat dan stok dikurangi', [
+            'order_id'   => $pesanan->order_id,
+            'snap_token' => $snapToken ? 'OK' : 'NULL',
+        ]);
 
         return response()->json(['snap_token' => $snapToken]);
     }
 
-
-    /**
-     * Proses pembuatan pesanan, detail, pengurangan stok, dan generate Snap Token.
-     * Dipanggil di dalam DB::transaction.
-     */
-    private function processOrder(array $items, int $totalHarga, User $user, Request $request): array
+    //Simpan pesanan, detail, kurangi stok, dan hapus keranjang.
+    private function processOrder(array $items, int $totalHarga, User $user, Request $request): Pesanan
     {
-        // Hapus update profile, data pengiriman disimpan khusus di pesanan ini
-
         $orderId = Pesanan::generateOrderId();
 
-        // 1. Buat record pesanan (snap_token diisi setelah dapat dari Midtrans)
+        // 1. Buat record pesanan (snap_token diisi setelah transaksi selesai)
         $pesanan = Pesanan::create([
             'order_id'          => $orderId,
             'user_id'           => $user->id,
@@ -130,6 +129,11 @@ class CheckoutController extends Controller
             // Kurangi stok
             Stok::where('id', $item['stok_id'])
                 ->decrement('jumlah_stok', $item['qty']);
+
+            Log::info('[Stok] Dikurangi', [
+                'stok_id'   => $item['stok_id'],
+                'dikurangi' => $item['qty'],
+            ]);
         }
 
         // 3. Hapus item keranjang yang sudah dicheckout
@@ -138,7 +142,12 @@ class CheckoutController extends Controller
             Keranjang::whereIn('id', $cartIds)->where('user_id', $user->id)->delete();
         }
 
-        // 4. Bangun payload Midtrans
+        return $pesanan;
+    }
+
+    //Generate Snap Token Midtrans
+    private function generateSnapToken(Pesanan $pesanan, array $items, Request $request): string
+    {
         $itemDetails = collect($items)->map(fn($i) => [
             'id'       => (string) $i['stok_id'],
             'price'    => $i['harga'],
@@ -146,103 +155,73 @@ class CheckoutController extends Controller
             'name'     => mb_substr($i['nama'] . ' (' . $i['ukuran'] . ')', 0, 50),
         ])->toArray();
 
+        // Atur waktu kedaluwarsa berdasarkan waktu pembuatan pesanan
         $params = [
             'transaction_details' => [
-                'order_id'     => $orderId,
-                'gross_amount' => $totalHarga,
+                'order_id'     => $pesanan->order_id,
+                'gross_amount' => (int) $pesanan->total_harga,
             ],
-            'item_details' => $itemDetails,
+            'item_details'     => $itemDetails,
             'customer_details' => [
-                'first_name' => $request->buyer_name,
-                'phone'      => $request->buyer_phone,
+                'first_name'      => $request->buyer_name,
+                'phone'           => $request->buyer_phone,
                 'billing_address' => [
                     'address' => $request->buyer_address,
                 ],
             ],
+            'expiry' => [
+                'start_time' => \Carbon\Carbon::parse($pesanan->created_at)->format('Y-m-d H:i:s O'),
+                'unit'       => 'hours',
+                'duration'   => 24,
+            ],
         ];
 
-        // 5. Generate Snap Token
-        $snapToken = Snap::getSnapToken($params);
-
-        // 6. Simpan snap_token ke pesanan
-        $pesanan->update(['snap_token' => $snapToken]);
-
-        return [$pesanan, $snapToken];
+        return Snap::getSnapToken($params);
     }
 
-    //Webhook handler dipanggil otomatis oleh server Midtrans setiap kali status transaksi berubah.
-    public function notification(Request $request)
-    {
-        $this->boot();
-        
-        try {
-            $notif    = new Notification();
-            $orderId  = $notif->order_id;
-            $status   = $notif->transaction_status;
-            $fraud    = $notif->fraud_status ?? null;
-            $type     = $notif->payment_type ?? null;
-
-            Log::info('[Midtrans Webhook]', compact('orderId', 'status', 'fraud', 'type'));
-
-            // Ekstrak ID pesanan dari order_id
-            $pesanan = Pesanan::where('order_id', $orderId)->first();
-
-            if (!$pesanan) {
-                // Fallback: coba cari via prefix PSN-
-                $pesananId = (int) substr($orderId, 4);
-                $pesanan   = Pesanan::find($pesananId);
-            }
-
-            if (!$pesanan) {
-                Log::warning('[Midtrans Webhook] Pesanan tidak ditemukan', ['order_id' => $orderId]);
-                return response()->json(['message' => 'Pesanan tidak ditemukan'], 404);
-            }
-
-            // Map status Midtrans menjadi status internal
-            $newStatus = match (true) {
-                in_array($status, ['capture', 'settlement']) && $fraud !== 'challenge' => 'settlement',
-                $status === 'pending'                => 'pending',
-                $status === 'cancel'                 => 'cancel',
-                $status === 'expire'                 => 'expire',
-                default                              => $status,
-            };
-
-            $oldStatus = $pesanan->status_pembayaran;
-
-            $pesanan->update([
-                'status_pembayaran' => $newStatus,
-                'metode_pembayaran' => $type ?? $pesanan->metode_pembayaran,
-            ]);
-
-            // Kembalikan stok jika pesanan dibatalkan atau expired via webhook
-            if ($oldStatus === 'pending' && in_array($newStatus, ['cancel', 'expire'])) {
-                $pesanan->load('detailPesanans');
-                $pesanan->restoreStok();
-            }
-
-            Log::info('[Midtrans Webhook] Status updated', [
-                'pesanan_id' => $pesanan->id,
-                'new_status' => $newStatus,
-            ]);
-
-            return response()->json(['message' => 'OK'], 200);
-        } catch (\Exception $e) {
-            Log::error('[Midtrans Webhook] Exception: ' . $e->getMessage());
-            return response()->json(['error' => $e->getMessage()], 500);
-        }
-    }
-
-    //Cek status transaksi secara manual (opsional, bisa dipanggil dari frontend).
+    //Cek status pembayaran
     public function checkStatus(Request $request)
     {
         $this->boot();
         $request->validate(['order_id' => 'required|string']);
 
         try {
-            $s = (array) Transaction::status($request->order_id);
+            $raw = (array) Transaction::status($request->order_id);
+
+            $transactionStatus = $raw['transaction_status'] ?? null;
+            $fraudStatus       = $raw['fraud_status'] ?? null;
+            $paymentType       = $raw['payment_type'] ?? null;
+
+            // Update status di database
+            if ($transactionStatus && $transactionStatus !== 'pending') {
+                $pesanan = \App\Models\Pesanan::where('order_id', $request->order_id)->first();
+
+                if ($pesanan && $pesanan->status_pembayaran === 'pending') {
+                    $newStatus = match (true) {
+                        in_array($transactionStatus, ['capture', 'settlement']) && $fraudStatus !== 'challenge' => 'settlement',
+                        $transactionStatus === 'cancel'  => 'cancel',
+                        $transactionStatus === 'expire'  => 'expire',
+                        default                          => $transactionStatus,
+                    };
+
+                    $pesanan->update([
+                        'status_pembayaran' => $newStatus,
+                        'metode_pembayaran' => $paymentType ?? $pesanan->metode_pembayaran,
+                    ]);
+
+                    // Kembalikan stok jika pesanan dibatalkan atau kadaluwarsa
+                    if (in_array($newStatus, ['cancel', 'expire'])) {
+                        $pesanan->load('detailPesanans');
+                        $pesanan->restoreStok();
+                    }
+
+                    Log::info('[CheckStatus] ' . $request->order_id . ' diupdate ke: ' . $newStatus);
+                }
+            }
+
             return response()->json([
-                'transaction_status' => $s['transaction_status'] ?? null,
-                'fraud_status'       => $s['fraud_status'] ?? null,
+                'transaction_status' => $transactionStatus,
+                'fraud_status'       => $fraudStatus,
             ]);
         } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()], 500);

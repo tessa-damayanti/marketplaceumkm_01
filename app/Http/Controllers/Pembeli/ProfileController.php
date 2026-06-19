@@ -22,7 +22,7 @@ class ProfileController extends Controller
 
         $user = Auth::user();
 
-        // Sinkronisasi status pesanan pending dari Midtrans (untuk localhost)
+        // Sinkronisasi status pembayaran
         Pesanan::syncPendingStatuses();
 
         $pesanans = Pesanan::with(['detailPesanans.stok.produk', 'detailPesanans.stok.ukuran'])
@@ -135,7 +135,7 @@ class ProfileController extends Controller
             $orderId = $pesanan->order_id ?? 'PSN-' . str_pad($pesanan->id, 3, '0', STR_PAD_LEFT);
             \Midtrans\Transaction::cancel($orderId);
         } catch (\Exception $e) {
-            // Silently ignore if not found in Midtrans
+           
         }
 
         $pesanan->load('detailPesanans');
@@ -147,7 +147,7 @@ class ProfileController extends Controller
         return response()->json(['success' => true, 'message' => 'Pesanan berhasil dibatalkan']);
     }
 
-    //Refresh generate ulang snap_token untuk pesanan pending. Dipanggil dari frontend ketika token lama sudah kadaluwarsa.
+    // Refresh snap_token untuk status Menunggu Pembayaran
     public function refreshSnapToken(int $id)
     {
         if (session('role') !== 'buyer') {
@@ -167,8 +167,19 @@ class ProfileController extends Controller
             return response()->json(['error' => 'Pesanan sudah tidak dalam status pending'], 422);
         }
 
+        // Cek pesanan yang sudah melewati batas 24 jam
+        $expiryAt        = \Carbon\Carbon::parse($pesanan->created_at)->addHours(24);
+        $remainingMinutes = (int) now()->diffInMinutes($expiryAt, false);
+
+        if ($remainingMinutes <= 0) {
+            // Batas waktu habis maka update status Pembayaran Kadaluwarsa dan kembalikan stok
+            $pesanan->load('detailPesanans');
+            $pesanan->update(['status_pembayaran' => 'expire']);
+            $pesanan->restoreStok();
+            return response()->json(['error' => 'Batas waktu pembayaran sudah habis. Pesanan dibatalkan.'], 422);
+        }
+
         try {
-            // Konfigurasi Midtrans
             Config::$serverKey    = config('midtrans.server_key');
             Config::$isProduction = config('midtrans.is_production');
             Config::$isSanitized  = true;
@@ -179,12 +190,9 @@ class ProfileController extends Controller
                 CURLOPT_HTTPHEADER     => [],
             ];
 
-            $user    = $pesanan->user;
-
-            // Generate order_id baru menggunakan format custom agar unik di Midtrans
+            $user       = $pesanan->user;
             $newOrderId = Pesanan::generateOrderId();
 
-            // Item details dari detail pesanan
             $itemDetails = $pesanan->detailPesanans->map(function ($d) {
                 $produk = $d->stok?->produk;
                 $ukuran = $d->stok?->ukuran?->nama_ukuran ?? '-';
@@ -196,6 +204,7 @@ class ProfileController extends Controller
                 ];
             })->toArray();
 
+            // Waktu pesanan dibuat agar timer tidak reset ke 24 jam
             $params = [
                 'transaction_details' => [
                     'order_id'     => $newOrderId,
@@ -203,23 +212,32 @@ class ProfileController extends Controller
                 ],
                 'item_details'     => $itemDetails,
                 'customer_details' => [
-                    'first_name' => $pesanan->nama_penerima ?? $user?->nama_lengkap ?? '-',
-                    'phone'      => $pesanan->no_wa_penerima ?? $user?->no_wa ?? '-',
+                    'first_name'      => $pesanan->nama_penerima ?? $user?->nama_lengkap ?? '-',
+                    'phone'           => $pesanan->no_wa_penerima ?? $user?->no_wa ?? '-',
                     'billing_address' => [
                         'address' => $pesanan->alamat_penerima ?? $user?->alamat ?? '-',
                     ],
+                ],
+                'expiry' => [
+                    'start_time' => \Carbon\Carbon::parse($pesanan->created_at)->format('Y-m-d H:i:s O'),
+                    'unit'       => 'hours',
+                    'duration'   => 24,
                 ],
             ];
 
             $snapToken = Snap::getSnapToken($params);
 
-            // Simpan token baru dan order_id baru ke database
+            // Simpan snap_token dan order_id Midtrans terbaru
             $pesanan->update([
                 'snap_token' => $snapToken,
                 'order_id'   => $newOrderId,
             ]);
 
-            return response()->json(['snap_token' => $snapToken]);
+            return response()->json([
+                'snap_token'        => $snapToken,
+                'new_order_id'      => $newOrderId,
+                'remaining_minutes' => $remainingMinutes,
+            ]);
 
         } catch (\Exception $e) {
             return response()->json(['error' => 'Gagal generate token: ' . $e->getMessage()], 500);

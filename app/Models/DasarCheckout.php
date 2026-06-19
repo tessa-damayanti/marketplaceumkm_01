@@ -7,8 +7,7 @@ use Illuminate\Http\Request;
 abstract class DasarCheckout implements AturanCheckout
 {
     /**
-     * Format seragam untuk data item pesanan.
-     * 
+     * Format untuk data item pesanan.
      * @param Stok $stok
      * @param int $qty
      * @param int|null $keranjangId
@@ -26,6 +25,6 @@ abstract class DasarCheckout implements AturanCheckout
         ];
     }
 
-    // Method abstrak yang wajib diisi oleh class turunan
+    // Method abstrak 
     abstract public function collectItems(Request $request, int $userId): array;
 }

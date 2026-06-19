@@ -10,10 +10,11 @@
                 <input
                     type="checkbox"
                     id="check-{{ $itemKey }}"
-                    class="item-check w-4 h-4 rounded border-[#c4ab96] bg-white text-[#BFA28C] focus:ring-[#BFA28C] focus:ring-2"
+                    class="item-check w-4 h-4 rounded border-[#c4ab96] bg-white text-[#BFA28C] focus:ring-[#BFA28C] focus:ring-2 disabled:opacity-50 disabled:cursor-not-allowed"
                     data-price="{{ $item['price'] }}"
                     data-qty="{{ $item['qty'] }}"
-                    data-key="{{ $itemKey }}">
+                    data-key="{{ $itemKey }}"
+                    @if($item['stock'] <= 0) disabled @endif>
             </div>
 
             <!-- Gambar -->
@@ -35,6 +36,12 @@
                     Ukuran : {{ $item['size'] }}
                 </p>
 
+                @if ($item['stock'] <= 0)
+                <p class="mt-1.5 text-xs font-semibold text-red-500 flex items-center gap-1.5">
+                    Ukuran yang dipilih tidak tersedia
+                </p>
+                @endif
+
                 <p class="mt-1 sm:mt-2 text-sm sm:text-base font-semibold leading-none text-[#7a5a43]">
                     Rp{{ number_format($item['price'], 0, ',', '.') }}
                 </p>
@@ -55,7 +62,8 @@
                         <input type="hidden" name="action" value="minus">
                         <button
                             type="submit"
-                            class="flex h-8 w-8 sm:h-9 sm:w-9 items-center justify-center rounded-[10px] bg-[#ded1c2] text-base font-bold text-[#6b5848] transition hover:bg-[#d2c2b0] focus:outline-none focus:ring-2 focus:ring-[#c4ab96]">
+                            @if($item['stock'] <= 0) disabled @endif
+                            class="flex h-8 w-8 sm:h-9 sm:w-9 items-center justify-center rounded-[10px] bg-[#ded1c2] text-base font-bold text-[#6b5848] transition hover:bg-[#d2c2b0] focus:outline-none focus:ring-2 focus:ring-[#c4ab96] disabled:opacity-50 disabled:cursor-not-allowed">
                             -
                         </button>
                     </form>
@@ -71,7 +79,8 @@
                         <input type="hidden" name="action" value="plus">
                         <button
                             type="submit"
-                            class="flex h-8 w-8 sm:h-9 sm:w-9 items-center justify-center rounded-[10px] bg-[#BFA28C] text-base font-bold text-white transition hover:bg-[#A88A72] focus:outline-none focus:ring-2 focus:ring-[#BFA28C]">
+                            @if($item['stock'] <= 0) disabled @endif
+                            class="flex h-8 w-8 sm:h-9 sm:w-9 items-center justify-center rounded-[10px] bg-[#BFA28C] text-base font-bold text-white transition hover:bg-[#A88A72] focus:outline-none focus:ring-2 focus:ring-[#BFA28C] disabled:opacity-50 disabled:cursor-not-allowed">
                             +
                         </button>
                     </form>
@@ -81,6 +90,15 @@
                 <p class="mt-1.5 text-[11px] sm:text-[12px] font-semibold text-red-400">
                     Pembelian mencapai batas stok maksimum!
                 </p>
+                @endif
+
+                @if ($item['stock'] <= 0)
+                <div class="mt-2">
+                    <a href="{{ route('product') }}?show={{ urlencode($item['name']) }}" 
+                        class="inline-flex items-center gap-1.5 rounded-lg bg-[#efe4d8] border border-[#d2c2b0] px-3 py-1.5 text-xs font-semibold text-[#6b5848] transition hover:bg-[#d2c2b0] hover:text-[#5c4432] cursor-pointer">
+                        Ubah Ukuran
+                    </a>
+                </div>
                 @endif
             </div>
 

@@ -15,8 +15,40 @@
 
 @section('content')
     @php
-    $total = collect($cartItems)->sum(fn($item) => $item['price'] * $item['qty']);
+    $total = collect($cartItems)->filter(fn($item) => $item['stock'] > 0)->sum(fn($item) => $item['price'] * $item['qty']);
     @endphp
+
+    @if (session('success'))
+    <div id="cart-toast" class="pointer-events-none fixed right-6 top-6 z-[999] translate-y-3 opacity-0 transition-all duration-500">
+        <div class="flex min-w-[320px] max-w-[360px] items-start gap-3 rounded-[24px] bg-[#fffaf6] px-5 py-4 shadow-[0_24px_60px_rgba(92,68,50,0.18)]" style="border:none;outline:none;">
+            <div class="mt-0.5 flex h-10 w-10 items-center justify-center rounded-2xl bg-[#dff1e3] text-[#5e936c]">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+                </svg>
+            </div>
+            <div class="min-w-0 flex-1">
+                <p class="text-sm font-bold text-[#5c4432]">Berhasil</p>
+                <p class="mt-1 text-sm leading-6 text-[#7b6858]">{{ session('success') }}</p>
+            </div>
+        </div>
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const toast = document.getElementById('cart-toast');
+            if (toast) {
+                requestAnimationFrame(() => {
+                    toast.classList.remove('opacity-0', 'translate-y-3');
+                    toast.classList.add('opacity-100', 'translate-y-0');
+                });
+                setTimeout(() => {
+                    toast.classList.add('opacity-0', 'translate-y-3');
+                    toast.classList.remove('opacity-100', 'translate-y-0');
+                    setTimeout(() => toast.remove(), 500);
+                }, 3000);
+            }
+        });
+    </script>
+    @endif
 
     <div class="min-h-screen px-5 py-8 md:px-10">
         <section class="mx-auto max-w-6xl">
@@ -100,7 +132,7 @@
             let total = 0;
             const checkboxes = document.querySelectorAll('.item-check');
             checkboxes.forEach((checkbox) => {
-                if (checkbox.checked) {
+                if (checkbox.checked && !checkbox.disabled) {
                     const price = parseInt(checkbox.dataset.price);
                     const qty = parseInt(checkbox.dataset.qty);
                     total += price * qty;
@@ -116,6 +148,10 @@
             const savedStates = JSON.parse(localStorage.getItem('cartCheckedStates')) || {};
             
             itemChecks.forEach((item) => {
+                if (item.disabled) {
+                    item.checked = false;
+                    return;
+                }
                 const key = item.dataset.key;
                 if (savedStates[key] === undefined) {
                     item.checked = true;
@@ -124,7 +160,8 @@
                 }
             });
 
-            const allChecked = [...itemChecks].every((cb) => cb.checked);
+            const activeChecks = [...itemChecks].filter(cb => !cb.disabled);
+            const allChecked = activeChecks.length > 0 && activeChecks.every((cb) => cb.checked);
             checkAll.checked = allChecked;
 
             updateCartTotal();
@@ -138,20 +175,25 @@
             }
 
             checkAll.addEventListener('change', function() {
-                itemChecks.forEach((item) => { item.checked = checkAll.checked; });
+                itemChecks.forEach((item) => { 
+                    if (!item.disabled) {
+                        item.checked = checkAll.checked; 
+                    }
+                });
                 saveStates();
                 updateCartTotal();
                 
                 // Sembunyikan pesan validasi jika ada item yang dipilih
                 const validationMsg = document.getElementById('validation-msg');
-                if (validationMsg && checkAll.checked && itemChecks.length > 0) {
+                if (validationMsg && checkAll.checked && activeChecks.length > 0) {
                     validationMsg.classList.add('hidden');
                 }
             });
 
             itemChecks.forEach((item) => {
                 item.addEventListener('change', function() {
-                    const allChecked = [...itemChecks].every((cb) => cb.checked);
+                    const activeChecks = [...itemChecks].filter(cb => !cb.disabled);
+                    const allChecked = activeChecks.length > 0 && activeChecks.every((cb) => cb.checked);
                     checkAll.checked = allChecked;
                     saveStates();
                     updateCartTotal();
@@ -159,13 +201,21 @@
                     // Sembunyikan pesan validasi jika ada item yang dipilih
                     const validationMsg = document.getElementById('validation-msg');
                     if (validationMsg) {
-                        const anyChecked = [...itemChecks].some((cb) => cb.checked);
+                        const anyChecked = activeChecks.some((cb) => cb.checked);
                         if (anyChecked) {
                             validationMsg.classList.add('hidden');
                         }
                     }
                 });
             });
+
+            // Close change size modal when clicking overlay
+            const changeSizeModal = document.getElementById('changeSizeModal');
+            if (changeSizeModal) {
+                changeSizeModal.addEventListener('click', function(e) {
+                    if (e.target === this) closeChangeSizeModal();
+                });
+            }
 
             const btnCheckout = document.getElementById('btn-checkout');
             if (btnCheckout) {
