@@ -49,10 +49,16 @@ function showToast(title, message) {
         toast.classList.remove('opacity-100', 'translate-y-0');
     }, 2000);
 }
+</script>
 
 @if(session('success'))
+<div id="toast-success-message" style="display:none;" data-message="{{ session('success') }}"></div>
+<script>
     document.addEventListener('DOMContentLoaded', () => {
-        showToast('Berhasil', '{{ session('success') }}');
+        const msgEl = document.getElementById('toast-success-message');
+        if(msgEl && msgEl.dataset.message) {
+            showToast('Berhasil', msgEl.dataset.message);
+        }
     });
-@endif
 </script>
+@endif
