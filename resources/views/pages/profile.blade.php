@@ -47,7 +47,7 @@
         'expire'     => ['bg' => 'bg-[#f3f4f6]',  'text' => 'text-[#6b7280]'],
     ];
 
-    // Mapping label status dalam Bahasa Indonesia
+    // Status dalam Bahasa Indonesia
     $statusLabel = [
         'pending'    => 'Menunggu Pembayaran',
         'settlement' => 'Pembayaran Berhasil',
@@ -55,7 +55,7 @@
         'expire'     => 'Pembayaran Kedaluwarsa',
     ];
 
-    // Bangun array data pesanan untuk dikirim ke JS
+    // Array data pesanan untuk dikirim ke JS
     $ordersData = [];
     foreach ($pesanans as $pesanan) {
         $status = $pesanan->status_pembayaran;
@@ -105,7 +105,7 @@
     <script src="https://app.sandbox.midtrans.com/snap/snap.js" data-client-key="{{ config('midtrans.client_key') }}"></script>
     <script type="application/json" id="orders-data">{!! json_encode($ordersData) !!}</script>
     <script>
-        // Data pesanan dari server, dibaca dari elemen JSON
+        // Data pesanan dari server
         let orders = {};
         try {
             const ordersEl = document.getElementById('orders-data');
@@ -380,6 +380,7 @@
             document.body.style.overflow = '';
         }
 
+        // Lanjutkan pembayaran pesanan pending
         async function payExistingOrder(rawId, snapToken) {
             if (!window.snap) {
                 alert('Midtrans Snap tidak termuat dengan benar. Coba refresh halaman.');
@@ -410,14 +411,25 @@
 
                 if (res.ok && data.snap_token) {
                     snapToken = data.snap_token;
-                    // Update order_id di memory agar polling berikutnya pakai ID terbaru
+                    // Update order_id agar polling berikutnya pakai ID terbaru
                     if (data.new_order_id) {
-                        const orderEntry = Object.values(orders).find(o => o.raw_id === rawId);
+                        const orderEntry = Object.values(orders).find(o => o.raw_id == rawId);
                         if (orderEntry) {
                             orderEntry.id = data.new_order_id;
                         }
                     }
                 } else {
+                    if (res.status === 422) {
+                        if (typeof window.showCustomAlert === 'function') {
+                            window.showCustomAlert(data.error || 'Batas waktu pembayaran sudah habis.', 'error', () => {
+                                window.location.reload();
+                            });
+                        } else {
+                            alert(data.error || 'Batas waktu pembayaran sudah habis.');
+                            window.location.reload();
+                        }
+                        return;
+                    }
                     console.warn('[payExistingOrder] Gagal refresh token, pakai token lama:', data.error);
                     // Lanjut dengan token lama jika ada
                 }
@@ -461,7 +473,7 @@
                     }
                 },
                 onClose: function(){
-                    // Optional: do nothing
+                    
                 }
             });
         }
@@ -480,13 +492,13 @@
                 switchTab('akun');
             }
 
-            // Bersihkan URL dari parameter (?page=... &tab=...) agar terlihat rapi seperti di admin
+            // Bersihkan URL dari parameter 
             if (window.history.replaceState && window.location.search) {
                 const cleanUrl = window.location.protocol + "//" + window.location.host + window.location.pathname;
                 window.history.replaceState({path: cleanUrl}, '', cleanUrl);
             }
 
-            // Auto-polling untuk pesanan pending agar status terupdate otomatis tanpa webhook
+            // Update status pembayaran
             const pendingOrders = Object.values(orders).filter(o => o.raw_status === 'pending');
             if (pendingOrders.length > 0) {
                 setInterval(async () => {

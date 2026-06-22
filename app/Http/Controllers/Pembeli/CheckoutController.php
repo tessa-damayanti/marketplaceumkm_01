@@ -50,6 +50,7 @@ class CheckoutController extends Controller
             'grand_total'   => 'required|numeric|min:1',
         ]);
 
+        // Ambil user yang sedang login
         /** @var User $user */
         $user   = Auth::user();
         $userId = $user->id;
@@ -235,16 +236,15 @@ class CheckoutController extends Controller
             $raw = (array) Transaction::status($request->order_id);
 
             $transactionStatus = $raw['transaction_status'] ?? null;
-            $fraudStatus       = $raw['fraud_status'] ?? null;
             $paymentType       = $raw['payment_type'] ?? null;
 
             // Update status di database
             if ($transactionStatus && $transactionStatus !== 'pending') {
-                $pesanan = \App\Models\Pesanan::where('order_id', $request->order_id)->first();
+                $pesanan = Pesanan::where('order_id', $request->order_id)->first();
 
                 if ($pesanan && $pesanan->status_pembayaran === 'pending') {
                     $newStatus = match (true) {
-                        in_array($transactionStatus, ['capture', 'settlement']) && $fraudStatus !== 'challenge' => 'settlement',
+                        in_array($transactionStatus, ['capture', 'settlement']) => 'settlement',
                         $transactionStatus === 'cancel'  => 'cancel',
                         $transactionStatus === 'expire'  => 'expire',
                         default                          => $transactionStatus,
@@ -267,7 +267,6 @@ class CheckoutController extends Controller
 
             return response()->json([
                 'transaction_status' => $transactionStatus,
-                'fraud_status'       => $fraudStatus,
             ]);
         } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()], 500);

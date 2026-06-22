@@ -28,7 +28,7 @@ class Pesanan extends Model
         return $this->hasMany(DetailPesanan::class, 'pesanan_id');
     }
 
-    //Kembalikan stok semua item pada pesanan ini, saat pesanan dibatalkan atau expired
+    //Kembalikan stok produk, jika pesanan dibatalkan atau expired
     public function restoreStok(): void
     {
         foreach ($this->detailPesanans as $detail) {
@@ -39,7 +39,7 @@ class Pesanan extends Model
         \Illuminate\Support\Facades\Log::info('[Stok] Stok dikembalikan untuk pesanan: ' . $this->order_id);
     }
 
-    //Hitung total produk terjual (berhasil) dari produk tertentu
+    //Hitung total produk terjual
     public static function getTotalSold(int $produkId): int
     {
         return (int) \App\Models\DetailPesanan::whereHas('pesanan', fn($q) => $q->where('status_pembayaran', 'settlement'))
@@ -83,17 +83,16 @@ class Pesanan extends Model
         foreach ($pendingPesanans as $pesanan) {
             try {
                 $orderId = $pesanan->order_id ?? 'PSN-' . str_pad($pesanan->id, 3, '0', STR_PAD_LEFT);
-                // Handle response Midtrans yang bisa berupa object atau array
+                // Handle response Midtrans
                 $raw            = \Midtrans\Transaction::status($orderId);
                 $statusResponse = is_array($raw) ? $raw : (array) $raw;
 
                 $transactionStatus = $statusResponse['transaction_status'] ?? null;
-                $fraudStatus       = $statusResponse['fraud_status'] ?? null;
                 $paymentType       = $statusResponse['payment_type'] ?? null;
 
                 if ($transactionStatus && $transactionStatus !== 'pending') {
                     $newStatus = match (true) {
-                        in_array($transactionStatus, ['capture', 'settlement']) && $fraudStatus !== 'challenge' => 'settlement',
+                        in_array($transactionStatus, ['capture', 'settlement']) => 'settlement',
                         $transactionStatus === 'cancel' => 'cancel',
                         $transactionStatus === 'expire' => 'expire',
                         default                         => $transactionStatus,
@@ -115,6 +114,15 @@ class Pesanan extends Model
                 }
             } catch (\Throwable $e) {
                 \Illuminate\Support\Facades\Log::warning('[SyncStatus] Gagal cek ' . ($orderId ?? '?') . ': ' . $e->getMessage());
+
+                // Fallback: Jika gagal cek ke Midtrans tapi waktu pesanan sudah lewat 24 jam
+                $expiryAt = \Carbon\Carbon::parse($pesanan->created_at)->addHours(24);
+                if (now()->greaterThanOrEqualTo($expiryAt)) {
+                    $pesanan->load('detailPesanans');
+                    $pesanan->update(['status_pembayaran' => 'expire']);
+                    $pesanan->restoreStok();
+                    \Illuminate\Support\Facades\Log::info('[SyncStatus] Fallback: ' . $orderId . ' otomatis expired karena lewat 24 jam.');
+                }
             }
         }
     }
