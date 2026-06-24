@@ -139,18 +139,3 @@
 
   </div>
 </div>
-
-<!-- Lihat Bukti Pembayaran -->
-<div class="overlay z-[9999]" id="modal-bukti">
-  <div class="modal max-w-2xl bg-transparent shadow-none border-0 overflow-hidden flex flex-col items-center">
-    <div class="w-full flex justify-end mb-2">
-      <button onclick="closeAdminModal('modal-bukti')"
-        class="text-white bg-black/50 hover:bg-black/80 rounded-full p-2 backdrop-blur-sm transition-colors">
-        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-        </svg>
-      </button>
-    </div>
-    <img id="bukti-image-full" src="" class="max-w-full max-h-[80vh] object-contain rounded-xl shadow-2xl">
-  </div>
-</div>

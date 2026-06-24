@@ -95,6 +95,13 @@
       return 'Rp' + Number(n).toLocaleString('id-ID');
     }
 
+    // Format untuk angka besar (Juta/Ribu) agar muat di kotak dashboard
+    function rpShort(n) {
+      if (n >= 1000000000) return 'Rp' + (n / 1000000000).toFixed(1).replace(/\.0$/, '').replace('.', ',') + ' M';
+      if (n >= 1000000) return 'Rp' + (n / 1000000).toFixed(1).replace(/\.0$/, '').replace('.', ',') + ' Jt';
+      return 'Rp' + Number(n).toLocaleString('id-ID');
+    }
+
     const produkImages = {
       'Kemeja Stripe': 'https://i.pinimg.com/1200x/b1/cc/2f/b1cc2fb9a73cb56f46e167b47d4febbf.jpg',
       'Kemeja Hitam': 'https://i.pinimg.com/736x/b3/3f/b9/b33fb97104fe57a9b2c093f6e0b857ec.jpg',
@@ -130,7 +137,7 @@
         'Pembayaran Kedaluwarsa': 'bg-[#f3f4f6] text-[#6b7280]',
         'Menunggu Pembayaran': 'bg-[#fff1bd] text-[#b45a00]',
       };
-      return `<span class="inline-flex items-center rounded-full ${colors[s] || 'bg-[#fff1bd] text-[#b45a00]'} px-3 py-1 text-sm font-medium">${s}</span>`;
+      return `<span class="inline-flex items-center whitespace-nowrap rounded-full ${colors[s] || 'bg-[#fff1bd] text-[#b45a00]'} px-3 py-1 text-sm font-medium">${s}</span>`;
     }
 
     function openAdminModal(id) {
@@ -153,12 +160,12 @@
       const form = document.createElement('form');
       form.method = 'POST';
       form.action = "{{ route('logout') }}";
-      
+
       const csrf = document.createElement('input');
       csrf.type = 'hidden';
       csrf.name = '_token';
       csrf.value = "{{ csrf_token() }}";
-      
+
       form.appendChild(csrf);
       document.body.appendChild(form);
       form.submit();
@@ -171,12 +178,100 @@
       overlay.classList.toggle('show');
     }
 
+    // INCOME FILTER DROPDOWN
+    function toggleIncomeFilter(e) {
+      e.stopPropagation();
+      const menu = document.getElementById('income-filter-menu');
+      const icon = document.getElementById('income-filter-icon');
+      menu?.classList.toggle('hidden');
+      icon?.classList.toggle('rotate-180');
+    }
+
+    function selectIncomeFilter(val, label) {
+      const input = document.getElementById('income-filter');
+      const labelEl = document.getElementById('income-filter-label');
+      if (input) input.value = val;
+      if (labelEl) labelEl.innerText = label;
+
+      const items = document.querySelectorAll('#income-filter-menu li');
+      items.forEach(item => {
+        if (item.innerText.trim() === label) {
+          item.classList.add('bg-[#fbf8f5]', 'text-[#BFA28C]');
+          item.classList.remove('text-[#5c4432]');
+        } else {
+          item.classList.remove('bg-[#fbf8f5]', 'text-[#BFA28C]');
+          item.classList.add('text-[#5c4432]');
+        }
+      });
+
+      document.getElementById('income-filter-menu')?.classList.add('hidden');
+      document.getElementById('income-filter-icon')?.classList.remove('rotate-180');
+      renderDashboard();
+    }
+
+    document.addEventListener('click', function(e) {
+      const menu = document.getElementById('income-filter-menu');
+      const btn = document.getElementById('income-filter-btn');
+      if (menu && btn && !btn.contains(e.target) && !menu.contains(e.target)) {
+        menu.classList.add('hidden');
+        document.getElementById('income-filter-icon')?.classList.remove('rotate-180');
+      }
+    });
+
     // DASHBOARD
     function renderDashboard() {
       if (!document.getElementById('s-pesanan')) return;
       document.getElementById('s-pesanan').textContent = pesananList.length;
       document.getElementById('s-produk').textContent = produkList.length;
       document.getElementById('s-kategori').textContent = kategoriList.length;
+
+      // Hitung Pendapatan Berdasarkan Filter
+      const filterEl = document.getElementById('income-filter');
+      const filterVal = filterEl ? filterEl.value : 'this_month';
+
+      const today = new Date();
+      const currentMonth = today.getMonth() + 1;
+      const currentYear = today.getFullYear();
+
+      let lastMonth = currentMonth - 1;
+      let lastMonthYear = currentYear;
+      if (lastMonth === 0) {
+        lastMonth = 12;
+        lastMonthYear = currentYear - 1;
+      }
+
+      let calculatedIncome = 0;
+      let subtitleText = 'BULAN INI';
+
+      pesananList.forEach(p => {
+        if (p.status !== 'Pembayaran Berhasil') return;
+
+        const income = parseInt(p.total) || 0;
+        const parts = p.tanggal.split('-'); // Format: DD-MM-YYYY
+
+        if (parts.length === 3) {
+          const m = parseInt(parts[1], 10);
+          const y = parseInt(parts[2], 10);
+
+          if (filterVal === 'this_month') {
+            if (m === currentMonth && y === currentYear) calculatedIncome += income;
+            subtitleText = 'BULAN INI';
+          } else if (filterVal === 'last_month') {
+            if (m === lastMonth && y === lastMonthYear) calculatedIncome += income;
+            subtitleText = 'BULAN LALU';
+          } else {
+            calculatedIncome += income;
+            subtitleText = 'SEMUA WAKTU';
+          }
+        }
+      });
+
+      if (document.getElementById('s-income')) {
+        document.getElementById('s-income').textContent = rpShort(calculatedIncome);
+      }
+      if (document.getElementById('s-income-sub')) {
+        document.getElementById('s-income-sub').textContent = subtitleText;
+      }
 
       const recent = pesananList.slice(0, 5);
       document.getElementById('dash-orders-tbody').innerHTML = recent.map(o => `
@@ -199,21 +294,31 @@
     }
 
     let salesChartInstance = null;
+
     function renderSalesChart() {
       const ctx = document.getElementById('salesChart');
       if (!ctx) return;
 
       const dataPerBulan = {
-        'Jan': 0, 'Feb': 0, 'Mar': 0, 'Apr': 0,
-        'Mei': 0, 'Jun': 0, 'Jul': 0, 'Agt': 0,
-        'Sep': 0, 'Okt': 0, 'Nov': 0, 'Des': 0
+        'Jan': 0,
+        'Feb': 0,
+        'Mar': 0,
+        'Apr': 0,
+        'Mei': 0,
+        'Jun': 0,
+        'Jul': 0,
+        'Agt': 0,
+        'Sep': 0,
+        'Okt': 0,
+        'Nov': 0,
+        'Des': 0
       };
 
       const namaBulan = Object.keys(dataPerBulan);
 
       pesananList.forEach(p => {
         if (p.status !== 'Pembayaran Berhasil') return;
-        
+
         const parts = p.tanggal.split('-');
         if (parts.length === 3) {
           const indexBulan = parseInt(parts[1], 10) - 1;
@@ -241,22 +346,37 @@
           responsive: true,
           maintainAspectRatio: false,
           plugins: {
-            legend: { display: false }
+            legend: {
+              display: false
+            }
           },
           scales: {
             y: {
               beginAtZero: true,
               suggestedMax: 100, // Paksa chart memiliki batas atas minimal 100 agar step 20 terlihat
-              grid: { color: '#f0e7dd' },
-              ticks: { 
-                color: '#9a8575', 
-                font: { family: 'Plus Jakarta Sans', weight: 'bold' },
+              grid: {
+                color: '#f0e7dd'
+              },
+              ticks: {
+                color: '#9a8575',
+                font: {
+                  family: 'Plus Jakarta Sans',
+                  weight: 'bold'
+                },
                 stepSize: 20 // Sumbu Y akan menampilkan kelipatan 20, 40, 60 dst
               }
             },
             x: {
-              grid: { display: false },
-              ticks: { color: '#9a8575', font: { family: 'Plus Jakarta Sans', weight: 'bold' } }
+              grid: {
+                display: false
+              },
+              ticks: {
+                color: '#9a8575',
+                font: {
+                  family: 'Plus Jakarta Sans',
+                  weight: 'bold'
+                }
+              }
             }
           }
         }
@@ -782,7 +902,10 @@
 
         const data = await res.json();
         if (data.success) {
-          p.stok = { ...p.stok, ...payload };
+          p.stok = {
+            ...p.stok,
+            ...payload
+          };
           closeAdminModal('modal-stok');
           renderStokTable();
           showAdminToast('Berhasil', 'Stok berhasil diperbarui.');
@@ -852,19 +975,19 @@
 
       document.getElementById('pesanan-tbody').innerHTML = paginatedList.length ? paginatedList.map(o => `
         <tr>
-          <td class="px-6 py-4 text-center">${o.id}</td>
-          <td class="px-6 py-4">${o.tanggal}</td>
+          <td class="whitespace-nowrap px-6 py-4 text-center">${o.id}</td>
+          <td class="whitespace-nowrap px-6 py-4">${o.tanggal}</td>
           <td class="px-6 py-4">
             <div class="flex items-center gap-3">
               <div class="h-8 w-8 rounded-full border border-[#e2d4c5] bg-[#fbf8f5] flex items-center justify-center overflow-hidden shrink-0">
                 <img src="${o.avatar ? o.avatar : `https://ui-avatars.com/api/?name=${encodeURIComponent(o.nama)}&background=f3e6db&color=5c4432&bold=true&size=64`}" alt="${o.nama}" class="h-full w-full object-cover">
               </div>
-              <span class="font-medium text-[#5c4432]">${o.nama}</span>
+              <span class="font-medium text-[#5c4432] line-clamp-1 break-all">${o.nama}</span>
             </div>
           </td>
-          <td class="px-6 py-4">${statusBadge(o.status)}</td>
-          <td class="px-6 py-4">${rp(o.items.reduce((s, i) => s + i.harga * i.qty, 0))}</td>
-          <td class="px-6 py-4 text-center"><button onclick="openDetailPesanan('${o.id}')" class="inline-flex items-center justify-center rounded-xl border border-[#d8c3af] bg-[#a78d78] px-4 py-2 text-sm font-normal text-white transition hover:bg-[#8f7561]">Detail</button></td>
+          <td class="whitespace-nowrap px-6 py-4">${statusBadge(o.status)}</td>
+          <td class="whitespace-nowrap px-6 py-4">${rp(o.items.reduce((s, i) => s + i.harga * i.qty, 0))}</td>
+          <td class="whitespace-nowrap px-6 py-4 text-center"><button onclick="openDetailPesanan('${o.id}')" class="inline-flex items-center justify-center rounded-xl border border-[#d8c3af] bg-[#a78d78] px-4 py-2 text-sm font-normal text-white transition hover:bg-[#8f7561]">Detail</button></td>
         </tr>`).join('') : `<tr><td colspan="6" class="px-6 py-6 text-center text-[#b7a08c]">Tidak ada pesanan ditemukan.</td></tr>`;
 
       const endIdx = Math.min(startIdx + pesananPerPage, totalItems);
@@ -880,8 +1003,17 @@
       if (activeBtn) activeBtn.textContent = pesananCurrentPage;
     }
 
-    function pesananPrevPage() { if (pesananCurrentPage > 1) { pesananCurrentPage--; renderPesananTable(); } }
-    function pesananNextPage() { pesananCurrentPage++; renderPesananTable(); }
+    function pesananPrevPage() {
+      if (pesananCurrentPage > 1) {
+        pesananCurrentPage--;
+        renderPesananTable();
+      }
+    }
+
+    function pesananNextPage() {
+      pesananCurrentPage++;
+      renderPesananTable();
+    }
 
 
     function openDetailPesanan(id) {
@@ -1034,13 +1166,13 @@
         setInterval(async () => {
           let shouldReload = false;
           const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') ?? '';
-          
+
           for (const order of pendingOrders) {
             try {
               const formData = new FormData();
               // Gunakan raw_order_id untuk pengecekan ke Midtrans
               formData.append('order_id', order.raw_order_id);
-              
+
               const res = await fetch('/checkout/status', {
                 method: 'POST',
                 headers: {

@@ -63,7 +63,7 @@ class ProdukController extends Controller
             'kategori_id' => 'required|exists:kategoris,id',
             'harga' => 'required|integer',
             'deskripsi' => 'required|string',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048'
+            'image' => 'nullable|image|mimes:jpeg,png,jpg|max:2048'
         ]);
 
         $data = $request->only(['nama', 'kategori_id', 'harga', 'deskripsi']);
@@ -120,7 +120,7 @@ class ProdukController extends Controller
             'kategori_id' => 'required|exists:kategoris,id',
             'harga' => 'required|integer',
             'deskripsi' => 'required|string',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048'
+            'image' => 'nullable|image|mimes:jpeg,png,jpg|max:2048'
         ]);
 
         $produk = Produk::findOrFail($id);
