@@ -39,6 +39,33 @@ class Pesanan extends Model
         \Illuminate\Support\Facades\Log::info('[Stok] Stok dikembalikan untuk pesanan: ' . $this->order_id);
     }
 
+    //Kirim notifikasi WhatsApp via Fonnte
+    public function sendWhatsAppNotification(): void
+    {
+        $token = env('FONNTE_TOKEN');
+        if (!$token || !$this->no_wa_penerima) {
+            return;
+        }
+
+        $namaPembeli = $this->nama_penerima ?? ($this->user ? $this->user->name : 'Pelanggan');
+        
+        $message = "Halo {$namaPembeli},\n\nPembayaran pesanan {$this->order_id} telah berhasil kami terima.\n\nPesanan Anda akan segera kami siapkan.\n\nTerima kasih telah berbelanja di Velora.";
+
+        try {
+            $response = \Illuminate\Support\Facades\Http::withHeaders([
+                'Authorization' => $token,
+            ])->post('https://api.fonnte.com/send', [
+                'target' => $this->no_wa_penerima,
+                'message' => $message,
+                'countryCode' => '62',
+            ]);
+
+            \Illuminate\Support\Facades\Log::info('[Fonnte] Notifikasi WA dikirim untuk pesanan ' . $this->order_id . ' - Status: ' . $response->status());
+        } catch (\Throwable $e) {
+            \Illuminate\Support\Facades\Log::error('[Fonnte] Gagal mengirim WA untuk pesanan ' . $this->order_id . ': ' . $e->getMessage());
+        }
+    }
+
     //Hitung total produk terjual
     public static function getTotalSold(int $produkId): int
     {
@@ -103,6 +130,11 @@ class Pesanan extends Model
                         'status_pembayaran' => $newStatus,
                         'metode_pembayaran' => $paymentType ?? $pesanan->metode_pembayaran,
                     ]);
+
+                    // Kirim notifikasi jika status berubah menjadi settlement
+                    if ($oldStatus === 'pending' && $newStatus === 'settlement') {
+                        $pesanan->sendWhatsAppNotification();
+                    }
 
                     // Kembalikan stok jika pesanan dibatalkan atau expired
                     if ($oldStatus === 'pending' && in_array($newStatus, ['cancel', 'expire'])) {

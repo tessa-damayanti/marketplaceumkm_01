@@ -250,10 +250,16 @@ class CheckoutController extends Controller
                         default                          => $transactionStatus,
                     };
 
+                    $oldStatus = $pesanan->status_pembayaran;
+                    
                     $pesanan->update([
                         'status_pembayaran' => $newStatus,
                         'metode_pembayaran' => $paymentType ?? $pesanan->metode_pembayaran,
                     ]);
+
+                    if ($oldStatus === 'pending' && $newStatus === 'settlement') {
+                        $pesanan->sendWhatsAppNotification();
+                    }
 
                     // Kembalikan stok jika pesanan dibatalkan atau kadaluwarsa
                     if (in_array($newStatus, ['cancel', 'expire'])) {

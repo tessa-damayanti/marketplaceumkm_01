@@ -241,7 +241,7 @@
       }
 
       let calculatedIncome = 0;
-      let subtitleText = 'BULAN INI';
+      let subtitleText = 'Bulan Ini';
 
       pesananList.forEach(p => {
         if (p.status !== 'Pembayaran Berhasil') return;
@@ -255,13 +255,13 @@
 
           if (filterVal === 'this_month') {
             if (m === currentMonth && y === currentYear) calculatedIncome += income;
-            subtitleText = 'BULAN INI';
+            subtitleText = 'Bulan Ini';
           } else if (filterVal === 'last_month') {
             if (m === lastMonth && y === lastMonthYear) calculatedIncome += income;
-            subtitleText = 'BULAN LALU';
+            subtitleText = 'Bulan Lalu';
           } else {
             calculatedIncome += income;
-            subtitleText = 'SEMUA WAKTU';
+            subtitleText = 'Semua Waktu';
           }
         }
       });

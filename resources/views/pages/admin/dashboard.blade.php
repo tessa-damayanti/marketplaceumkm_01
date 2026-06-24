@@ -41,7 +41,7 @@
     </x-admin.metric-card>
 
     <!-- Card 4 -->
-    <x-admin.metric-card title="Total Pendapatan" valueId="s-income" value="Rp0" subtitle="BULAN INI" subtitleId="s-income-sub" iconBgColor="bg-[#e5f0e1]" iconTextColor="text-[#4a6341]" valueSize="text-3xl">
+    <x-admin.metric-card title="Total Pendapatan" valueId="s-income" value="Rp0" subtitle="Bulan Ini" subtitleId="s-income-sub" iconBgColor="bg-[#e5f0e1]" iconTextColor="text-[#4a6341]">
     </x-admin.metric-card>
   </div>
 
