@@ -122,11 +122,28 @@ function showAlert(msg, type, cb) {
     }
 }
 
+function clearErrors() {
+    ['buyer_name', 'buyer_phone', 'buyer_address'].forEach(field => {
+        const input = document.querySelector(`[name="${field}"]`);
+        const errSpan = document.getElementById(`err_${field}`);
+        if (input) {
+            input.classList.remove('border-red-500', 'focus:border-red-500', 'focus:ring-red-500/15');
+            input.classList.add('border-[#dccabb]', 'focus:border-[#a78d78]', 'focus:ring-[#a78d78]/15');
+        }
+        if (errSpan) {
+            errSpan.textContent = '';
+            errSpan.classList.add('hidden');
+        }
+    });
+}
+
 document.getElementById('checkout-form').addEventListener('submit', async function(e) {
     e.preventDefault();
 
     payBtn.textContent = 'Memproses...';
     payBtn.disabled    = true;
+    
+    clearErrors();
 
     const formData = new FormData(this);
 
@@ -163,7 +180,22 @@ document.getElementById('checkout-form').addEventListener('submit', async functi
             });
         } else if (res.status === 422) {
             resetPayBtn();
-            showAlert('Validasi gagal: ' + (data.message || 'Periksa data Anda.'), 'error');
+            if (data.errors) {
+                for (const field in data.errors) {
+                    const input = document.querySelector(`[name="${field}"]`);
+                    const errSpan = document.getElementById(`err_${field}`);
+                    if (input) {
+                        input.classList.remove('border-[#dccabb]', 'focus:border-[#a78d78]', 'focus:ring-[#a78d78]/15');
+                        input.classList.add('border-red-500', 'focus:border-red-500', 'focus:ring-red-500/15');
+                    }
+                    if (errSpan) {
+                        errSpan.textContent = data.errors[field][0];
+                        errSpan.classList.remove('hidden');
+                    }
+                }
+            } else {
+                showAlert('Validasi gagal: ' + (data.message || 'Periksa data Anda.'), 'error');
+            }
         } else {
             resetPayBtn();
             showAlert('Gagal: ' + (data.error || data.message || 'Terjadi kesalahan.'), 'error');

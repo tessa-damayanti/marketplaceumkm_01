@@ -48,6 +48,10 @@ class CheckoutController extends Controller
             'buyer_phone'   => 'required|string|max:15',
             'buyer_address' => 'required|string',
             'grand_total'   => 'required|numeric|min:1',
+        ], [
+            'buyer_name.required'    => 'Nama lengkap wajib diisi.',
+            'buyer_phone.required'   => 'Nomor WhatsApp wajib diisi.',
+            'buyer_address.required' => 'Alamat wajib diisi.',
         ]);
 
         // Ambil user yang sedang login
