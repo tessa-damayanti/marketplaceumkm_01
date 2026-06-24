@@ -553,6 +553,15 @@
         document.getElementById('err-prod-desk').style.display = 'block';
         isValid = false;
       }
+      // Validasi foto wajib saat tambah produk baru
+      if (!editingProdukId && fileInput.files.length === 0) {
+        const errFoto = document.getElementById('err-prod-foto');
+        if (errFoto) {
+          errFoto.textContent = 'Foto produk wajib diunggah.';
+          errFoto.style.display = 'block';
+        }
+        isValid = false;
+      }
       if (!isValid) return;
 
       const formData = new FormData();
@@ -633,8 +642,29 @@
 
     function handleFileChange(input) {
       const file = input.files[0];
+      const errEl = document.getElementById('err-prod-foto');
       document.getElementById('upload-hint').textContent = file?.name || 'Belum ada file dipilih';
-      if (!file) return selectedProdukImage = '';
+      
+      if (!file) {
+        selectedProdukImage = '';
+        return;
+      }
+
+      // Validasi ukuran maksimal 2MB
+      if (file.size > 2 * 1024 * 1024) {
+        if (errEl) {
+          errEl.textContent = 'Ukuran file maksimal 2MB.';
+          errEl.style.display = 'block';
+        }
+        input.value = '';
+        document.getElementById('upload-hint').textContent = 'Belum ada file dipilih';
+        selectedProdukImage = '';
+        return;
+      }
+
+      // File valid, sembunyikan error
+      if (errEl) errEl.style.display = 'none';
+      
       const reader = new FileReader();
       reader.onload = () => selectedProdukImage = String(reader.result || '');
       reader.readAsDataURL(file);

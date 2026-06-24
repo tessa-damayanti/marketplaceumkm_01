@@ -12,6 +12,7 @@
           <span class="upload-hint" id="upload-hint">Belum ada file dipilih</span>
           <input type="file" id="file-upload" accept="image/*" onchange="handleFileChange(this)">
         </div>
+        <span class="error-msg" id="err-prod-foto" style="color: #ef4444; font-size: 12px; font-weight: 500; display: none; margin-top: 4px;"></span>
       </div>
       <div>
         <label class="field-label">Nama Produk</label>
