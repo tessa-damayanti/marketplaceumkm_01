@@ -6,6 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class Stok extends Model
 {
+    protected $table = 'stoks';
+
     protected $fillable = [
         'produk_id',
         'ukuran_id',
