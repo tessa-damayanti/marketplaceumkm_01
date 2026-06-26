@@ -18,6 +18,7 @@ class KategoriController extends Controller
         ]);
     }
 
+    //mengambil data kategori di database untuk ditampilkan di halaman admin
     private function getKategoriData()
     {
         return Kategori::orderBy('id', 'asc')->get()->map(function ($k) {
@@ -31,7 +32,12 @@ class KategoriController extends Controller
             return redirect()->route('login')->with('error', 'Silakan login sebagai admin terlebih dahulu.');
         }
 
-        $request->validate(['nama' => 'required|string|max:25|unique:kategoris,nama']);
+        $request->validate([
+            'nama' => 'required|string|max:25|unique:kategoris,nama'
+        ], [
+            'nama.max' => 'Nama kategori maksimal 25 karakter',
+            'nama.unique' => 'Nama kategori sudah ada.'
+        ]);
         $kat = Kategori::create(['nama' => $request->nama]);
         return response()->json(['success' => true, 'data' => ['id' => $kat->id, 'nama' => $kat->nama]]);
     }
@@ -42,7 +48,12 @@ class KategoriController extends Controller
             return redirect()->route('login')->with('error', 'Silakan login sebagai admin terlebih dahulu.');
         }
 
-        $request->validate(['nama' => 'required|string|max:25|unique:kategoris,nama,' . $id]);
+        $request->validate([
+            'nama' => 'required|string|max:25|unique:kategoris,nama,' . $id
+        ], [
+            'nama.max' => 'Nama kategori maksimal 25 karakter',
+            'nama.unique' => 'Nama kategori sudah ada.'
+        ]);
         $kat = Kategori::findOrFail($id);
         $kat->update(['nama' => $request->nama]);
         return response()->json(['success' => true, 'data' => ['id' => $kat->id, 'nama' => $kat->nama]]);

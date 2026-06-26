@@ -791,7 +791,7 @@
 
         if (res.status === 422 && data.errors && data.errors.nama) {
           if (errEl) {
-            errEl.textContent = 'Nama kategori sudah ada.';
+            errEl.textContent = data.errors.nama[0];
             errEl.style.display = 'block';
           }
           return;
