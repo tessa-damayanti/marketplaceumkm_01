@@ -156,6 +156,40 @@
             }
         }
 
+        async function loadHistory(url) {
+            const container = document.getElementById('tab-riwayat');
+            container.style.pointerEvents = 'none';
+            
+            try {
+                const response = await fetch(url, {
+                    headers: { 'X-Requested-With': 'XMLHttpRequest' }
+                });
+                const html = await response.text();
+                const parser = new DOMParser();
+                const doc = parser.parseFromString(html, 'text/html');
+                
+                const newHistory = doc.getElementById('tab-riwayat');
+                if (newHistory) {
+                    container.innerHTML = newHistory.innerHTML;
+                }
+                
+                // Update URL di browser tanpa reload
+                window.history.pushState({path: url}, '', url);
+                
+                // Perbarui data JSON modal order
+                const newOrdersData = doc.getElementById('orders-data');
+                if (newOrdersData) {
+                    orders = JSON.parse(newOrdersData.textContent);
+                    document.getElementById('orders-data').textContent = newOrdersData.textContent;
+                }
+            } catch (e) {
+                console.error(e);
+                window.location.href = url; // Fallback jika fetch gagal
+            } finally {
+                container.style.pointerEvents = 'auto';
+            }
+        }
+
         function openOrderModal() {
             const modal = document.getElementById('orderModal');
             if (modal) {
@@ -492,11 +526,7 @@
                 switchTab('akun');
             }
 
-            // Bersihkan URL dari parameter 
-            if (window.history.replaceState && window.location.search) {
-                const cleanUrl = window.location.protocol + "//" + window.location.host + window.location.pathname;
-                window.history.replaceState({path: cleanUrl}, '', cleanUrl);
-            }
+            // Penghapusan cleanUrl karena AJAX pushState membutuhkan param tetap di URL
 
             // Update status pembayaran
             const pendingOrders = Object.values(orders).filter(o => o.raw_status === 'pending');

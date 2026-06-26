@@ -53,8 +53,8 @@ class ProfileController extends Controller
             'name.string' => 'Nama lengkap harus berupa teks.',
             'name.max' => 'Nama lengkap maksimal 50 karakter.',
             'phone.required' => 'Nomor WhatsApp wajib diisi.',
-            'phone.string' => 'Nomor WhatsApp harus berupa teks.',
-            'phone.max' => 'Nomor WhatsApp maksimal 15 karakter.',
+            'phone.numeric' => 'Nomor WhatsApp harus berupa angka.',
+            'phone.digits_between' => 'Nomor WhatsApp harus antara 10 hingga 15 digit.',
             'address.required' => 'Alamat wajib diisi.',
             'address.string' => 'Alamat harus berupa teks.',
             'profile_photo.image' => 'Foto profil harus berupa gambar.',
@@ -64,7 +64,7 @@ class ProfileController extends Controller
 
         $request->validate([
             'name' => 'required|string|max:50',
-            'phone' => 'required|string|max:15',
+            'phone' => 'required|numeric|digits_between:10,15',
             'address' => 'required|string',
             'profile_photo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ], $messages);
@@ -95,26 +95,32 @@ class ProfileController extends Controller
             return redirect()->route('login')->with('error', 'Silakan login terlebih dahulu.');
         }
 
-        $request->validate([
-            'old_password' => 'required',
-            'new_password' => 'required|min:6|confirmed',
+        $validator = \Illuminate\Support\Facades\Validator::make($request->all(), [
+            'old_password' => ['required', 'current_password'],
+            'new_password' => 'required|min:6|different:old_password',
+            'new_password_confirmation' => 'required|same:new_password',
         ], [
             'old_password.required' => 'Password lama wajib diisi.',
+            'old_password.current_password' => 'Password lama tidak sesuai.',
             'new_password.required' => 'Password baru wajib diisi.',
             'new_password.min' => 'Password baru minimal 6 karakter.',
-            'new_password.confirmed' => 'Konfirmasi password tidak cocok.',
+            'new_password.different' => 'Password baru tidak boleh sama dengan password lama.',
+            'new_password_confirmation.required' => 'Konfirmasi password wajib diisi.',
+            'new_password_confirmation.same' => 'Konfirmasi password tidak cocok.',
         ]);
 
-        $user = User::find(Auth::id());
-
-        if (!\Illuminate\Support\Facades\Hash::check($request->old_password, $user->password)) {
-            return back()->withErrors(['old_password' => 'Password lama tidak sesuai.']);
+        if ($validator->fails()) {
+            return redirect()->route('profile', ['tab' => 'password'])
+                             ->withErrors($validator)
+                             ->withInput();
         }
+
+        $user = User::find(Auth::id());
 
         $user->password = \Illuminate\Support\Facades\Hash::make($request->new_password);
         $user->save();
 
-        return redirect()->route('profile')->with('success', 'Password berhasil diperbarui.');
+        return redirect()->route('profile', ['tab' => 'password'])->with('success', 'Password berhasil diperbarui.');
     }
 
     public function cancelOrder(int $id)

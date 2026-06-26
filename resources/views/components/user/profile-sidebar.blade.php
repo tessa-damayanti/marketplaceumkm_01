@@ -1,3 +1,12 @@
+@php
+    $activeTab = request()->query('tab');
+    if (!in_array($activeTab, ['akun', 'riwayat', 'password'])) {
+        $activeTab = (request()->query('page') || request()->query('status')) ? 'riwayat' : 'akun';
+    }
+    
+    $activeClass = 'font-bold text-[#5c4432] bg-[#e8ded3]';
+    $inactiveClass = 'font-medium text-[#8b6f58] bg-transparent';
+@endphp
 <div class="rounded-[32px] bg-white p-8 shadow-[0_8px_30px_rgba(92,68,50,0.06)]">
 
     {{-- Profil --}}
@@ -24,7 +33,7 @@
         {{-- Akun --}}
         <button onclick="switchTab('akun')"
             id="btn-tab-akun"
-            class="flex w-full items-center gap-4 rounded-2xl px-6 py-4 text-left font-medium text-[#8b6f58] hover:bg-[#f0e7dd] transition-colors">
+            class="flex w-full items-center gap-4 rounded-2xl px-6 py-4 text-left hover:bg-[#f0e7dd] transition-colors {{ $activeTab === 'akun' ? $activeClass : $inactiveClass }}">
 
             <svg xmlns="http://www.w3.org/2000/svg"
                 class="h-6 w-6"
@@ -43,7 +52,7 @@
         {{-- Riwayat --}}
         <button onclick="switchTab('riwayat')"
             id="btn-tab-riwayat"
-            class="flex w-full items-center gap-4 rounded-2xl px-6 py-4 text-left font-bold text-[#5c4432] bg-[#e8ded3] hover:bg-[#f0e7dd] transition-colors">
+            class="flex w-full items-center gap-4 rounded-2xl px-6 py-4 text-left hover:bg-[#f0e7dd] transition-colors {{ $activeTab === 'riwayat' ? $activeClass : $inactiveClass }}">
 
             <svg xmlns="http://www.w3.org/2000/svg"
                 class="h-6 w-6"
@@ -62,7 +71,7 @@
         {{-- Ubah Password --}}
         <button onclick="switchTab('password')"
             id="btn-tab-password"
-            class="flex w-full items-center gap-4 rounded-2xl px-6 py-4 text-left font-medium text-[#8b6f58] hover:bg-[#f0e7dd] transition-colors">
+            class="flex w-full items-center gap-4 rounded-2xl px-6 py-4 text-left hover:bg-[#f0e7dd] transition-colors {{ $activeTab === 'password' ? $activeClass : $inactiveClass }}">
 
             <svg xmlns="http://www.w3.org/2000/svg"
                  class="h-6 w-6"

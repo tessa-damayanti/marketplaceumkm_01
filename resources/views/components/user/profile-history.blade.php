@@ -8,7 +8,13 @@
     ];
 @endphp
 
-<div id="tab-riwayat" class="block">
+@php
+    $activeTab = request()->query('tab');
+    if (!in_array($activeTab, ['akun', 'riwayat', 'password'])) {
+        $activeTab = (request()->query('page') || request()->query('status')) ? 'riwayat' : 'akun';
+    }
+@endphp
+<div id="tab-riwayat" class="{{ $activeTab === 'riwayat' ? 'block' : 'hidden' }}">
     <h2 class="mb-6 text-3xl font-bold text-[#5c4432]">
         Riwayat Pembelian
     </h2>
@@ -16,19 +22,19 @@
     <!-- Tab Status Berdasarkan Permintaan User -->
     <div class="mb-6">
         <div class="flex w-full gap-1">
-            <button onclick="window.location.href='?tab=riwayat&status=all'" id="btn-subtab-all" class="subtab-btn flex-1 rounded-lg border py-2 text-xs transition-all duration-200 {{ $status === 'all' ? 'font-bold bg-[#e8ded3] text-[#5c4432] border-[#BFA28C]' : 'font-medium bg-transparent text-[#8b6f58] border-[#e8ded3]' }}">
+            <button onclick="loadHistory('?tab=riwayat&status=all')" id="btn-subtab-all" class="subtab-btn flex-1 rounded-lg border py-2 text-xs transition-all duration-200 {{ $status === 'all' ? 'font-bold bg-[#e8ded3] text-[#5c4432] border-[#BFA28C]' : 'font-medium bg-transparent text-[#8b6f58] border-[#e8ded3]' }}">
                 Semua
             </button>
-            <button onclick="window.location.href='?tab=riwayat&status=pending'" id="btn-subtab-pending" class="subtab-btn flex-1 rounded-lg border py-2 text-xs transition-all duration-200 {{ $status === 'pending' ? 'font-bold bg-[#e8ded3] text-[#5c4432] border-[#BFA28C]' : 'font-medium bg-transparent text-[#8b6f58] border-[#e8ded3]' }}">
+            <button onclick="loadHistory('?tab=riwayat&status=pending')" id="btn-subtab-pending" class="subtab-btn flex-1 rounded-lg border py-2 text-xs transition-all duration-200 {{ $status === 'pending' ? 'font-bold bg-[#e8ded3] text-[#5c4432] border-[#BFA28C]' : 'font-medium bg-transparent text-[#8b6f58] border-[#e8ded3]' }}">
                 Menunggu Pembayaran
             </button>
-            <button onclick="window.location.href='?tab=riwayat&status=settlement'" id="btn-subtab-settlement" class="subtab-btn flex-1 rounded-lg border py-2 text-xs transition-all duration-200 {{ $status === 'settlement' ? 'font-bold bg-[#e8ded3] text-[#5c4432] border-[#BFA28C]' : 'font-medium bg-transparent text-[#8b6f58] border-[#e8ded3]' }}">
+            <button onclick="loadHistory('?tab=riwayat&status=settlement')" id="btn-subtab-settlement" class="subtab-btn flex-1 rounded-lg border py-2 text-xs transition-all duration-200 {{ $status === 'settlement' ? 'font-bold bg-[#e8ded3] text-[#5c4432] border-[#BFA28C]' : 'font-medium bg-transparent text-[#8b6f58] border-[#e8ded3]' }}">
                 Pembayaran Berhasil
             </button>
-            <button onclick="window.location.href='?tab=riwayat&status=cancel'" id="btn-subtab-cancel" class="subtab-btn flex-1 rounded-lg border py-2 text-xs transition-all duration-200 {{ $status === 'cancel' ? 'font-bold bg-[#e8ded3] text-[#5c4432] border-[#BFA28C]' : 'font-medium bg-transparent text-[#8b6f58] border-[#e8ded3]' }}">
+            <button onclick="loadHistory('?tab=riwayat&status=cancel')" id="btn-subtab-cancel" class="subtab-btn flex-1 rounded-lg border py-2 text-xs transition-all duration-200 {{ $status === 'cancel' ? 'font-bold bg-[#e8ded3] text-[#5c4432] border-[#BFA28C]' : 'font-medium bg-transparent text-[#8b6f58] border-[#e8ded3]' }}">
                 Pembayaran Dibatalkan
             </button>
-            <button onclick="window.location.href='?tab=riwayat&status=expire'" id="btn-subtab-expire" class="subtab-btn flex-1 rounded-lg border py-2 text-xs transition-all duration-200 {{ $status === 'expire' ? 'font-bold bg-[#e8ded3] text-[#5c4432] border-[#BFA28C]' : 'font-medium bg-transparent text-[#8b6f58] border-[#e8ded3]' }}">
+            <button onclick="loadHistory('?tab=riwayat&status=expire')" id="btn-subtab-expire" class="subtab-btn flex-1 rounded-lg border py-2 text-xs transition-all duration-200 {{ $status === 'expire' ? 'font-bold bg-[#e8ded3] text-[#5c4432] border-[#BFA28C]' : 'font-medium bg-transparent text-[#8b6f58] border-[#e8ded3]' }}">
                 Pembayaran Kadaluwarsa
             </button>
         </div>
@@ -36,7 +42,7 @@
 
     <div class="overflow-hidden rounded-[18px] bg-white shadow-[0_6px_22px_rgba(92,68,50,0.08)]">
         <div class="overflow-x-auto">
-            <table class="w-full min-w-[800px] text-left">
+            <table class="w-full text-left">
                 <thead>
                 <tr class="border-b border-[#eee5dc] bg-[#fcfaf8] text-sm font-bold text-[#5c4432]">
                     <th class="px-6 py-5 whitespace-nowrap">ID. Pesanan</th>
@@ -131,7 +137,7 @@
                             <svg class="h-3 w-3" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6" /></svg>
                         </span>
                     @else
-                        <a href="{{ $pesanans->previousPageUrl() }}" class="flex h-7 w-7 items-center justify-center rounded-lg border border-[#f0e7dd] bg-white text-[#9a8575] transition-colors hover:bg-[#fbf8f5] hover:text-[#BFA28C]">
+                        <a href="javascript:void(0)" onclick="loadHistory('{{ $pesanans->previousPageUrl() }}&tab=riwayat&status={{ $status }}')" class="flex h-7 w-7 items-center justify-center rounded-lg border border-[#f0e7dd] bg-white text-[#9a8575] transition-colors hover:bg-[#fbf8f5] hover:text-[#BFA28C]">
                             <svg class="h-3 w-3" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6" /></svg>
                         </a>
                     @endif
@@ -143,7 +149,7 @@
 
                     {{-- Tombol Next --}}
                     @if ($pesanans->hasMorePages())
-                        <a href="{{ $pesanans->nextPageUrl() }}" class="flex h-7 w-7 items-center justify-center rounded-lg border border-[#f0e7dd] bg-white text-[#9a8575] transition-colors hover:bg-[#fbf8f5] hover:text-[#BFA28C]">
+                        <a href="javascript:void(0)" onclick="loadHistory('{{ $pesanans->nextPageUrl() }}&tab=riwayat&status={{ $status }}')" class="flex h-7 w-7 items-center justify-center rounded-lg border border-[#f0e7dd] bg-white text-[#9a8575] transition-colors hover:bg-[#fbf8f5] hover:text-[#BFA28C]">
                             <svg class="h-3 w-3" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 5l6 6-6 6" /></svg>
                         </a>
                     @else

@@ -1,4 +1,10 @@
-<div id="tab-akun" class="hidden rounded-[32px] bg-white p-10 shadow-[0_8px_30px_rgba(92,68,50,0.06)] min-h-[500px]">
+@php
+    $activeTab = request()->query('tab');
+    if (!in_array($activeTab, ['akun', 'riwayat', 'password'])) {
+        $activeTab = (request()->query('page') || request()->query('status')) ? 'riwayat' : 'akun';
+    }
+@endphp
+<div id="tab-akun" class="{{ $activeTab === 'akun' ? 'block' : 'hidden' }} rounded-[32px] bg-white p-10 shadow-[0_8px_30px_rgba(92,68,50,0.06)] min-h-[500px]">
 
     <h2 class="text-3xl font-bold text-[#5c4432]">Edit Profil</h2>
     <p class="mt-2 text-[#7b6858] mb-10">
