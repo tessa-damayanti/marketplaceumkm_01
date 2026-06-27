@@ -51,10 +51,10 @@ class ProfileController extends Controller
         $messages = [
             'name.required' => 'Nama lengkap wajib diisi.',
             'name.string' => 'Nama lengkap harus berupa teks.',
-            'name.max' => 'Nama lengkap maksimal 50 karakter.',
+            'name.max' => 'Nama lengkap maksimal 25 karakter.',
             'phone.required' => 'Nomor WhatsApp wajib diisi.',
             'phone.numeric' => 'Nomor WhatsApp harus berupa angka.',
-            'phone.digits_between' => 'Nomor WhatsApp harus antara 10 hingga 15 digit.',
+            'phone.digits_between' => 'Nomor WhatsApp harus antara 12 hingga 15 digit.',
             'address.required' => 'Alamat wajib diisi.',
             'address.string' => 'Alamat harus berupa teks.',
             'profile_photo.image' => 'Foto profil harus berupa gambar.',
@@ -63,7 +63,7 @@ class ProfileController extends Controller
         ];
 
         $request->validate([
-            'name' => 'required|string|max:50',
+            'name' => 'required|string|max:25',
             'phone' => 'required|numeric|digits_between:10,15',
             'address' => 'required|string',
             'profile_photo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',

@@ -21,7 +21,7 @@ class ProdukController extends Controller
 
     private function getProdukData()
     {
-        $produks = Produk::with(['kategori', 'stoks.ukuran'])->get();
+        $produks = Produk::with(['kategori', 'stoks.ukuran'])->orderBy('id', 'desc')->get();
         $data = [];
         foreach ($produks as $produk) {
             $stokArray = ['S' => 0, 'M' => 0, 'L' => 0, 'XL' => 0];
@@ -64,6 +64,11 @@ class ProdukController extends Controller
             'harga' => 'required|integer',
             'deskripsi' => 'required|string',
             'image' => 'nullable|image|mimes:jpeg,png,jpg|max:2048'
+        ], [
+            'nama.unique' => 'Nama produk sudah ada.',
+            'image.image' => 'File harus berupa foto.',
+            'image.mimes' => 'Format foto harus jpeg, png, atau jpg.',
+            'image.max' => 'Ukuran foto tidak boleh lebih dari 2MB.'
         ]);
 
         $data = $request->only(['nama', 'kategori_id', 'harga', 'deskripsi']);
@@ -121,6 +126,11 @@ class ProdukController extends Controller
             'harga' => 'required|integer',
             'deskripsi' => 'required|string',
             'image' => 'nullable|image|mimes:jpeg,png,jpg|max:2048'
+        ], [
+            'nama.unique' => 'Nama produk sudah ada.',
+            'image.image' => 'File harus berupa foto/gambar.',
+            'image.mimes' => 'Format foto harus jpeg, png, atau jpg.',
+            'image.max' => 'Ukuran foto tidak boleh lebih dari 2MB.'
         ]);
 
         $produk = Produk::findOrFail($id);
@@ -170,6 +180,15 @@ class ProdukController extends Controller
         }
 
         $produk = Produk::findOrFail($id);
+
+        $totalStok = $produk->stoks()->sum('jumlah_stok');
+        if ($totalStok > 0) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Produk gagal dihapus karena masih memiliki stok sebanyak ' . $totalStok . ' item. Silakan kosongkan stok terlebih dahulu.'
+            ], 400);
+        }
+
         $produk->delete();
         return response()->json(['success' => true]);
     }

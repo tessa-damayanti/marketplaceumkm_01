@@ -20,7 +20,7 @@ class StokController extends Controller
 
     private function getProdukData()
     {
-        $produks = Produk::with(['kategori', 'stoks.ukuran'])->get();
+        $produks = Produk::with(['kategori', 'stoks.ukuran'])->orderBy('id', 'desc')->get();
         $data = [];
         foreach ($produks as $produk) {
             $stokArray = ['S' => 0, 'M' => 0, 'L' => 0, 'XL' => 0];

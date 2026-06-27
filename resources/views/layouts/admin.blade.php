@@ -494,7 +494,7 @@
       document.getElementById('prod-modal-title').textContent = 'Tambah Produk';
       ['prod-nama', 'prod-harga', 'prod-desk', 'file-upload'].forEach(id => document.getElementById(id).value = '');
       document.getElementById('upload-hint').textContent = 'Belum ada file dipilih';
-      ['err-prod-nama', 'err-prod-harga', 'err-prod-desk'].forEach(id => {
+      ['err-prod-nama', 'err-prod-harga', 'err-prod-desk', 'err-prod-foto'].forEach(id => {
         const el = document.getElementById(id);
         if (el) el.style.display = 'none';
       });
@@ -512,7 +512,7 @@
       document.getElementById('prod-desk').value = p.deskripsi;
       selectedProdukImage = p.image || '';
       document.getElementById('upload-hint').textContent = 'Foto tersimpan';
-      ['err-prod-nama', 'err-prod-harga', 'err-prod-desk'].forEach(id => {
+      ['err-prod-nama', 'err-prod-harga', 'err-prod-desk', 'err-prod-foto'].forEach(id => {
         const el = document.getElementById(id);
         if (el) el.style.display = 'none';
       });
@@ -589,11 +589,34 @@
 
         const data = await res.json();
 
-        if (res.status === 422 && data.errors && data.errors.nama) {
-          const errEl = document.getElementById('err-prod-nama');
-          if (errEl) {
-            errEl.textContent = 'Nama produk sudah ada.';
-            errEl.style.display = 'block';
+        if (res.status === 422 && data.errors) {
+          if (data.errors.nama) {
+            const errEl = document.getElementById('err-prod-nama');
+            if (errEl) {
+              errEl.textContent = data.errors.nama[0];
+              errEl.style.display = 'block';
+            }
+          }
+          if (data.errors.image) {
+            const errEl = document.getElementById('err-prod-foto');
+            if (errEl) {
+              errEl.textContent = data.errors.image[0];
+              errEl.style.display = 'block';
+            }
+          }
+          if (data.errors.harga) {
+            const errEl = document.getElementById('err-prod-harga');
+            if (errEl) {
+              errEl.textContent = data.errors.harga[0];
+              errEl.style.display = 'block';
+            }
+          }
+          if (data.errors.deskripsi) {
+            const errEl = document.getElementById('err-prod-desk');
+            if (errEl) {
+              errEl.textContent = data.errors.deskripsi[0];
+              errEl.style.display = 'block';
+            }
           }
           return;
         }
@@ -603,7 +626,7 @@
             const idx = produkList.findIndex(x => String(x.id) === String(editingProdukId));
             if (idx > -1) produkList[idx] = data.produk;
           } else {
-            produkList.push(data.produk);
+            produkList.unshift(data.produk);
           }
           closeAdminModal('modal-tambah-produk');
           renderProdukTable();
@@ -633,7 +656,8 @@
           renderProdukTable();
           showAdminToast('Berhasil Dihapus', 'Produk telah dihapus dari daftar.', 'success');
         } else {
-          showAdminToast('Gagal', 'Terjadi kesalahan.', 'error');
+          closeAdminModal('modal-hapus-produk');
+          showAdminToast('Gagal', data.message || 'Terjadi kesalahan.', 'error');
         }
       } catch (err) {
         showAdminToast('Gagal', 'Koneksi bermasalah.', 'error');
@@ -802,7 +826,7 @@
             const k = kategoriList.find(x => String(x.id) === String(editingKatId));
             if (k) k.nama = nama;
           } else {
-            kategoriList.push(data.data);
+            kategoriList.unshift(data.data);
           }
           closeAdminModal('modal-tambah-kat');
           renderKategoriTable();
@@ -908,7 +932,6 @@
       if (!p) return;
 
       const payload = {};
-      let hasError = false;
       ['s', 'm', 'l', 'xl'].forEach(sz => {
         let val = parseInt(document.getElementById('stok-' + sz).value);
         if (isNaN(val) || val < 0) {
@@ -916,6 +939,13 @@
         }
         payload[sz.toUpperCase()] = val;
       });
+
+      // Cek apakah ada perubahan stok
+      const isChanged = ['S', 'M', 'L', 'XL'].some(sz => payload[sz] !== p.stok[sz]);
+      if (!isChanged) {
+        showAdminToast('Info', 'Tidak ada perubahan stok.', 'error');
+        return;
+      }
 
       const csrf = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
 

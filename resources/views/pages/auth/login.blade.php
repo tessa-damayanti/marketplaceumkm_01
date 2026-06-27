@@ -55,7 +55,7 @@
                         <h2 class="text-4xl font-bold text-[#fffaf6]">Login</h2>
                     </div>
 
-                    <form class="space-y-5" onsubmit="return false;">
+                    <form class="space-y-5" onsubmit="validateForm(); return false;">
 
                         <div>
                             <label class="block text-sm font-semibold text-[#fff4eb] mb-2">
@@ -115,8 +115,7 @@
                         </div>
 
                         <button
-                            type="button"
-                            onclick="validateForm()"
+                            type="submit"
                             class="w-full h-14 rounded-2xl bg-[#e6dbcf] text-[#5c4432] text-base font-semibold shadow-[0_14px_28px_rgba(92,68,50,0.22)] transition-[background,box-shadow,transform] duration-200 hover:bg-[#d9cec1] hover:shadow-[0_16px_32px_rgba(92,68,50,0.25)] active:translate-y-0 hover:-translate-y-[1px]">
                             Login
                         </button>

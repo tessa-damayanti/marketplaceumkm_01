@@ -25,6 +25,9 @@ class LoginController extends Controller
             'username' => 'required|string|unique:users,username',
             'email' => 'required|email|unique:users,email',
             'password' => 'required|string|min:6',
+        ], [
+            'username.unique' => 'Username telah digunakan.',
+            'email.unique' => 'Email telah digunakan.',
         ]);
 
         $user = \App\Models\User::create([

@@ -21,7 +21,7 @@ class KategoriController extends Controller
     //mengambil data kategori di database untuk ditampilkan di halaman admin
     private function getKategoriData()
     {
-        return Kategori::orderBy('id', 'asc')->get()->map(function ($k) {
+        return Kategori::orderBy('id', 'desc')->get()->map(function ($k) {
             return ['id' => $k->id, 'nama' => $k->nama];
         })->toArray();
     }
