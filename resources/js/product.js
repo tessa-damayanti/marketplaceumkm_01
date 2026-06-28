@@ -284,7 +284,11 @@ document.addEventListener('DOMContentLoaded', () => {
                     grid.appendChild(card);
                 });
 
-                requestAnimationFrame(() => setTimeout(initCardAnimations, 30));
+                if (typeof window.resetPaginationAndShowPage1 === 'function') {
+                    window.resetPaginationAndShowPage1();
+                } else {
+                    requestAnimationFrame(() => setTimeout(initCardAnimations, 30));
+                }
             });
         });
 
@@ -302,6 +306,115 @@ document.addEventListener('DOMContentLoaded', () => {
     window.addEventListener('keydown', e => {
         if (e.key === 'Escape') closeModal();
     });
+
+    function setupProductPagination() {
+        if (!document.getElementById('categoryTabsProd')) return;
+
+        const grid = document.getElementById('product-grid');
+        if (!grid) return;
+
+        const cards = Array.from(grid.querySelectorAll('.product-card'));
+        const itemsPerPage = 28;
+        let currentPage = 1;
+
+        const paginationContainer = document.getElementById('pagination-container');
+        if (!paginationContainer) return;
+
+        function showPage(page) {
+            currentPage = page;
+            const currentCards = Array.from(grid.querySelectorAll('.product-card'));
+            
+            let visibleCount = 0;
+            currentCards.forEach((card, index) => {
+                if (currentCards.length <= itemsPerPage) {
+                    card.style.display = 'flex';
+                    card.dataset.index = index;
+                } else {
+                    const isVisible = index >= (page - 1) * itemsPerPage && index < page * itemsPerPage;
+                    if (isVisible) {
+                        card.style.display = 'flex';
+                        card.dataset.index = visibleCount;
+                        visibleCount++;
+                    } else {
+                        card.style.display = 'none';
+                    }
+                }
+            });
+
+            resetProductCards();
+            requestAnimationFrame(() => setTimeout(initCardAnimations, 30));
+
+            renderPaginationControls(currentCards.length);
+        }
+
+        function renderPaginationControls(totalItems) {
+            paginationContainer.innerHTML = '';
+
+            const totalPages = Math.ceil(totalItems / itemsPerPage);
+            if (totalPages <= 1) {
+                paginationContainer.classList.add('hidden');
+                return;
+            }
+            paginationContainer.classList.remove('hidden');
+
+            // Pagination buttons
+            const prevBtn = document.createElement('button');
+            prevBtn.type = 'button';
+            prevBtn.className = currentPage === 1 
+                ? 'flex 8 w-8 cursor-not-allowed items-center justify-center rounded-lg border border-[#f0e7dd] text-[#d8c3af]'
+                : 'flex h-8 w-8 items-center justify-center rounded-lg border border-[#f0e7dd] bg-white text-[#9a8575] transition-colors hover:bg-[#fbf8f5] hover:text-[#BFA28C] cursor-pointer';
+            prevBtn.innerHTML = `
+                <svg class="h-4 w-4 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path d="M15 18l-6-6 6-6" />
+                </svg>
+            `;
+            if (currentPage > 1) {
+                prevBtn.onclick = () => {
+                    showPage(currentPage - 1);
+                    window.scrollTo({ top: grid.offsetTop - 100, behavior: 'smooth' });
+                };
+            } else {
+                prevBtn.disabled = true;
+            }
+            paginationContainer.appendChild(prevBtn);
+
+            // Active Page Button (Only the current page is shown)
+            const pageBtn = document.createElement('button');
+            pageBtn.type = 'button';
+            pageBtn.innerText = currentPage;
+            pageBtn.className = 'flex h-8 w-8 items-center justify-center rounded-lg bg-[#BFA28C] text-sm font-bold text-white shadow-sm';
+            paginationContainer.appendChild(pageBtn);
+
+            // Next button
+            const nextBtn = document.createElement('button');
+            nextBtn.type = 'button';
+            nextBtn.className = currentPage === totalPages 
+                ? 'flex h-8 w-8 cursor-not-allowed items-center justify-center rounded-lg border border-[#f0e7dd] text-[#d8c3af]'
+                : 'flex h-8 w-8 items-center justify-center rounded-lg border border-[#f0e7dd] bg-white text-[#9a8575] transition-colors hover:bg-[#fbf8f5] hover:text-[#BFA28C] cursor-pointer';
+            nextBtn.innerHTML = `
+                <svg class="h-4 w-4 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path d="M9 5l6 6-6 6" />
+                </svg>
+            `;
+            if (currentPage < totalPages) {
+                nextBtn.onclick = () => {
+                    showPage(currentPage + 1);
+                    window.scrollTo({ top: grid.offsetTop - 100, behavior: 'smooth' });
+                };
+            } else {
+                nextBtn.disabled = true;
+            }
+            paginationContainer.appendChild(nextBtn);
+        }
+
+        window.resetPaginationAndShowPage1 = () => {
+            showPage(1);
+        };
+
+        showPage(1);
+    }
+
+    setupProductPagination();
 });
 
 window.openModalFromElement = openModalFromElement;

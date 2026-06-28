@@ -21,12 +21,24 @@
       </div>
       <div>
         <label class="field-label">Kategori</label>
-        <select id="prod-kat" style="width:100%">
-        </select>
+        <div class="modal-custom-select" id="prod-kat-wrapper">
+          <button type="button" id="prod-kat-btn" onclick="toggleModalKatDropdown(event)"
+            class="modal-select-btn">
+            <span id="prod-kat-label">Pilih Kategori...</span>
+            <svg id="prod-kat-icon" width="14" height="8" viewBox="0 0 14 8" fill="none"
+              class="modal-select-icon">
+              <path d="M2 2l5 4 5-4" stroke="#7b6858" stroke-width="2" stroke-linecap="round"
+                stroke-linejoin="round" />
+            </svg>
+          </button>
+          <ul id="prod-kat-menu" class="modal-select-menu hidden">
+          </ul>
+          <input type="hidden" id="prod-kat" value="">
+        </div>
       </div>
       <div>
         <label class="field-label">Harga</label>
-        <input type="text" id="prod-harga" placeholder="Rp 100.000" style="width:100%" oninput="formatRupiahInput(this); document.getElementById('err-prod-harga').style.display='none'">
+        <input type="text" id="prod-harga" placeholder="Rp 000.000" style="width:100%" oninput="formatRupiahInput(this); document.getElementById('err-prod-harga').style.display='none'">
         <span class="error-msg" id="err-prod-harga" style="color: #ef4444; font-size: 12px; font-weight: 500; display: none; margin-top: 4px;">Harga produk wajib diisi.</span>
       </div>
       <div>

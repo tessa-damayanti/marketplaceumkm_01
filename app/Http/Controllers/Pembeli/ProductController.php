@@ -13,7 +13,7 @@ class ProductController extends Controller
     {
         $dbProduks = \App\Models\Produk::with(['kategori', 'stoks.ukuran'])->get();
 
-        // Hitung total terjual per produk (hanya dari pesanan settlement/berhasil)
+        // Hitung total terjual per produk (hanya dari pembayaran berhasil)
         $soldMap = \App\Models\DetailPesanan::selectRaw('stoks.produk_id, SUM(detail_pesanans.jumlah) as total_terjual')
             ->join('stoks', 'stoks.id', '=', 'detail_pesanans.stok_id')
             ->join('pesanans', 'pesanans.id', '=', 'detail_pesanans.pesanan_id')
@@ -41,6 +41,7 @@ class ProductController extends Controller
             }   
 
             $mapped[$cat][] = [
+                'id'       => $p->id,
                 'name'     => $p->nama,
                 'category' => $catName,
                 'image'    => $p->image ? asset('images/' . $p->image) : 'https://i.pinimg.com/1200x/b1/cc/2f/b1cc2fb9a73cb56f46e167b47d4febbf.jpg',
@@ -90,9 +91,14 @@ class ProductController extends Controller
 
         if ($defaultCategory === 'semua') {
             $displayProducts = [];
+             // Menggabungkan seluruh produk dari semua kategori //
             foreach ($products as $category => $items) {
-                $displayProducts = array_merge($displayProducts, array_reverse($items));
+                $displayProducts = array_merge($displayProducts, $items);
             }
+            //Mengurutkan seluruh produk berdasarkan id //
+            usort($displayProducts, function ($a, $b) {
+                return $b['id'] <=> $a['id'];
+            });
         } else {
             $displayProducts = array_reverse($products[$defaultCategory] ?? []);
         }

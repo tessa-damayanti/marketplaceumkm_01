@@ -1,6 +1,6 @@
 @props(['item', 'itemKey'])
 
-<div class="mb-4 rounded-[20px] bg-[#f4ede5] px-3 sm:px-4 py-4 sm:py-5 last:mb-0">
+<div class="cart-item-wrapper mb-4 rounded-[20px] bg-[#f4ede5] px-3 sm:px-4 py-4 sm:py-5 last:mb-0" data-key="{{ $itemKey }}">
     <div class="flex flex-col gap-4">
 
         <!-- Checkbox, Gambar, Info -->
@@ -56,42 +56,37 @@
             <div class="flex flex-col">
                 <!-- Qty Counter -->
                 <div class="flex items-center gap-3">
-                    <!-- Tombol Kurang -->
-                    <form action="{{ route('cart.update') }}" method="POST">
-                        @csrf
-                        <input type="hidden" name="key" value="{{ $itemKey }}">
-                        <input type="hidden" name="action" value="minus">
-                        <button
-                            type="submit"
-                            @if($item['stock'] <= 0) disabled @endif
-                            class="flex h-8 w-8 sm:h-9 sm:w-9 items-center justify-center rounded-[10px] bg-[#ded1c2] text-base font-bold text-[#6b5848] transition hover:bg-[#d2c2b0] focus:outline-none focus:ring-2 focus:ring-[#c4ab96] disabled:opacity-50 disabled:cursor-not-allowed">
-                            -
-                        </button>
-                    </form>
 
-                    <span class="w-6 text-center text-sm font-semibold text-[#5c4432] qty-value">
-                        {{ $item['qty'] }}
+                    <!-- Tombol Kurang -->
+                    <button
+                        type="button"
+                        data-action="minus"
+                        data-key="{{ $itemKey }}"
+                        @if($item['stock'] <= 0) disabled @endif
+                        class="qty-btn flex h-8 w-8 sm:h-9 sm:w-9 items-center justify-center rounded-[10px] bg-[#ded1c2] text-base font-bold text-[#6b5848] transition hover:bg-[#d2c2b0] focus:outline-none focus:ring-2 focus:ring-[#c4ab96] disabled:opacity-50 disabled:cursor-not-allowed active:scale-90">
+                        <span class="pointer-events-none">−</span>
+                    </button>
+
+                    <!-- Angka Qty -->
+                    <span class="qty-display relative w-6 text-center text-sm font-semibold text-[#5c4432]">
+                        <span class="qty-value block transition-all duration-200" data-qty="{{ $item['qty'] }}">{{ $item['qty'] }}</span>
                     </span>
 
                     <!-- Tombol Tambah -->
-                    <form action="{{ route('cart.update') }}" method="POST">
-                        @csrf
-                        <input type="hidden" name="key" value="{{ $itemKey }}">
-                        <input type="hidden" name="action" value="plus">
-                        <button
-                            type="submit"
-                            @if($item['stock'] <= 0) disabled @endif
-                            class="flex h-8 w-8 sm:h-9 sm:w-9 items-center justify-center rounded-[10px] bg-[#BFA28C] text-base font-bold text-white transition hover:bg-[#A88A72] focus:outline-none focus:ring-2 focus:ring-[#BFA28C] disabled:opacity-50 disabled:cursor-not-allowed">
-                            +
-                        </button>
-                    </form>
+                    <button
+                        type="button"
+                        data-action="plus"
+                        data-key="{{ $itemKey }}"
+                        @if($item['stock'] <= 0) disabled @endif
+                        class="qty-btn flex h-8 w-8 sm:h-9 sm:w-9 items-center justify-center rounded-[10px] bg-[#BFA28C] text-base font-bold text-white transition hover:bg-[#A88A72] focus:outline-none focus:ring-2 focus:ring-[#BFA28C] disabled:opacity-50 disabled:cursor-not-allowed active:scale-90">
+                        <span class="pointer-events-none">+</span>
+                    </button>
                 </div>
 
-                @if(session('limit_reached') == $itemKey)
-                <p class="mt-1.5 text-[11px] sm:text-[12px] font-semibold text-red-400">
+                <!-- Pesan ketika mencapai batas stok maksimal -->
+                <p class="limit-msg mt-1.5 text-[11px] sm:text-[12px] font-semibold text-red-400 hidden">
                     Pembelian mencapai batas stok maksimum!
                 </p>
-                @endif
 
                 @if ($item['stock'] <= 0)
                 <div class="mt-2">

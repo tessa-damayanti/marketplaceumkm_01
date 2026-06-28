@@ -10,6 +10,69 @@
         body {
             background-color: #f5ede4;
         }
+
+        .qty-btn {
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
+            transform-origin: center;
+        }
+        .qty-btn:not(:disabled):active {
+            transform: scale(0.82);
+        }
+        .qty-btn:not(:disabled) {
+            transition: background-color 0.18s ease, transform 0.12s cubic-bezier(.34,1.56,.64,1), box-shadow 0.18s ease;
+        }
+        .qty-btn:not(:disabled):hover {
+            box-shadow: 0 4px 12px rgba(92,68,50,0.18);
+        }
+
+        .qty-value {
+            display: block;
+            transition: opacity 0.15s ease, transform 0.15s cubic-bezier(.34,1.56,.64,1);
+        }
+        .qty-value.qty-changing {
+            opacity: 0;
+            transform: translateY(4px) scale(0.85);
+        }
+        .qty-value.qty-changed {
+            animation: qtyPop 0.28s cubic-bezier(.34,1.56,.64,1) forwards;
+        }
+        @keyframes qtyPop {
+            0%   { opacity: 0; transform: translateY(-5px) scale(0.8); }
+            60%  { opacity: 1; transform: translateY(1px) scale(1.08); }
+            100% { opacity: 1; transform: translateY(0) scale(1); }
+        }
+
+       /* Efek animasi saat total harga diperbarui */
+        #cart-total {
+            transition: opacity 0.2s ease, transform 0.2s ease;
+        }
+        #cart-total.total-updating {
+            opacity: 0.4;
+            transform: scale(0.97);
+        }
+
+      /* Menampilkan loading spinner saat tombol jumlah diproses */
+        .qty-btn.loading {
+            pointer-events: none;
+            opacity: 0.6;
+        }
+        .qty-btn.loading span {
+            visibility: hidden;
+        }
+        .qty-btn.loading::after {
+            content: '';
+            position: absolute;
+            width: 12px;
+            height: 12px;
+            border: 2px solid currentColor;
+            border-top-color: transparent;
+            border-radius: 50%;
+            animation: spin 0.5s linear infinite;
+        }
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
     </style>
 @endpush
 
@@ -66,7 +129,7 @@
         <!-- Main Card -->
         <div class="overflow-hidden rounded-[28px] border border-[#e5d8ca] bg-white shadow-[0_14px_45px_rgba(92,68,50,0.10)]">
 
-            <!-- Header Card (Combined) -->
+            <!-- Header Card -->
             <div class="border-b border-[#e5d8ca] bg-[#efe4d8] px-5 sm:px-8 py-4 sm:py-6">
                 <h1 class="text-xl sm:text-3xl font-bold text-[#5c4432]">Keranjang Saya</h1>
             </div>
@@ -134,11 +197,19 @@
             checkboxes.forEach((checkbox) => {
                 if (checkbox.checked && !checkbox.disabled) {
                     const price = parseInt(checkbox.dataset.price);
-                    const qty = parseInt(checkbox.dataset.qty);
+                    const qty   = parseInt(checkbox.dataset.qty);
                     total += price * qty;
                 }
             });
-            document.getElementById('cart-total').innerText = formatRupiah(total);
+            const el = document.getElementById('cart-total');
+            
+            if (el.classList.contains('total-updating')) {
+                setTimeout(() => {
+                    el.textContent = formatRupiah(total);
+                }, 250);
+            } else {
+                el.textContent = formatRupiah(total);
+            }
         }
 
         document.addEventListener('DOMContentLoaded', function() {
@@ -157,7 +228,7 @@
             }
             
             if (reorderedStoks && Array.isArray(reorderedStoks)) {
-                // Centang khusus item yang baru saja dibeli ulang
+                // Centang untuk produk yang dibeli ulang
                 itemChecks.forEach((item) => {
                     if (item.disabled) {
                         item.checked = false;
@@ -169,7 +240,7 @@
                 localStorage.removeItem('reordered_stoks');
                 saveStates(); 
             } else {
-                // Perilaku default: baca dari savedStates atau centang semua yang aktif
+                // Mengembalikan status centang produk yang tersimpan sebelumnya
                 itemChecks.forEach((item) => {
                     if (item.disabled) {
                         item.checked = false;
@@ -199,7 +270,7 @@
                 saveStates();
                 updateCartTotal();
                 
-                // Sembunyikan pesan validasi jika ada item yang dipilih
+                // Menyembunyikan pesan validasi jika minimal satu produk dipilih //
                 const validationMsg = document.getElementById('validation-msg');
                 if (validationMsg && checkAll.checked && activeChecks.length > 0) {
                     validationMsg.classList.add('hidden');
@@ -214,7 +285,7 @@
                     saveStates();
                     updateCartTotal();
 
-                    // Sembunyikan pesan validasi jika ada item yang dipilih
+                    // Menyembunyikan pesan validasi jika minimal satu produk dipilih //
                     const validationMsg = document.getElementById('validation-msg');
                     if (validationMsg) {
                         const anyChecked = activeChecks.some((cb) => cb.checked);
@@ -225,7 +296,7 @@
                 });
             });
 
-            // Close change size modal when clicking overlay
+            // Menutup modal ubah ukuran saat area luar modal diklik
             const changeSizeModal = document.getElementById('changeSizeModal');
             if (changeSizeModal) {
                 changeSizeModal.addEventListener('click', function(e) {
@@ -263,15 +334,94 @@
     </script>
 
     <script>
-        document.addEventListener('submit', function() {
-            localStorage.setItem('scrollPos', window.scrollY);
-        });
-        window.addEventListener('load', function() {
-            const scrollPos = localStorage.getItem('scrollPos');
-            if (scrollPos) {
-                window.scrollTo(0, parseInt(scrollPos));
-                localStorage.removeItem('scrollPos');
-            }
+        // Mengubah jumlah produk pada keranjang tanpa mereload halaman keranjang //
+        const AJAX_URL  = '{{ route("cart.update") }}';
+        const CSRF      = '{{ csrf_token() }}';
+
+        function formatRupiah(n) {
+            return 'Rp' + Math.round(n).toLocaleString('id-ID');
+        }
+
+        // Memberikan animasi saat jumlah produk berubah //
+        function animateQty(qtyEl, newQty) {
+            qtyEl.classList.add('qty-changing');
+            setTimeout(() => {
+                qtyEl.textContent = newQty;
+                qtyEl.dataset.qty = newQty;
+                qtyEl.classList.remove('qty-changing');
+                qtyEl.classList.add('qty-changed');
+                setTimeout(() => qtyEl.classList.remove('qty-changed'), 400);
+            }, 150);
+        }
+
+        // Memberikan animasi saat total harga diperbarui //
+        function animateTotal(newTotal) {
+            const el = document.getElementById('cart-total');
+            el.classList.add('total-updating');
+            setTimeout(() => {
+                el.textContent = formatRupiah(newTotal);
+                el.classList.remove('total-updating');
+            }, 200);
+        }
+
+        document.querySelectorAll('.qty-btn').forEach(btn => {
+            btn.addEventListener('click', async function() {
+                if (this.disabled || this.classList.contains('loading')) return;
+
+                const key     = this.dataset.key;
+                const action  = this.dataset.action;
+                const wrapper = this.closest('.cart-item-wrapper');
+
+                this.classList.add('loading');
+
+                try {
+                    const res = await fetch(AJAX_URL, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': CSRF,
+                            'Accept': 'application/json',
+                        },
+                        body: JSON.stringify({ key, action }),
+                    });
+
+                    if (!res.ok) throw new Error('Gagal memperbarui keranjang');
+                    const data = await res.json();
+
+                    // Memperbarui jumlah produk //
+                    const qtyEl = wrapper.querySelector('.qty-value');
+                    if (qtyEl) animateQty(qtyEl, data.qty);
+
+                    // Memperbarui data jumlah dan harga pada checkbox //
+                    const cb = wrapper.querySelector('.item-check');
+                    if (cb) {
+                        cb.dataset.qty   = data.qty;
+                        cb.dataset.price = data.price;
+                    }
+
+                    // Memperbarui total harga seluruh keranjang
+                    animateTotal(data.grand_total);
+
+                    // Menampilkan atau menyembunyikan pesan ketika batas stok maksimal
+                    const limitMsg = wrapper.querySelector('.limit-msg');
+                    if (limitMsg) {
+                        if (data.limit_reached) {
+                            limitMsg.classList.remove('hidden');
+                            setTimeout(() => limitMsg.classList.add('hidden'), 3000);
+                        } else {
+                            limitMsg.classList.add('hidden');
+                        }
+                    }
+
+                    // Menghitung kembali total harga berdasarkan produk yang dipilih
+                    updateCartTotal();
+
+                } catch (err) {
+                    console.error(err);
+                } finally {
+                    this.classList.remove('loading');
+                }
+            });
         });
     </script>
 @endpush

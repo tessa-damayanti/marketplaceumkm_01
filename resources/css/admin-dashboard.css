@@ -790,7 +790,6 @@ label.field-label {
 
 #modal-tambah-produk input[type="text"],
 #modal-tambah-kat input[type="text"],
-#modal-tambah-produk select,
 #modal-tambah-produk textarea {
   width: 100%;
   min-height: 56px;
@@ -800,9 +799,6 @@ label.field-label {
   background: #ffffff;
   font-size: 14px;
   line-height: 1.4;
-  appearance: none;
-  -webkit-appearance: none;
-  -moz-appearance: none;
 }
 
 #modal-tambah-produk input[type="text"]::placeholder,
@@ -818,17 +814,107 @@ label.field-label {
   padding-top: 18px;
 }
 
-#modal-tambah-produk select {
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='none' stroke='%237b6858' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m5 7 5 5 5-5'/%3E%3C/svg%3E");
-  background-position: right 18px center;
-  background-repeat: no-repeat;
-  background-size: 18px;
-  padding-right: 52px;
+/* Dropdown modal kategori */
+.modal-custom-select {
+  position: relative;
+  width: 100%;
+}
+
+.modal-select-btn {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  min-height: 56px;
+  border: 2px solid var(--border-strong);
+  border-radius: 16px;
+  padding: 14px 18px;
+  background: #ffffff;
+  font-size: 14px;
+  color: #5c4432;
+  cursor: pointer;
+  text-align: left;
+  gap: 10px;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.modal-select-btn:hover,
+.modal-select-btn:focus {
+  border-color: var(--bg-accent-deep);
+  box-shadow: 0 0 0 3px rgba(167, 141, 120, 0.14);
+  outline: none;
+}
+
+.modal-select-btn.open {
+  border-color: var(--bg-accent-deep);
+  box-shadow: 0 0 0 3px rgba(167, 141, 120, 0.14);
+}
+
+.modal-select-btn span {
+  flex: 1;
+}
+
+.modal-select-btn span.placeholder-text {
+  color: var(--text-muted);
+  font-weight: 400;
+}
+
+.modal-select-icon {
+  flex-shrink: 0;
+  transition: transform 0.2s ease;
+}
+
+.modal-select-icon.rotate-180 {
+  transform: rotate(180deg);
+}
+
+.modal-select-menu {
+  position: absolute;
+  left: 0;
+  top: calc(100% + 6px);
+  width: 100%;
+  background: #ffffff;
+  border: 1.5px solid #d8c3af;
+  border-radius: 14px;
+  overflow: hidden;
+  box-shadow: 0 8px 24px rgba(92, 68, 50, 0.12);
+  z-index: 200;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.modal-select-menu.hidden {
+  display: none;
+}
+
+.modal-select-option {
+  padding: 12px 18px;
+  font-size: 14px;
+  font-weight: 500;
+  color: #5c4432;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+  border-bottom: 1px solid #f0e7dd;
+}
+
+.modal-select-option:last-child {
+  border-bottom: none;
+}
+
+.modal-select-option:hover {
+  background: #BFA28C;
+  color: #ffffff;
+}
+
+.modal-select-option.selected {
+  background: #BFA28C;
+  color: #ffffff;
+  font-weight: 600;
 }
 
 #modal-tambah-produk input[type="text"]:focus,
 #modal-tambah-kat input[type="text"]:focus,
-#modal-tambah-produk select:focus,
 #modal-tambah-produk textarea:focus,
 #modal-tambah-produk .upload-zone:focus-within {
   border-color: var(--bg-accent-deep);

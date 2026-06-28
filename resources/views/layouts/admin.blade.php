@@ -216,6 +216,15 @@
         menu.classList.add('hidden');
         document.getElementById('income-filter-icon')?.classList.remove('rotate-180');
       }
+
+      // Tutup dropdown modal kategori
+      const modalMenu = document.getElementById('prod-kat-menu');
+      const modalBtn = document.getElementById('prod-kat-btn');
+      if (modalMenu && modalBtn && !modalBtn.contains(e.target) && !modalMenu.contains(e.target)) {
+        modalMenu.classList.add('hidden');
+        document.getElementById('prod-kat-icon')?.classList.remove('rotate-180');
+        modalBtn.classList.remove('open');
+      }
     });
 
     // DASHBOARD
@@ -481,10 +490,58 @@
     }
 
     function populateKategoriSelect() {
-      const select = document.getElementById('prod-kat');
-      if (select) {
-        select.innerHTML = kategoriList.map(k => `<option value="${k.id}">${k.nama}</option>`).join('');
+      const menu = document.getElementById('prod-kat-menu');
+      const hidden = document.getElementById('prod-kat');
+      if (menu) {
+        menu.innerHTML = kategoriList.map((k, i) => {
+          const isLast = i === kategoriList.length - 1;
+          return `<li class="modal-select-option${isLast ? ' last' : ''}" data-id="${k.id}" data-nama="${k.nama}" onclick="selectModalKategori(this)">${k.nama}</li>`;
+        }).join('');
       }
+      if (hidden) hidden.value = kategoriList.length > 0 ? kategoriList[0].id : '';
+      
+      const label = document.getElementById('prod-kat-label');
+      if (label && kategoriList.length > 0) {
+        label.textContent = kategoriList[0].nama;
+        label.classList.remove('placeholder-text');
+      }
+      
+      _highlightModalKatOption(hidden ? hidden.value : '');
+    }
+
+    function toggleModalKatDropdown(e) {
+      e.stopPropagation();
+      const menu = document.getElementById('prod-kat-menu');
+      const icon = document.getElementById('prod-kat-icon');
+      const btn = document.getElementById('prod-kat-btn');
+      menu?.classList.toggle('hidden');
+      icon?.classList.toggle('rotate-180');
+      btn?.classList.toggle('open');
+    }
+
+    function selectModalKategori(li) {
+      const id = li.dataset.id;
+      const nama = li.dataset.nama;
+      document.getElementById('prod-kat').value = id;
+      const label = document.getElementById('prod-kat-label');
+      if (label) {
+        label.textContent = nama;
+        label.classList.remove('placeholder-text');
+      }
+      _highlightModalKatOption(id);
+      document.getElementById('prod-kat-menu')?.classList.add('hidden');
+      document.getElementById('prod-kat-icon')?.classList.remove('rotate-180');
+      document.getElementById('prod-kat-btn')?.classList.remove('open');
+    }
+
+    function _highlightModalKatOption(selectedId) {
+      document.querySelectorAll('#prod-kat-menu .modal-select-option').forEach(opt => {
+        if (String(opt.dataset.id) === String(selectedId)) {
+          opt.classList.add('selected');
+        } else {
+          opt.classList.remove('selected');
+        }
+      });
     }
 
     function setModalMode(mode) {
@@ -507,7 +564,16 @@
       populateKategoriSelect();
       document.getElementById('prod-modal-title').textContent = 'Edit Produk';
       document.getElementById('prod-nama').value = p.nama;
-      document.getElementById('prod-kat').value = p.kategori_id || '';
+      // Set dropdown ke kategori yang sesuai
+      const katId = String(p.kategori_id || '');
+      document.getElementById('prod-kat').value = katId;
+      const matchedKat = kategoriList.find(k => String(k.id) === katId);
+      const label = document.getElementById('prod-kat-label');
+      if (label && matchedKat) {
+        label.textContent = matchedKat.nama;
+        label.classList.remove('placeholder-text');
+      }
+      _highlightModalKatOption(katId);
       document.getElementById('prod-harga').value = p.harga ? 'Rp' + Number(p.harga).toLocaleString('id-ID') : '';
       document.getElementById('prod-desk').value = p.deskripsi;
       selectedProdukImage = p.image || '';

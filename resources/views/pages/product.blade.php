@@ -233,7 +233,13 @@
         @endforeach
 
     </div>
+
+    <!-- Pagination -->
+    <div id="pagination-container" class="mt-12 mb-6 flex justify-center items-center gap-1.5 flex-wrap hidden">
+    </div>
     @else
+
+    <!-- Menampilkan pesan jika produk tidak ditemukan -->
     <div class="flex flex-col items-center justify-center py-20 text-center">
         <div class="mb-4 flex h-20 w-20 items-center justify-center rounded-full bg-[#EDE4DA]">
             <svg class="h-10 w-10 text-[#BFA28C]" fill="none" viewBox="0 0 24 24" stroke="currentColor">

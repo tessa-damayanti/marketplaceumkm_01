@@ -102,9 +102,10 @@
 @push('scripts')
 <script src="https://app.sandbox.midtrans.com/snap/snap.js" data-client-key="{{ config('midtrans.client_key') }}"></script>
 <script>
-const CHARGE_URL = '{{ route("checkout.charge") }}';
+const CHARGE_URL  = '{{ route("checkout.charge") }}';
+const STATUS_URL  = '{{ route("checkout.status") }}';
 const PROFILE_URL = '{{ route("profile") }}?tab=riwayat';
-const CSRF       = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+const CSRF        = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
 
 const payBtn = document.getElementById('pay-btn');
 
@@ -163,8 +164,17 @@ document.getElementById('checkout-form').addEventListener('submit', async functi
         const data = await res.json().catch(() => { throw new Error('Respon bukan JSON'); });
 
         if (res.ok && data.snap_token) {
+            const orderId = data.order_id;
             window.snap.pay(data.snap_token, {
-                onSuccess: function(result){
+                onSuccess: async function(result){
+                    // Panggil checkStatus agar WA terkirim ke pembeli
+                    try {
+                        await fetch(STATUS_URL, {
+                            method: 'POST',
+                            headers: { 'X-CSRF-TOKEN': CSRF, 'Content-Type': 'application/json', 'Accept': 'application/json' },
+                            body: JSON.stringify({ order_id: result.order_id }),
+                        });
+                    } catch(e) { console.warn('[WA] Gagal trigger checkStatus:', e); }
                     showAlert('Pembayaran berhasil! Terima kasih.', 'success', () => { window.location.href = PROFILE_URL; });
                 },
                 onPending: function(result){

@@ -54,7 +54,7 @@ class Pesanan extends Model
         $message = "Halo {$namaPembeli},\n\nPembayaran pesanan {$this->order_id} telah berhasil kami terima.\n\nPesanan Anda akan segera kami siapkan.\n\nTerima kasih telah berbelanja di Velora.";
 
         try {
-            $response = \Illuminate\Support\Facades\Http::withHeaders([
+            $response = \Illuminate\Support\Facades\Http::withoutVerifying()->withHeaders([
                 'Authorization' => $token,
             ])->post('https://api.fonnte.com/send', [
                 'target' => $this->no_wa_penerima,
