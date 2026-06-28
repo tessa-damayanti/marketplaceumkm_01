@@ -893,6 +893,7 @@
             if (k) k.nama = nama;
           } else {
             kategoriList.unshift(data.data);
+            katCurrentPage = 1; 
           }
           closeAdminModal('modal-tambah-kat');
           renderKategoriTable();
