@@ -22,7 +22,7 @@
             </label>
 
             <div class="relative inline-block mt-2 flex-shrink-0">
-                <img id="profilePreview" src="{{ Auth::user()->foto_profile ? asset('storage/' . Auth::user()->foto_profile) : asset('images/1.png') }}"
+                <img id="profilePreview" src="{{ Auth::user()->foto_profile_url }}"
                     class="h-36 w-36 aspect-square rounded-full object-cover shadow-sm ring-4 ring-[#f4ece3]" alt="Foto Profil">
 
                 <label for="profilePhoto"
@@ -38,6 +38,10 @@
                 <input id="profilePhoto" name="profile_photo" type="file" accept="image/*" class="hidden"
                     onchange="previewProfilePhoto(event)">
             </div>
+            <!-- Tempat untuk menampilkan error message -->
+            <p id="profilePhotoError" class="mt-2 text-xs font-semibold text-red-500 w-36 text-center transition-all duration-300 {{ $errors->has('profile_photo') ? 'block' : 'hidden' }}">
+                {{ $errors->first('profile_photo') }}
+            </p>
         </div>
 
         <div class="col-span-1 md:col-span-2 space-y-5">
@@ -88,7 +92,7 @@
 
             <div class="flex justify-end">
                 <button type="submit"
-                    class="relative z-10 rounded-xl bg-[#BFA28C] px-8 py-3 font-bold text-white transition hover:bg-[#A88A72]">
+                    class="rounded-2xl bg-[#d8c3af] px-8 py-4 font-bold text-white transition hover:bg-[#BFA28C]">
                     Simpan
                 </button>
             </div>
@@ -99,13 +103,76 @@
 </div>
 
 <script>
+    // State to store if the selected file is valid
+    let isFileValid = true;
+
     function previewProfilePhoto(event) {
         const file = event.target.files[0];
+        const errorEl = document.getElementById('profilePhotoError');
+        const preview = document.getElementById('profilePreview');
 
         if (!file) return;
 
-        const preview = document.getElementById('profilePreview');
+        // Reset state
+        isFileValid = true;
+        errorEl.classList.add('hidden');
+        errorEl.classList.remove('block');
+        errorEl.textContent = '';
+        errorEl.style.opacity = '0';
+
+        // Validasi tipe file
+        const allowedTypes = ['image/jpeg', 'image/png', 'image/jpg', 'image/gif'];
+        if (!allowedTypes.includes(file.type)) {
+            showError('Harap pilih gambar dengan format JPG, JPEG, PNG');
+            event.target.value = ''; // Reset input file
+            isFileValid = false;
+            return;
+        }
+
+        // Validasi ukuran file 
+        const maxSize = 2 * 1024 * 1024;
+        if (file.size > maxSize) {
+            showError('Ukuran foto profil maksimal 2 MB.');
+            event.target.value = ''; // Reset input file
+            isFileValid = false;
+            return;
+        }
+
+        // Tampilkan pratinjau jika valid
         preview.src = URL.createObjectURL(file);
     }
 
+    function showError(message) {
+        const errorEl = document.getElementById('profilePhotoError');
+        errorEl.textContent = message;
+        errorEl.classList.remove('hidden');
+        errorEl.classList.add('block');
+        
+        // Animasi fade-in sederhana
+        errorEl.style.opacity = '0';
+        errorEl.style.transform = 'translateY(-5px)';
+        errorEl.style.transition = 'opacity 0.3s ease, transform 0.3s ease';
+        
+        setTimeout(() => {
+            errorEl.style.opacity = '1';
+            errorEl.style.transform = 'translateY(0)';
+        }, 10);
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        const form = document.querySelector('form[action="{{ route('profile.update') }}"]');
+        const submitBtn = form ? form.querySelector('button[type="submit"]') : null;
+
+        if (form && submitBtn) {
+            form.addEventListener('submit', function(e) {
+                // Cek sekali lagi validasi file
+                if (!isFileValid) {
+                    e.preventDefault();
+                    // Scroll ke bagian foto profil agar terlihat
+                    document.getElementById('profilePhotoError').scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    return;
+                }
+            });
+        }
+    });
 </script>

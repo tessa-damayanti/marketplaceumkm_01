@@ -40,6 +40,23 @@ class User extends Authenticatable
     }
 
     /**
+     * Get the user's profile photo URL or default avatar initials.
+     *
+     * @return string
+     */
+    public function getFotoProfileUrlAttribute()
+    {
+        if ($this->foto_profile) {
+            return asset('storage/' . $this->foto_profile);
+        }
+
+        $name = $this->nama_lengkap ?? $this->username;
+        $name = trim($name);
+
+        return 'https://ui-avatars.com/api/?name=' . urlencode($name) . '&background=bfa28c&color=ffffff&bold=true&length=2';
+    }
+
+    /**
      * @var list<string>
      */
     protected $hidden = [

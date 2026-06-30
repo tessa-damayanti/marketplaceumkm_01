@@ -117,7 +117,7 @@
         }
 
 
-        function switchTab(tabId) {
+        function switchTab(tabId, updateHistory = true) {
             const tabAkun     = document.getElementById('tab-akun');
             const tabRiwayat  = document.getElementById('tab-riwayat');
             const tabPassword = document.getElementById('tab-password');
@@ -153,6 +153,13 @@
             if (activeBtn) {
                 activeBtn.classList.remove(...inactive);
                 activeBtn.classList.add(...active);
+            }
+
+            if (updateHistory) {
+                const cleanUrl = window.location.origin + window.location.pathname;
+                if (window.location.href !== cleanUrl) {
+                    window.history.pushState({path: cleanUrl}, '', cleanUrl);
+                }
             }
         }
 
@@ -276,10 +283,10 @@
                         footer.classList.remove('hidden');
                         footer.classList.add('flex');
 
-                        // Tombol Batalkan Pesanan
+                         // Tombol Batalkan Pesanan
                         const btnCancel = document.createElement('button');
                         btnCancel.textContent = 'Batalkan Pesanan';
-                        btnCancel.className = 'rounded-xl border border-[#dc2626] bg-white px-5 py-2.5 text-sm font-semibold text-[#dc2626] transition hover:bg-[#fef2f2]';
+                        btnCancel.className = 'rounded-xl border border-[#dc2626] bg-white px-5 py-2.5 text-sm font-semibold text-[#dc2626] transition-all duration-300 ease-in-out hover:bg-[#fef2f2] hover:scale-[1.03] active:scale-[0.97]';
                         btnCancel.onclick = function() {
                             cancelOrder(order.raw_id);
                         };
@@ -287,7 +294,7 @@
                         // Tombol Bayar Sekarang
                         const btnPay = document.createElement('button');
                         btnPay.textContent = 'Bayar Sekarang';
-                        btnPay.className = 'rounded-xl bg-[#47c17b] px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-[#3ca468]';
+                        btnPay.className = 'rounded-xl bg-[#47c17b] px-5 py-2.5 text-sm font-semibold text-white transition-all duration-300 ease-in-out hover:bg-[#3ca468] hover:scale-[1.03] active:scale-[0.97] hover:shadow-lg hover:shadow-green-500/20';
                         btnPay.onclick = function() {
                             payExistingOrder(order.raw_id, order.snap_token);
                         };
@@ -302,7 +309,7 @@
                         // Tombol Beli Lagi
                         const btnReorder = document.createElement('button');
                         btnReorder.textContent = 'Beli Lagi';
-                        btnReorder.className = 'rounded-xl bg-[#BFA28C] px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-[#A88A72]';
+                        btnReorder.className = 'rounded-xl bg-[#BFA28C] px-5 py-2.5 text-sm font-semibold text-white transition-all duration-300 ease-in-out hover:bg-[#A88A72] hover:scale-[1.03] active:scale-[0.97] hover:shadow-lg hover:shadow-[#BFA28C]/20';
                         btnReorder.onclick = function() {
                             btnReorder.disabled = true;
                             btnReorder.textContent = 'Memproses...';
@@ -519,11 +526,14 @@
             const statusParam = urlParams.get('status') || '{{ $status ?? "all" }}';
             
             if (tabParam && ['akun', 'riwayat', 'password'].includes(tabParam)) {
-                switchTab(tabParam);
+                switchTab(tabParam, false);
+                // Immediately clean the URL so the ?tab=... goes away from the address bar
+                const cleanUrl = window.location.origin + window.location.pathname;
+                window.history.replaceState({path: cleanUrl}, '', cleanUrl);
             } else if (pageParam || urlParams.get('status')) {
-                switchTab('riwayat');
+                switchTab('riwayat', false);
             } else {
-                switchTab('akun');
+                switchTab('akun', false);
             }
 
             // Penghapusan cleanUrl karena AJAX pushState membutuhkan param tetap di URL

@@ -22,19 +22,19 @@
     <!-- Tab Status Berdasarkan Permintaan User -->
     <div class="mb-6">
         <div class="flex w-full gap-1">
-            <button onclick="loadHistory('?tab=riwayat&status=all')" id="btn-subtab-all" class="subtab-btn flex-1 rounded-lg border py-2 text-xs transition-all duration-200 {{ $status === 'all' ? 'font-bold bg-[#e8ded3] text-[#5c4432] border-[#BFA28C]' : 'font-medium bg-transparent text-[#8b6f58] border-[#e8ded3]' }}">
+            <button onclick="loadHistory('?tab=riwayat&status=all')" id="btn-subtab-all" class="subtab-btn flex-1 rounded-lg border py-2 text-xs transition-all duration-300 ease-in-out hover:scale-[1.02] active:scale-[0.98] {{ $status === 'all' ? 'font-bold bg-[#e8ded3] text-[#5c4432] border-[#BFA28C] shadow-sm' : 'font-medium bg-transparent text-[#8b6f58] border-[#e8ded3]' }}">
                 Semua
             </button>
-            <button onclick="loadHistory('?tab=riwayat&status=pending')" id="btn-subtab-pending" class="subtab-btn flex-1 rounded-lg border py-2 text-xs transition-all duration-200 {{ $status === 'pending' ? 'font-bold bg-[#e8ded3] text-[#5c4432] border-[#BFA28C]' : 'font-medium bg-transparent text-[#8b6f58] border-[#e8ded3]' }}">
+            <button onclick="loadHistory('?tab=riwayat&status=pending')" id="btn-subtab-pending" class="subtab-btn flex-1 rounded-lg border py-2 text-xs transition-all duration-300 ease-in-out hover:scale-[1.02] active:scale-[0.98] {{ $status === 'pending' ? 'font-bold bg-[#e8ded3] text-[#5c4432] border-[#BFA28C] shadow-sm' : 'font-medium bg-transparent text-[#8b6f58] border-[#e8ded3]' }}">
                 Menunggu Pembayaran
             </button>
-            <button onclick="loadHistory('?tab=riwayat&status=settlement')" id="btn-subtab-settlement" class="subtab-btn flex-1 rounded-lg border py-2 text-xs transition-all duration-200 {{ $status === 'settlement' ? 'font-bold bg-[#e8ded3] text-[#5c4432] border-[#BFA28C]' : 'font-medium bg-transparent text-[#8b6f58] border-[#e8ded3]' }}">
+            <button onclick="loadHistory('?tab=riwayat&status=settlement')" id="btn-subtab-settlement" class="subtab-btn flex-1 rounded-lg border py-2 text-xs transition-all duration-300 ease-in-out hover:scale-[1.02] active:scale-[0.98] {{ $status === 'settlement' ? 'font-bold bg-[#e8ded3] text-[#5c4432] border-[#BFA28C] shadow-sm' : 'font-medium bg-transparent text-[#8b6f58] border-[#e8ded3]' }}">
                 Pembayaran Berhasil
             </button>
-            <button onclick="loadHistory('?tab=riwayat&status=cancel')" id="btn-subtab-cancel" class="subtab-btn flex-1 rounded-lg border py-2 text-xs transition-all duration-200 {{ $status === 'cancel' ? 'font-bold bg-[#e8ded3] text-[#5c4432] border-[#BFA28C]' : 'font-medium bg-transparent text-[#8b6f58] border-[#e8ded3]' }}">
+            <button onclick="loadHistory('?tab=riwayat&status=cancel')" id="btn-subtab-cancel" class="subtab-btn flex-1 rounded-lg border py-2 text-xs transition-all duration-300 ease-in-out hover:scale-[1.02] active:scale-[0.98] {{ $status === 'cancel' ? 'font-bold bg-[#e8ded3] text-[#5c4432] border-[#BFA28C] shadow-sm' : 'font-medium bg-transparent text-[#8b6f58] border-[#e8ded3]' }}">
                 Pembayaran Dibatalkan
             </button>
-            <button onclick="loadHistory('?tab=riwayat&status=expire')" id="btn-subtab-expire" class="subtab-btn flex-1 rounded-lg border py-2 text-xs transition-all duration-200 {{ $status === 'expire' ? 'font-bold bg-[#e8ded3] text-[#5c4432] border-[#BFA28C]' : 'font-medium bg-transparent text-[#8b6f58] border-[#e8ded3]' }}">
+            <button onclick="loadHistory('?tab=riwayat&status=expire')" id="btn-subtab-expire" class="subtab-btn flex-1 rounded-lg border py-2 text-xs transition-all duration-300 ease-in-out hover:scale-[1.02] active:scale-[0.98] {{ $status === 'expire' ? 'font-bold bg-[#e8ded3] text-[#5c4432] border-[#BFA28C] shadow-sm' : 'font-medium bg-transparent text-[#8b6f58] border-[#e8ded3]' }}">
                 Pembayaran Kadaluwarsa
             </button>
         </div>
@@ -45,13 +45,13 @@
             <table class="w-full text-left">
                 <thead>
                 <tr class="border-b border-[#eee5dc] bg-[#fcfaf8] text-sm font-bold text-[#5c4432]">
-                    <th class="px-6 py-5 whitespace-nowrap">ID. Pesanan</th>
-                    <th class="px-6 py-5 whitespace-nowrap">Produk</th>
+                    <th class="px-4 py-4 whitespace-nowrap">ID. Pesanan</th>
+                    <th class="px-4 py-4 whitespace-nowrap">Produk</th>
                     @if ($status === 'all')
-                    <th class="px-6 py-5 text-center whitespace-nowrap col-status">Status Pembayaran</th>
+                    <th class="px-4 py-4 text-center whitespace-nowrap col-status">Status Pembayaran</th>
                     @endif
-                    <th class="px-6 py-5 whitespace-nowrap">Total</th>
-                    <th class="px-6 py-5 text-center whitespace-nowrap">Aksi</th>
+                    <th class="px-4 py-4 whitespace-nowrap">Total</th>
+                    <th class="px-4 py-4 text-center whitespace-nowrap">Aksi</th>
                 </tr>
                 </thead>
 
@@ -74,40 +74,40 @@
                             }
                         @endphp
                         <tr class="border-b border-[#eee5dc] order-row">
-                            <td class="px-6 py-6 font-bold whitespace-nowrap">{{ $pesanan->order_id ?? 'PSN-' . str_pad($pesanan->id, 3, '0', STR_PAD_LEFT) }}</td>
+                            <td class="px-4 py-4 text-sm font-bold whitespace-nowrap">{{ $pesanan->order_id ?? 'PSN-' . str_pad($pesanan->id, 3, '0', STR_PAD_LEFT) }}</td>
 
-                            <td class="px-6 py-6">
-                                <div class="flex items-center gap-4">
-                                    <div class="h-16 w-16 shrink-0 overflow-hidden rounded-xl border border-[#f1e8df] bg-[#fcfaf8]">
+                            <td class="px-4 py-4">
+                                <div class="flex items-center gap-3">
+                                    <div class="h-12 w-12 shrink-0 overflow-hidden rounded-xl border border-[#f1e8df] bg-[#fcfaf8]">
                                         <img src="{{ $firstImg }}" alt="{{ $firstName }}" class="h-full w-full object-cover">
                                     </div>
                                     <div class="min-w-0">
-                                        <p class="text-base font-bold text-[#5c4432]">{{ $firstName }}</p>
+                                        <p class="text-sm font-bold text-[#5c4432]">{{ $firstName }}</p>
                                         @if ($extraCount > 0)
-                                            <p class="mt-1 text-sm text-[#7b6858]">+{{ $extraCount }} produk lainnya</p>
+                                            <p class="mt-0.5 text-xs text-[#7b6858]">+{{ $extraCount }} produk lainnya</p>
                                         @endif
                                     </div>
                                 </div>
                             </td>
 
                             @if ($status === 'all')
-                            <td class="px-6 py-6 text-center col-status">
-                                <span class="inline-flex whitespace-nowrap rounded-full {{ $badge['bg'] }} px-5 py-2 text-sm font-semibold {{ $badge['text'] }}">
+                            <td class="px-4 py-4 text-center col-status">
+                                <span class="inline-flex whitespace-nowrap rounded-full {{ $badge['bg'] }} px-3 py-1.5 text-xs font-semibold {{ $badge['text'] }}">
                                     {{ $pesanan->status_label }}
                                 </span>
                             </td>
                             @endif
 
-                            <td class="px-6 py-6 text-base font-bold whitespace-nowrap text-[#5c4432]">
+                            <td class="px-4 py-4 text-sm font-bold whitespace-nowrap text-[#5c4432]">
                                 Rp{{ number_format($pesanan->total_harga, 0, ',', '.') }}
                             </td>
 
-                            <td class="px-6 py-6">
+                            <td class="px-4 py-4">
                                 <div class="flex justify-center">
                                     <button
                                         data-order-id="{{ $pesanan->id }}"
                                         onclick="openOrderDetail(this.dataset.orderId)"
-                                        class="whitespace-nowrap rounded-xl border-0 bg-[#BFA28C] px-4 py-2 text-sm font-semibold text-white transition-all hover:bg-[#A88A72] hover:shadow-[0_5px_14px_rgba(191,162,140,0.2)]">
+                                        class="whitespace-nowrap rounded-xl border-0 bg-[#BFA28C] px-3.5 py-1.5 text-xs font-semibold text-white transition-all duration-300 ease-in-out hover:bg-[#A88A72] hover:scale-[1.05] active:scale-[0.95] hover:shadow-[0_5px_14px_rgba(191,162,140,0.3)]">
                                         Detail
                                     </button>
                                 </div>
@@ -125,7 +125,7 @@
                 </tbody>
             </table>
         </div>
-        @if ($pesanans->hasPages())
+        @if ($pesanans->count() > 0)
             <div class="flex items-center justify-between border-t border-[#f0e7dd] bg-white px-6 py-4">
                 <span class="text-xs font-semibold text-[#9a8575]">
                     {{ $pesanans->firstItem() ?? 0 }} - {{ $pesanans->lastItem() ?? 0 }} dari {{ $pesanans->total() }}
@@ -137,7 +137,7 @@
                             <svg class="h-3 w-3" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6" /></svg>
                         </span>
                     @else
-                        <a href="javascript:void(0)" onclick="loadHistory('{{ $pesanans->previousPageUrl() }}&tab=riwayat&status={{ $status }}')" class="flex h-7 w-7 items-center justify-center rounded-lg border border-[#f0e7dd] bg-white text-[#9a8575] transition-colors hover:bg-[#fbf8f5] hover:text-[#BFA28C]">
+                        <a href="javascript:void(0)" onclick="loadHistory('{{ $pesanans->previousPageUrl() }}&tab=riwayat&status={{ $status }}')" class="flex h-7 w-7 items-center justify-center rounded-lg border border-[#f0e7dd] bg-white text-[#9a8575] transition-all duration-300 ease-in-out hover:bg-[#fbf8f5] hover:text-[#BFA28C] hover:scale-110 active:scale-90">
                             <svg class="h-3 w-3" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6" /></svg>
                         </a>
                     @endif
@@ -149,7 +149,7 @@
 
                     {{-- Tombol Next --}}
                     @if ($pesanans->hasMorePages())
-                        <a href="javascript:void(0)" onclick="loadHistory('{{ $pesanans->nextPageUrl() }}&tab=riwayat&status={{ $status }}')" class="flex h-7 w-7 items-center justify-center rounded-lg border border-[#f0e7dd] bg-white text-[#9a8575] transition-colors hover:bg-[#fbf8f5] hover:text-[#BFA28C]">
+                        <a href="javascript:void(0)" onclick="loadHistory('{{ $pesanans->nextPageUrl() }}&tab=riwayat&status={{ $status }}')" class="flex h-7 w-7 items-center justify-center rounded-lg border border-[#f0e7dd] bg-white text-[#9a8575] transition-all duration-300 ease-in-out hover:bg-[#fbf8f5] hover:text-[#BFA28C] hover:scale-110 active:scale-90">
                             <svg class="h-3 w-3" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 5l6 6-6 6" /></svg>
                         </a>
                     @else
@@ -158,12 +158,6 @@
                         </span>
                     @endif
                 </div>
-            </div>
-        @elseif ($pesanans->count() > 0)
-            <div class="flex items-center justify-between border-t border-[#f0e7dd] bg-white px-6 py-4">
-                <span class="text-xs font-semibold text-[#9a8575]">
-                    1 - {{ $pesanans->count() }} dari {{ $pesanans->count() }}
-                </span>
             </div>
         @endif
     </div>

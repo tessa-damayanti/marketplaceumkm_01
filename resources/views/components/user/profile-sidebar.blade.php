@@ -15,7 +15,7 @@
         <div class="h-14 w-14 flex-shrink-0 overflow-hidden rounded-full ring-4 ring-[#f4ece3] shadow-sm">
             <img
                 id="sidebarProfileImage"
-                src="{{ Auth::user()->foto_profile ? asset('storage/' . Auth::user()->foto_profile) : asset('images/1.png') }}"
+                src="{{ Auth::user()->foto_profile_url }}"
                 class="h-full w-full aspect-square object-cover"
                 alt="Foto Profil"
             >
@@ -33,7 +33,7 @@
         {{-- Akun --}}
         <button onclick="switchTab('akun')"
             id="btn-tab-akun"
-            class="flex w-full items-center gap-4 rounded-2xl px-6 py-4 text-left hover:bg-[#f0e7dd] transition-colors {{ $activeTab === 'akun' ? $activeClass : $inactiveClass }}">
+            class="flex w-full items-center gap-4 rounded-2xl px-6 py-4 text-left hover:bg-[#f0e7dd] transition-all duration-300 ease-in-out hover:scale-[1.02] active:scale-[0.98] hover:shadow-sm {{ $activeTab === 'akun' ? $activeClass : $inactiveClass }}">
 
             <svg xmlns="http://www.w3.org/2000/svg"
                 class="h-6 w-6"
@@ -52,7 +52,7 @@
         {{-- Riwayat --}}
         <button onclick="switchTab('riwayat')"
             id="btn-tab-riwayat"
-            class="flex w-full items-center gap-4 rounded-2xl px-6 py-4 text-left hover:bg-[#f0e7dd] transition-colors {{ $activeTab === 'riwayat' ? $activeClass : $inactiveClass }}">
+            class="flex w-full items-center gap-4 rounded-2xl px-6 py-4 text-left hover:bg-[#f0e7dd] transition-all duration-300 ease-in-out hover:scale-[1.02] active:scale-[0.98] hover:shadow-sm {{ $activeTab === 'riwayat' ? $activeClass : $inactiveClass }}">
 
             <svg xmlns="http://www.w3.org/2000/svg"
                 class="h-6 w-6"
@@ -71,7 +71,7 @@
         {{-- Ubah Password --}}
         <button onclick="switchTab('password')"
             id="btn-tab-password"
-            class="flex w-full items-center gap-4 rounded-2xl px-6 py-4 text-left hover:bg-[#f0e7dd] transition-colors {{ $activeTab === 'password' ? $activeClass : $inactiveClass }}">
+            class="flex w-full items-center gap-4 rounded-2xl px-6 py-4 text-left hover:bg-[#f0e7dd] transition-all duration-300 ease-in-out hover:scale-[1.02] active:scale-[0.98] hover:shadow-sm {{ $activeTab === 'password' ? $activeClass : $inactiveClass }}">
 
             <svg xmlns="http://www.w3.org/2000/svg"
                  class="h-6 w-6"
@@ -88,7 +88,7 @@
         {{-- Logout --}}
         <button onclick="openLogoutModal()"
             id="btn-tab-logout"
-            class="flex w-full items-center gap-4 rounded-2xl px-6 py-4 text-left font-medium text-[#8b6f58] hover:bg-[#f0e7dd] active:bg-[#e8ded3] transition-colors">
+            class="flex w-full items-center gap-4 rounded-2xl px-6 py-4 text-left font-medium text-[#8b6f58] hover:bg-[#f0e7dd] hover:scale-[1.02] active:scale-[0.98] hover:shadow-sm transition-all duration-300 ease-in-out">
 
             <svg xmlns="http://www.w3.org/2000/svg"
                 class="h-6 w-6"

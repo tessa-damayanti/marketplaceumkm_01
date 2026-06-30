@@ -83,7 +83,7 @@
 
         <div class="flex justify-end pt-4">
             <button type="submit"
-                class="relative z-10 rounded-xl bg-[#BFA28C] px-8 py-3 font-bold text-white transition hover:bg-[#A88A72]">
+                class="rounded-2xl bg-[#d8c3af] px-8 py-4 font-bold text-white transition hover:bg-[#BFA28C]">
                 Simpan
             </button>
         </div>

@@ -90,13 +90,13 @@
             </p>
             <div class="mt-5 flex justify-center gap-[10px]">
                 <button onclick="closeLogoutModal()" 
-                    class="rounded-xl border border-[#d8c3af] bg-white px-7 py-2.5 text-sm font-bold text-[#5c4432] transition hover:bg-[#fcf8f3] hover:border-[#c7b09b]">
+                    class="rounded-xl border border-[#d8c3af] bg-white px-7 py-2.5 text-sm font-bold text-[#5c4432] transition-all duration-300 ease-in-out hover:bg-[#fcf8f3] hover:border-[#c7b09b] hover:scale-[1.03] active:scale-[0.97]">
                     Batal
                 </button>
                 <form action="{{ route('logout') }}" method="POST" class="m-0">
                     @csrf
                     <button type="submit" 
-                        class="rounded-xl bg-[#ef4444] px-7 py-2.5 text-sm font-semibold text-white transition hover:brightness-105">
+                        class="rounded-xl bg-[#ef4444] px-7 py-2.5 text-sm font-semibold text-white transition-all duration-300 ease-in-out hover:scale-[1.03] active:scale-[0.97] hover:shadow-lg hover:shadow-red-500/20">
                         Ya, Keluar
                     </button>
                 </form>
@@ -114,11 +114,11 @@
             </p>
             <div class="mt-5 flex justify-center gap-[10px]">
                 <button id="btn-cancel-modal-close"
-                    class="rounded-xl border border-[#d8c3af] bg-white px-7 py-2.5 text-sm font-bold text-[#5c4432] transition hover:bg-[#fcf8f3] hover:border-[#c7b09b]">
+                    class="rounded-xl border border-[#d8c3af] bg-white px-7 py-2.5 text-sm font-bold text-[#5c4432] transition-all duration-300 ease-in-out hover:bg-[#fcf8f3] hover:border-[#c7b09b] hover:scale-[1.03] active:scale-[0.97]">
                     Kembali
                 </button>
                 <button id="btn-cancel-modal-submit"
-                    class="rounded-xl bg-[#ef4444] px-7 py-2.5 text-sm font-semibold text-white transition hover:brightness-105">
+                    class="rounded-xl bg-[#ef4444] px-7 py-2.5 text-sm font-semibold text-white transition-all duration-300 ease-in-out hover:scale-[1.03] active:scale-[0.97] hover:shadow-lg hover:shadow-red-500/20">
                     Ya, Batalkan
                 </button>
             </div>
