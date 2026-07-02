@@ -740,10 +740,24 @@
         return;
       }
 
+      // Validasi format/ekstensi file (harus jpeg, png, jpg)
+      const allowedExtensions = ['jpeg', 'png', 'jpg'];
+      const fileExtension = file.name.split('.').pop().toLowerCase();
+      if (!allowedExtensions.includes(fileExtension)) {
+        if (errEl) {
+          errEl.textContent = 'Format foto harus jpeg, png, atau jpg.';
+          errEl.style.display = 'block';
+        }
+        input.value = '';
+        document.getElementById('upload-hint').textContent = 'Belum ada file dipilih';
+        selectedProdukImage = '';
+        return;
+      }
+
       // Validasi ukuran maksimal 2MB
       if (file.size > 2 * 1024 * 1024) {
         if (errEl) {
-          errEl.textContent = 'Ukuran file maksimal 2MB.';
+          errEl.textContent = 'Ukuran foto tidak boleh lebih dari 2MB.';
           errEl.style.display = 'block';
         }
         input.value = '';

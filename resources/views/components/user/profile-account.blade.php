@@ -123,7 +123,7 @@
         // Validasi tipe file
         const allowedTypes = ['image/jpeg', 'image/png', 'image/jpg', 'image/gif'];
         if (!allowedTypes.includes(file.type)) {
-            showError('Harap pilih gambar dengan format JPG, JPEG, PNG');
+            showError('aFormat foto harus jpeg, png, atau jpg.');
             event.target.value = ''; // Reset input file
             isFileValid = false;
             return;

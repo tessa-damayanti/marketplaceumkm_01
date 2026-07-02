@@ -66,7 +66,7 @@ class ProdukController extends Controller
             'image' => 'nullable|image|mimes:jpeg,png,jpg|max:2048'
         ], [
             'nama.unique' => 'Nama produk sudah ada.',
-            'image.image' => 'File harus berupa foto.',
+            'image.image' => 'File harus berupa foto/gambar.',
             'image.mimes' => 'Format foto harus jpeg, png, atau jpg.',
             'image.max' => 'Ukuran foto tidak boleh lebih dari 2MB.'
         ]);

@@ -122,12 +122,24 @@
             const tabRiwayat  = document.getElementById('tab-riwayat');
             const tabPassword = document.getElementById('tab-password');
 
-            if (tabAkun)     tabAkun.classList.add('hidden');
-            if (tabRiwayat)  tabRiwayat.classList.add('hidden');
-            if (tabPassword) tabPassword.classList.add('hidden');
+            if (tabAkun) {
+                tabAkun.classList.add('hidden');
+                tabAkun.classList.remove('block');
+            }
+            if (tabRiwayat) {
+                tabRiwayat.classList.add('hidden');
+                tabRiwayat.classList.remove('block');
+            }
+            if (tabPassword) {
+                tabPassword.classList.add('hidden');
+                tabPassword.classList.remove('block');
+            }
 
             const activeTab = document.getElementById('tab-' + tabId);
-            if (activeTab) activeTab.classList.remove('hidden');
+            if (activeTab) {
+                activeTab.classList.remove('hidden');
+                activeTab.classList.add('block');
+            }
 
             const btnAkun     = document.getElementById('btn-tab-akun');
             const btnRiwayat  = document.getElementById('btn-tab-riwayat');
@@ -358,10 +370,13 @@
                     const data = await res.json();
                     if (res.ok && data.success) {
                         if (typeof window.showCustomAlert === 'function') {
-                            window.showCustomAlert('Pesanan berhasil dibatalkan.', 'success', () => { window.location.href = '?tab=riwayat&status=all'; });
+                            window.showCustomAlert('Pesanan berhasil dibatalkan.', 'success');
+                            setTimeout(() => {
+                                window.location.href = '{{ route('profile') }}?tab=riwayat&status=all';
+                            }, 1500);
                         } else {
                             alert('Pesanan berhasil dibatalkan.');
-                            window.location.href = '?tab=riwayat&status=all';
+                            window.location.href = '{{ route('profile') }}?tab=riwayat&status=all';
                         }
                     } else {
                         const errMsg = data.error || 'Gagal membatalkan pesanan.';
@@ -492,18 +507,24 @@
             window.snap.pay(snapToken, {
                 onSuccess: function(result){
                     if (typeof window.showCustomAlert === 'function') {
-                        window.showCustomAlert('Pembayaran berhasil! Terima kasih.', 'success', () => { window.location.href = '?tab=riwayat&status=all'; });
+                        window.showCustomAlert('Pembayaran berhasil! Terima kasih.', 'success');
+                        setTimeout(() => {
+                            window.location.href = '{{ route('profile') }}?tab=riwayat&status=all';
+                        }, 1500);
                     } else {
                         alert('Pembayaran berhasil! Terima kasih.');
-                        window.location.href = '?tab=riwayat&status=all';
+                        window.location.href = '{{ route('profile') }}?tab=riwayat&status=all';
                     }
                 },
                 onPending: function(result){
                     if (typeof window.showCustomAlert === 'function') {
-                        window.showCustomAlert('Menunggu pembayaran Anda!', 'success', () => { window.location.href = '?tab=riwayat&status=all'; });
+                        window.showCustomAlert('Menunggu pembayaran Anda!', 'success');
+                        setTimeout(() => {
+                            window.location.href = '{{ route('profile') }}?tab=riwayat&status=all';
+                        }, 1500);
                     } else {
                         alert('Menunggu pembayaran Anda!');
-                        window.location.href = '?tab=riwayat&status=all';
+                        window.location.href = '{{ route('profile') }}?tab=riwayat&status=all';
                     }
                 },
                 onError: function(result){

@@ -42,16 +42,25 @@
 
     <div class="overflow-hidden rounded-[18px] bg-white shadow-[0_6px_22px_rgba(92,68,50,0.08)]">
         <div class="overflow-x-auto">
+            @if ($status === 'all')
             <table class="w-full text-left">
+            @else
+            <table class="w-full min-w-[800px] table-fixed text-left">
+            @endif
                 <thead>
                 <tr class="border-b border-[#eee5dc] bg-[#fcfaf8] text-sm font-bold text-[#5c4432]">
-                    <th class="px-4 py-4 whitespace-nowrap">ID. Pesanan</th>
-                    <th class="px-4 py-4 whitespace-nowrap">Produk</th>
                     @if ($status === 'all')
-                    <th class="px-4 py-4 text-center whitespace-nowrap col-status">Status Pembayaran</th>
+                        <th class="px-4 py-4 whitespace-nowrap">ID. Pesanan</th>
+                        <th class="px-4 py-4 whitespace-nowrap">Produk</th>
+                        <th class="px-4 py-4 text-center whitespace-nowrap col-status">Status Pembayaran</th>
+                        <th class="px-4 py-4 whitespace-nowrap">Total</th>
+                        <th class="px-4 py-4 text-center whitespace-nowrap">Aksi</th>
+                    @else
+                        <th class="w-[20%] px-4 py-4 whitespace-nowrap" style="width: 20%;">ID. Pesanan</th>
+                        <th class="w-[50%] px-4 py-4 whitespace-nowrap" style="width: 50%;">Produk</th>
+                        <th class="w-[18%] px-4 py-4 whitespace-nowrap" style="width: 18%;">Total</th>
+                        <th class="w-[12%] px-4 py-4 text-center whitespace-nowrap" style="width: 12%;">Aksi</th>
                     @endif
-                    <th class="px-4 py-4 whitespace-nowrap">Total</th>
-                    <th class="px-4 py-4 text-center whitespace-nowrap">Aksi</th>
                 </tr>
                 </thead>
 
@@ -82,9 +91,13 @@
                                         <img src="{{ $firstImg }}" alt="{{ $firstName }}" class="h-full w-full object-cover">
                                     </div>
                                     <div class="min-w-0">
-                                        <p class="text-sm font-bold text-[#5c4432]">{{ $firstName }}</p>
+                                        @if ($status === 'all')
+                                            <p class="text-sm font-bold text-[#5c4432]">{{ $firstName }}</p>
+                                        @else
+                                            <p class="text-sm font-bold text-[#5c4432] truncate">{{ $firstName }}</p>
+                                        @endif
                                         @if ($extraCount > 0)
-                                            <p class="mt-0.5 text-xs text-[#7b6858]">+{{ $extraCount }} produk lainnya</p>
+                                            <p class="mt-0.5 text-xs text-[#7b6858] whitespace-nowrap">+{{ $extraCount }} produk lainnya</p>
                                         @endif
                                     </div>
                                 </div>

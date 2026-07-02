@@ -7,6 +7,7 @@ use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\Storage;
 
 class User extends Authenticatable
 {
@@ -46,11 +47,11 @@ class User extends Authenticatable
      */
     public function getFotoProfileUrlAttribute()
     {
-        if ($this->foto_profile) {
+        if ($this->foto_profile && Storage::disk('public')->exists($this->foto_profile)) {
             return asset('storage/' . $this->foto_profile);
         }
 
-        $name = $this->nama_lengkap ?? $this->username;
+        $name = !empty(trim($this->nama_lengkap ?? '')) ? $this->nama_lengkap : $this->username;
         $name = trim($name);
 
         return 'https://ui-avatars.com/api/?name=' . urlencode($name) . '&background=bfa28c&color=ffffff&bold=true&length=2';
