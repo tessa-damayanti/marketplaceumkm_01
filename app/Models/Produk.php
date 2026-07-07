@@ -19,11 +19,13 @@ class Produk extends Model
         'image',
     ];
 
+    // Satu produk hanya boleh punya satu kategori
     public function kategori()
     {
         return $this->belongsTo(Kategori::class, 'kategori_id');
     }
 
+    //Satu produk bisa memiliki banyak  stok
     public function stoks()
     {
         return $this->hasMany(Stok::class, 'produk_id');

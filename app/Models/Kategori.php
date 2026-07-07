@@ -14,6 +14,7 @@ class Kategori extends Model
 
     protected $fillable = ['nama'];
 
+    //Satu kategori dapat memiliki banyak produk
     public function produks()
     {
         return $this->hasMany(Produk::class, 'kategori_id');

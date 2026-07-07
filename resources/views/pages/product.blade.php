@@ -139,8 +139,11 @@
         </button>
 
         <div id="categoryTabsProd"
-            class="flex gap-[0.45rem] overflow-hidden scroll-smooth"
-            style="width: calc((100px * 10) + (0.45rem * 9));">
+            class="flex gap-[0.45rem] overflow-x-auto scroll-smooth mx-auto pb-2"
+            style="max-width: 100%; scrollbar-width: none; -ms-overflow-style: none;">
+            <style>
+                #categoryTabsProd::-webkit-scrollbar { display: none; }
+            </style>
 
             <a href="{{ route('product') }}?category=semua"
                 class="cat-tab-prod group inline-flex shrink-0 cursor-pointer items-center justify-center gap-[6px] rounded-full border-[1.5px] border-transparent
@@ -181,46 +184,38 @@
 
 <script>
     (function() {
-        const MAX_VISIBLE = 10;
-        const tabs = Array.from(document.querySelectorAll('.cat-tab-prod'));
+        const container = document.getElementById('categoryTabsProd');
         const prevBtn = document.getElementById('cat-prev-prod');
         const nextBtn = document.getElementById('cat-next-prod');
 
-        let currentOffset = 0;
-
-        function updateVisibility() {
-            tabs.forEach((tab, i) => {
-                tab.style.display =
-                    i >= currentOffset && i < currentOffset + MAX_VISIBLE ?
-                    'inline-flex' :
-                    'none';
-            });
-
-            const needArrows = tabs.length > MAX_VISIBLE;
-            const atStart = currentOffset === 0;
-            const atEnd = currentOffset + MAX_VISIBLE >= tabs.length;
-
-            prevBtn.style.display = needArrows ? 'inline-flex' : 'none';
-            nextBtn.style.display = needArrows ? 'inline-flex' : 'none';
-
-            prevBtn.disabled = atStart;
-            nextBtn.disabled = atEnd;
-
-            prevBtn.style.opacity = atStart ? '0.4' : '1';
-            nextBtn.style.opacity = atEnd ? '0.4' : '1';
+        function checkArrows() {
+            if (container.scrollWidth > container.clientWidth) {
+                prevBtn.style.display = 'inline-flex';
+                nextBtn.style.display = 'inline-flex';
+                prevBtn.classList.remove('hidden');
+                nextBtn.classList.remove('hidden');
+                
+                prevBtn.style.opacity = container.scrollLeft <= 0 ? '0.4' : '1';
+                prevBtn.disabled = container.scrollLeft <= 0;
+                
+                const maxScrollLeft = container.scrollWidth - container.clientWidth;
+                nextBtn.style.opacity = container.scrollLeft >= maxScrollLeft - 1 ? '0.4' : '1';
+                nextBtn.disabled = container.scrollLeft >= maxScrollLeft - 1;
+            } else {
+                prevBtn.style.display = 'none';
+                nextBtn.style.display = 'none';
+            }
         }
 
         window.scrollCatProd = function(dir) {
-            const totalPages = Math.ceil(tabs.length / MAX_VISIBLE);
-            const currentPage = Math.floor(currentOffset / MAX_VISIBLE);
-            const nextPage = Math.max(0, Math.min(currentPage + dir, totalPages - 1));
-
-            currentOffset = nextPage * MAX_VISIBLE;
-
-            updateVisibility();
+            const scrollAmount = container.clientWidth * 0.6;
+            container.scrollBy({ left: dir * scrollAmount, behavior: 'smooth' });
         };
 
-        updateVisibility();
+        container.addEventListener('scroll', checkArrows);
+        window.addEventListener('resize', checkArrows);
+        
+        setTimeout(checkArrows, 100);
     })();
 </script>
 <section class="mx-auto max-w-7xl px-4 pb-14 sm:px-6 [font-family:Poppins,sans-serif]">

@@ -118,8 +118,11 @@
         </button>
 
         <div id="categoryTabs"
-            class="flex gap-[0.45rem] overflow-hidden scroll-smooth mx-auto"
-            style="max-width: 100%; justify-content: safe center;">
+            class="flex gap-[0.45rem] overflow-x-auto scroll-smooth mx-auto pb-2"
+            style="max-width: 100%; scrollbar-width: none; -ms-overflow-style: none;">
+            <style>
+                #categoryTabs::-webkit-scrollbar { display: none; }
+            </style>
 
             @foreach($categories as $cat)
             @php $catLower = strtolower($cat->nama); @endphp
@@ -145,45 +148,41 @@
 
 <script>
     (function() {
-        const MAX_VISIBLE = 10;
         const container = document.getElementById('categoryTabs');
-        const tabs = Array.from(container.querySelectorAll('.cat-tab-home'));
         const prevBtn = document.getElementById('cat-prev-home');
         const nextBtn = document.getElementById('cat-next-home');
-        let currentOffset = 0;
 
-        function updateVisibility() {
-            tabs.forEach((tab, i) => {
-                tab.style.display = (i >= currentOffset && i < currentOffset + MAX_VISIBLE) ? '' : 'none';
-            });
-            // Show/hide arrows
-            const needArrows = tabs.length > MAX_VISIBLE;
-            prevBtn.classList.toggle('hidden', !needArrows);
-            nextBtn.classList.toggle('hidden', !needArrows);
-            prevBtn.style.display = needArrows ? 'inline-flex' : 'none';
-            nextBtn.style.display = needArrows ? 'inline-flex' : 'none';
-            prevBtn.disabled = currentOffset === 0;
-            prevBtn.style.opacity = currentOffset === 0 ? '0.4' : '1';
-            nextBtn.disabled = currentOffset + MAX_VISIBLE >= tabs.length;
-            nextBtn.style.opacity = currentOffset + MAX_VISIBLE >= tabs.length ? '0.4' : '1';
+        function checkArrows() {
+            // Tampilkan arrow hanya jika container bisa discroll
+            if (container.scrollWidth > container.clientWidth) {
+                prevBtn.style.display = 'inline-flex';
+                nextBtn.style.display = 'inline-flex';
+                prevBtn.classList.remove('hidden');
+                nextBtn.classList.remove('hidden');
+                
+                // Opacity berdasarkan posisi scroll
+                prevBtn.style.opacity = container.scrollLeft <= 0 ? '0.4' : '1';
+                prevBtn.disabled = container.scrollLeft <= 0;
+                
+                const maxScrollLeft = container.scrollWidth - container.clientWidth;
+                nextBtn.style.opacity = container.scrollLeft >= maxScrollLeft - 1 ? '0.4' : '1';
+                nextBtn.disabled = container.scrollLeft >= maxScrollLeft - 1;
+            } else {
+                prevBtn.style.display = 'none';
+                nextBtn.style.display = 'none';
+            }
         }
 
         window.scrollCatHome = function(dir) {
-            currentOffset += dir * MAX_VISIBLE;
-
-            if (currentOffset < 0) {
-                currentOffset = 0;
-            }
-
-            if (currentOffset >= tabs.length) {
-                currentOffset = tabs.length - 1;
-            }
-
-
-            updateVisibility();
+            const scrollAmount = container.clientWidth * 0.6; // Scroll 60% dari lebar layar
+            container.scrollBy({ left: dir * scrollAmount, behavior: 'smooth' });
         };
 
-        updateVisibility();
+        container.addEventListener('scroll', checkArrows);
+        window.addEventListener('resize', checkArrows);
+        
+        // Panggil setelah render selesai
+        setTimeout(checkArrows, 100);
     })();
 </script>
 

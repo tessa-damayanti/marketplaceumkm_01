@@ -10,6 +10,7 @@ class Ukuran extends Model
 
     protected $fillable = ['nama_ukuran'];
 
+    // satu ukuran bisa nyambung ke BANYAK baris stok
     public function stoks()
     {
         return $this->hasMany(Stok::class, 'ukuran_id');

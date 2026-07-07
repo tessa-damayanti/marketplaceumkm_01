@@ -124,19 +124,19 @@
       <p style="font-size:13.5px;font-weight:700;color:#555;" id="stok-modal-produk-name">Produk: -</p>
       <div class="stok-row">
         <label>Ukuran S:</label>
-        <input type="number" id="stok-s" min="0" value="0">
+        <input type="number" id="stok-s" min="0" value="0" oninput="if(this.value < 0) this.value = 0;" onkeypress="return event.charCode >= 48 && event.charCode <= 57">
       </div>
       <div class="stok-row">
         <label>Ukuran M:</label>
-        <input type="number" id="stok-m" min="0" value="0">
+        <input type="number" id="stok-m" min="0" value="0" oninput="if(this.value < 0) this.value = 0;" onkeypress="return event.charCode >= 48 && event.charCode <= 57">
       </div>
       <div class="stok-row">
         <label>Ukuran L:</label>
-        <input type="number" id="stok-l" min="0" value="0">
+        <input type="number" id="stok-l" min="0" value="0" oninput="if(this.value < 0) this.value = 0;" onkeypress="return event.charCode >= 48 && event.charCode <= 57">
       </div>
       <div class="stok-row">
         <label>Ukuran XL:</label>
-        <input type="number" id="stok-xl" min="0" value="0">
+        <input type="number" id="stok-xl" min="0" value="0" oninput="if(this.value < 0) this.value = 0;" onkeypress="return event.charCode >= 48 && event.charCode <= 57">
       </div>
     </div>
     <div class="modal-footer">

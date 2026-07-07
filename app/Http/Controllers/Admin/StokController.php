@@ -9,6 +9,7 @@ class StokController extends Controller
 {
     public function stok()
     {
+        // cek akses admin
         if (session('role') !== 'admin') {
             return redirect()->route('login')->with('error', 'Silakan login sebagai admin terlebih dahulu.');
         }
@@ -18,6 +19,7 @@ class StokController extends Controller
         ]);
     }
 
+    // Ambil data produk sekalian kategori & stoknya buat ditampilin di tabel stok admin.
     private function getProdukData()
     {
         $produks = Produk::with(['kategori', 'stoks.ukuran'])->orderBy('id', 'desc')->get();
@@ -46,10 +48,12 @@ class StokController extends Controller
 
     public function updateStok(Request $request, $produk_id)
     {
+        // Cek akses admin
         if (session('role') !== 'admin') {
             return redirect()->route('login')->with('error', 'Silakan login sebagai admin terlebih dahulu.');
         }
 
+        //memastikan semua ukuran (S, M, L, XL) diisi angka dan minimal 0
         $request->validate([
             'S' => 'required|integer|min:0',
             'M' => 'required|integer|min:0',
@@ -57,10 +61,12 @@ class StokController extends Controller
             'XL' => 'required|integer|min:0',
         ]);
 
+        // menyimpan atau Update stok tiap ukuran ke database.
         $sizes = ['S', 'M', 'L', 'XL'];
         foreach ($sizes as $size) {
             $ukuran = \App\Models\Ukuran::where('nama_ukuran', $size)->first();
             if ($ukuran) {
+                //mengupdate data stok
                 \App\Models\Stok::updateOrCreate(
                     ['produk_id' => $produk_id, 'ukuran_id' => $ukuran->id],
                     ['jumlah_stok' => $request->$size]

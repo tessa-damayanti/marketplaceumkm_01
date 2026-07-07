@@ -1013,13 +1013,20 @@
       if (!p) return;
 
       const payload = {};
+      let hasError = false;
       ['s', 'm', 'l', 'xl'].forEach(sz => {
-        let val = parseInt(document.getElementById('stok-' + sz).value);
-        if (isNaN(val) || val < 0) {
-          val = 0;
+        const inputVal = document.getElementById('stok-' + sz).value.trim();
+        if (inputVal === '') {
+          hasError = true;
+        } else {
+          payload[sz.toUpperCase()] = parseInt(inputVal);
         }
-        payload[sz.toUpperCase()] = val;
       });
+
+      if (hasError) {
+        showAdminToast('Gagal', 'Semua ukuran stok wajib diisi angka (minimal 0).', 'error');
+        return;
+      }
 
       // Cek apakah ada perubahan stok
       const isChanged = ['S', 'M', 'L', 'XL'].some(sz => payload[sz] !== p.stok[sz]);
