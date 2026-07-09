@@ -212,6 +212,13 @@ function buyNow() {
     const stokId = currentProduct.stok_ids ? currentProduct.stok_ids[selectedSize] : '';
     const url = `${checkoutUrl}?name=${encodeURIComponent(currentProduct.name)}&price=${price}&qty=${currentQty}&size=${encodeURIComponent(selectedSize)}&image=${encodeURIComponent(currentProduct.image)}&stok_id=${stokId}`;
 
+    if (window.history.replaceState) {
+        const currentUrl = new URL(window.location.href);
+        currentUrl.searchParams.delete('show');
+        currentUrl.searchParams.delete('cart_update');
+        window.history.replaceState({}, '', currentUrl.toString());
+    }
+
     window.location.href = url;
 }
 
@@ -220,6 +227,7 @@ function showSizeError() {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
+    if (window.location.pathname.includes('/admin')) return;
     initCardAnimations();
 
     // Auto-open product modal if show param is present in URL
@@ -307,7 +315,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (e.key === 'Escape') closeModal();
     });
 
-    function setupProductPagination() {
+    window.setupProductPagination = function() {
         if (!document.getElementById('categoryTabsProd')) return;
 
         const grid = document.getElementById('product-grid');
@@ -414,21 +422,141 @@ document.addEventListener('DOMContentLoaded', () => {
         showPage(1);
     }
 
-    setupProductPagination();
+    window.setupProductPagination();
 });
 
-window.openModalFromElement = openModalFromElement;
-window.closeModal = closeModal;
-window.increaseQty = increaseQty;
-window.decreaseQty = decreaseQty;
-window.addToCart = addToCart;
-window.buyNow = buyNow;
+if (!window.location.pathname.includes('/admin')) {
+    window.openModalFromElement = openModalFromElement;
+    window.openModal = openModal;
+    window.closeModal = closeModal;
+    window.increaseQty = increaseQty;
+    window.decreaseQty = decreaseQty;
+    window.addToCart = addToCart;
+    window.buyNow = buyNow;
+
+    // digunakan oleh halaman cart saat mode Ubah Ukuran
+    window.setModalQty = function(qty) {
+        currentQty = Math.max(1, parseInt(qty) || 1);
+        document.getElementById('qtyValue').innerText = currentQty;
+    };
+}
 
 window.addEventListener('pageshow', function (event) {
+    if (window.location.pathname.includes('/admin')) return;
     const historyTraversal = event.persisted ||
         (typeof window.performance != 'undefined' &&
          window.performance.navigation.type === 2);
     if (historyTraversal) {
         window.location.reload();
     }
+});
+
+// Live Search (Search-as-you-type)
+document.addEventListener('DOMContentLoaded', () => {
+    if (window.location.pathname.includes('/admin')) return;
+    const isProductPage = window.location.pathname.endsWith('/product') || window.location.pathname.includes('/product');
+    const searchInputs = document.querySelectorAll('input[name="search"]');
+
+    // Focus on input and place cursor at the end on product page load
+    if (isProductPage) {
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.has('search')) {
+            searchInputs.forEach(input => {
+                input.focus();
+                // Put cursor at the end of text
+                const val = input.value;
+                input.value = '';
+                input.value = val;
+            });
+        }
+    }
+
+    let searchDebounceTimer;
+
+    searchInputs.forEach(input => {
+        // Prevent default form submission when pressing enter
+        const form = input.closest('form');
+        if (form) {
+            form.addEventListener('submit', (e) => {
+                e.preventDefault();
+            });
+        }
+
+        input.addEventListener('input', function() {
+            const val = this.value;
+
+            // Sync other search inputs
+            searchInputs.forEach(other => {
+                if (other !== input) other.value = val;
+            });
+
+            const currentIsProductPage = window.location.pathname.endsWith('/product') || window.location.pathname.includes('/product');
+
+            if (!currentIsProductPage) {
+                // If not on product page, redirect to product page with search term after debounce
+                clearTimeout(searchDebounceTimer);
+                searchDebounceTimer = setTimeout(() => {
+                    const targetUrl = new URL('/product', window.location.origin);
+                    targetUrl.searchParams.set('search', val);
+                    window.location.href = targetUrl.toString();
+                }, 400);
+                return;
+            }
+
+            // If on product page, perform AJAX search
+            clearTimeout(searchDebounceTimer);
+            searchDebounceTimer = setTimeout(() => {
+                const url = new URL(window.location.href);
+                if (val.trim() === '') {
+                    url.searchParams.delete('search');
+                } else {
+                    url.searchParams.set('search', val);
+                }
+
+                // Update the browser URL without reloading
+                window.history.replaceState({}, '', url.toString());
+
+                fetch(url.toString(), {
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest'
+                    }
+                })
+                .then(res => res.text())
+                .then(html => {
+                    const parser = new DOMParser();
+                    const doc = parser.parseFromString(html, 'text/html');
+
+                    // Replace heading container
+                    const newHeading = doc.getElementById('heading-container');
+                    const oldHeading = document.getElementById('heading-container');
+                    if (newHeading && oldHeading) {
+                        oldHeading.innerHTML = newHeading.innerHTML;
+                    }
+
+                    // Replace category tabs container
+                    const newTabs = doc.getElementById('category-tabs-container');
+                    const oldTabs = document.getElementById('category-tabs-container');
+                    if (newTabs && oldTabs) {
+                        oldTabs.innerHTML = newTabs.innerHTML;
+                    }
+
+                    // Replace product list container
+                    const newGrid = doc.getElementById('product-list-container');
+                    const oldGrid = document.getElementById('product-list-container');
+                    if (newGrid && oldGrid) {
+                        oldGrid.innerHTML = newGrid.innerHTML;
+                    }
+
+                    // Re-initialize pagination controls and scroll arrow listeners
+                    if (typeof window.setupProductPagination === 'function') {
+                        window.setupProductPagination();
+                    }
+                    if (typeof window.initCategoryTabsArrows === 'function') {
+                        window.initCategoryTabsArrows();
+                    }
+                })
+                .catch(err => console.error('Error during live search:', err));
+            }, 250);
+        });
+    });
 });

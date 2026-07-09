@@ -926,6 +926,7 @@ label.field-label {
 }
 
 .confirm-box p {
+  text-align: center;
   font-size: 14px;
   font-weight: 600;
   color: #1a1a1a;

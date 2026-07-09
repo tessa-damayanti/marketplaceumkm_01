@@ -108,6 +108,7 @@ const PROFILE_URL = '{{ route("profile") }}?tab=riwayat';
 const CSRF        = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
 
 const payBtn = document.getElementById('pay-btn');
+let existingSnapToken = null;
 
 function resetPayBtn() {
     payBtn.disabled = false;
@@ -146,6 +147,32 @@ document.getElementById('checkout-form').addEventListener('submit', async functi
     
     clearErrors();
 
+    if (existingSnapToken) {
+        window.snap.pay(existingSnapToken, {
+            onSuccess: async function(result){
+                try {
+                    await fetch(STATUS_URL, {
+                        method: 'POST',
+                        headers: { 'X-CSRF-TOKEN': CSRF, 'Content-Type': 'application/json', 'Accept': 'application/json' },
+                        body: JSON.stringify({ order_id: result.order_id }),
+                    });
+                } catch(e) { console.warn('[WA] Gagal trigger checkStatus:', e); }
+                showAlert('Pembayaran berhasil! Terima kasih.', 'success', () => { window.location.href = PROFILE_URL; });
+            },
+            onPending: function(result){
+                showAlert('Menunggu pembayaran Anda!', 'success', () => { window.location.href = PROFILE_URL; });
+            },
+            onError: function(result){
+                showAlert('Pembayaran gagal!', 'error');
+                resetPayBtn();
+            },
+            onClose: function(){
+                resetPayBtn();
+            }
+        });
+        return;
+    }
+
     const formData = new FormData(this);
 
     try {
@@ -164,7 +191,14 @@ document.getElementById('checkout-form').addEventListener('submit', async functi
         const data = await res.json().catch(() => { throw new Error('Respon bukan JSON'); });
 
         if (res.ok && data.snap_token) {
-            const orderId = data.order_id;
+            existingSnapToken = data.snap_token;
+            
+            // Nonaktifkan field input agar user tidak mengubah data setelah pesanan dibuat
+            ['buyer_name', 'buyer_phone', 'buyer_address'].forEach(field => {
+                const input = document.querySelector(`[name="${field}"]`);
+                if (input) input.disabled = true;
+            });
+
             window.snap.pay(data.snap_token, {
                 onSuccess: async function(result){
                     // Panggil checkStatus agar WA terkirim ke pembeli

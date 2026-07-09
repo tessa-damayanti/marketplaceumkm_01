@@ -119,12 +119,26 @@ class ProductController extends Controller
                 if (count($matchedCategories) === 1) {
                     $defaultCategory = array_values($matchedCategories)[0];
                 }
-            } else if (array_key_exists($searchLower, $products)) {
-                $defaultCategory = $searchLower;
+            } else {
+                $matchedCategory = $categories->first(function ($cat) use ($searchLower) {
+                    $catNameLower = strtolower($cat->nama);
+                    return $catNameLower === $searchLower 
+                        || str_contains($searchLower, $catNameLower) 
+                        || (strlen($searchLower) >= 3 && str_contains($catNameLower, $searchLower));
+                });
+
+                if ($matchedCategory) {
+                    $defaultCategory = strtolower($matchedCategory->nama);
+                }
             }
         }
 
-        return view('pages.product', compact('displayProducts', 'defaultCategory', 'search', 'categories'));
+        $isCategoryEmpty = false;
+        if ($defaultCategory !== 'semua') {
+            $isCategoryEmpty = !isset($products[strtolower($defaultCategory)]) || count($products[strtolower($defaultCategory)]) === 0;
+        }
+
+        return view('pages.product', compact('displayProducts', 'defaultCategory', 'search', 'categories', 'isCategoryEmpty'));
     }
 }
 

@@ -51,37 +51,24 @@
         </div>
 
         <!-- Date -->
-        <div class="flex w-full flex-row items-center justify-between gap-2 shrink-0 sm:w-auto sm:justify-start">
-          <span class="text-[10px] font-bold uppercase tracking-wider text-[#a78d78] shrink-0">Dari</span>
+        <div class="flex w-full flex-row items-center justify-between gap-1 shrink-0 sm:gap-2 sm:w-auto sm:justify-start">
+          <span class="text-[9px] sm:text-[10px] font-bold uppercase tracking-normal sm:tracking-wider text-[#a78d78] shrink-0">Dari</span>
           <div class="relative flex-1 min-w-0">
             <input type="text" id="pesanan-date-from" placeholder="yyyy-mm-dd" readonly
-              class="h-10 w-full cursor-pointer rounded-[10px] border border-[#e0d2c3] bg-white px-2 pr-7 text-[11px] sm:text-sm text-[#5c4432] focus:outline-none focus:ring-2 focus:ring-[#a78d78]/20 focus:border-[#a78d78] transition">
-            <svg class="absolute right-2 top-1/2 -translate-y-1/2 h-4 w-4 sm:h-5 sm:w-5 text-[#a78d78] pointer-events-none" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              class="h-10 w-full cursor-pointer rounded-[10px] border border-[#e0d2c3] bg-white px-1.5 pr-6 sm:px-2 sm:pr-7 text-[10px] sm:text-sm text-[#5c4432] focus:outline-none focus:ring-2 focus:ring-[#a78d78]/20 focus:border-[#a78d78] transition">
+            <svg class="absolute right-1.5 sm:right-2 top-1/2 -translate-y-1/2 h-3.5 w-3.5 sm:h-5 sm:w-5 text-[#a78d78] pointer-events-none" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
               <path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
             </svg>
           </div>
 
-          <span class="text-[10px] font-bold uppercase tracking-wider text-[#a78d78] shrink-0 ml-1">Sampai</span>
+          <span class="text-[9px] sm:text-[10px] font-bold uppercase tracking-normal sm:tracking-wider text-[#a78d78] shrink-0 ml-0.5 sm:ml-1">Sampai</span>
           <div class="relative flex-1 min-w-0">
             <input type="text" id="pesanan-date-to" placeholder="yyyy-mm-dd" readonly
-              class="h-10 w-full cursor-pointer rounded-[10px] border border-[#e0d2c3] bg-white px-2 pr-7 text-[11px] sm:text-sm text-[#5c4432] focus:outline-none focus:ring-2 focus:ring-[#a78d78]/20 focus:border-[#a78d78] transition">
-            <svg class="absolute right-2 top-1/2 -translate-y-1/2 h-4 w-4 sm:h-5 sm:w-5 text-[#a78d78] pointer-events-none" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              class="h-10 w-full cursor-pointer rounded-[10px] border border-[#e0d2c3] bg-white px-1.5 pr-6 sm:px-2 sm:pr-7 text-[10px] sm:text-sm text-[#5c4432] focus:outline-none focus:ring-2 focus:ring-[#a78d78]/20 focus:border-[#a78d78] transition">
+            <svg class="absolute right-1.5 sm:right-2 top-1/2 -translate-y-1/2 h-3.5 w-3.5 sm:h-5 sm:w-5 text-[#a78d78] pointer-events-none" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
               <path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
             </svg>
           </div>
-          <style>
-            /* Force side-by-side strictly for mobile regardless of admin-dashboard.css grid rule */
-            @media (max-width: 640px) {
-                #page-pesanan .pesanan-date-wrapper {
-                    display: flex !important;
-                    flex-direction: row !important;
-                    flex-wrap: nowrap !important;
-                    width: 100% !important;
-                    justify-content: space-between !important;
-                    align-items: center !important;
-                }
-            }
-          </style>
         </div>
       </div>
 

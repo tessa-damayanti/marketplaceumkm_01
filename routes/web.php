@@ -30,6 +30,7 @@ Route::get('/cart', [CartController::class, 'index'])->name('cart');
 Route::post('/cart/add', [CartController::class, 'add'])->name('cart.add');
 Route::post('/cart/remove', [CartController::class, 'remove'])->name('cart.remove');
 Route::post('/cart/update', [CartController::class, 'update'])->name('cart.update');
+Route::post('/cart/update-size', [CartController::class, 'updateSize'])->name('cart.update-size');
 
 
 Route::get('/profile', [ProfileController::class, 'index'])->name('profile');

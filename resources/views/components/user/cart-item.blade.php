@@ -89,9 +89,10 @@
                 </p>
 
                 @if ($item['stock'] <= 0)
+                {{-- Ubah Ukuran: buka modal di halaman semua produk --}}
                 <div class="mt-2">
-                    <a href="{{ route('product') }}?show={{ urlencode($item['name']) }}" 
-                        class="inline-flex items-center gap-1.5 rounded-lg bg-[#efe4d8] border border-[#d2c2b0] px-3 py-1.5 text-xs font-semibold text-[#6b5848] transition hover:bg-[#d2c2b0] hover:text-[#5c4432] cursor-pointer">
+                    <a href="{{ route('product') }}?show={{ urlencode($item['name']) }}&cart_update={{ $itemKey }}"
+                        class="inline-flex items-center rounded-lg bg-[#efe4d8] border border-[#d2c2b0] px-3 py-1.5 text-xs font-semibold text-[#6b5848] transition hover:bg-[#d2c2b0] hover:text-[#5c4432] cursor-pointer">
                         Ubah Ukuran
                     </a>
                 </div>
