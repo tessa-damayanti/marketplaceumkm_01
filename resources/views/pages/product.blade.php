@@ -7,15 +7,15 @@
 <!-- Toast -->
 @if (session('success'))
 <div id="cart-toast" class="pointer-events-none fixed right-6 top-6 z-[999] translate-y-3 opacity-0 transition-all duration-500">
-    <div class="flex min-w-[240px] max-w-[280px] items-start gap-2.5 rounded-[18px] bg-[#fffaf6] px-4 py-3 shadow-[0_24px_60px_rgba(92,68,50,0.18)]" style="border:none;outline:none;">
-        <div class="mt-0.5 flex h-8 w-8 items-center justify-center rounded-xl bg-[#dff1e3] text-[#5e936c]">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+    <div class="flex min-w-[320px] max-w-[360px] items-start gap-3 rounded-[24px] bg-[#fffaf6] px-5 py-4 shadow-[0_24px_60px_rgba(92,68,50,0.18)]" style="border:none;outline:none;">
+        <div class="mt-0.5 flex h-10 w-10 items-center justify-center rounded-2xl bg-[#dff1e3] text-[#5e936c]">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
             </svg>
         </div>
         <div class="min-w-0 flex-1">
-            <p class="text-xs font-bold text-[#5c4432]">Berhasil</p>
-            <p class="mt-0.5 text-xs leading-5 text-[#7b6858]">{{ session('success') }}</p>
+            <p class="text-sm font-bold text-[#5c4432]">Berhasil</p>
+            <p class="mt-1 text-sm leading-6 text-[#7b6858]">{{ session('success') }}</p>
         </div>
     </div>
 </div>
@@ -90,7 +90,7 @@
     Ditambahkan ke keranjang
 </div>
 
-<section id="heading-container" class="mx-auto max-w-7xl px-4 pt-6 sm:px-6 sm:pt-8 [font-family:Poppins,sans-serif]">
+<section class="mx-auto max-w-7xl px-4 pt-6 sm:px-6 sm:pt-8 [font-family:Poppins,sans-serif]">
     <div class="flex items-center justify-between gap-3">
 
         <!-- Judul kategori aktif  -->
@@ -126,7 +126,7 @@
         </div>
     </div>
 </section>
-<section id="category-tabs-container" class="mx-auto max-w-7xl px-4 pb-4 pt-4 sm:px-6 sm:pb-6 sm:pt-5 [font-family:Poppins,sans-serif]">
+<section class="mx-auto max-w-7xl px-4 pb-4 pt-4 sm:px-6 sm:pb-6 sm:pt-5 [font-family:Poppins,sans-serif]">
     <div class="relative flex items-center gap-2">
 
         {{-- Arrow Kiri --}}
@@ -142,7 +142,9 @@
             class="flex gap-[0.45rem] overflow-x-auto scroll-smooth pb-2"
             style="max-width: 100%; scrollbar-width: none; -ms-overflow-style: none;">
             <style>
-                #categoryTabsProd::-webkit-scrollbar { display: none; }
+                #categoryTabsProd::-webkit-scrollbar {
+                    display: none;
+                }
             </style>
 
             <a href="{{ route('product') }}?category=semua"
@@ -183,11 +185,10 @@
 </section>
 
 <script>
-    window.initCategoryTabsArrows = function() {
+    (function() {
         const container = document.getElementById('categoryTabsProd');
         const prevBtn = document.getElementById('cat-prev-prod');
         const nextBtn = document.getElementById('cat-next-prod');
-        if (!container || !prevBtn || !nextBtn) return;
 
         function checkArrows() {
             if (container.scrollWidth > container.clientWidth) {
@@ -195,10 +196,10 @@
                 nextBtn.style.display = 'inline-flex';
                 prevBtn.classList.remove('hidden');
                 nextBtn.classList.remove('hidden');
-                
+
                 prevBtn.style.opacity = container.scrollLeft <= 0 ? '0.4' : '1';
                 prevBtn.disabled = container.scrollLeft <= 0;
-                
+
                 const maxScrollLeft = container.scrollWidth - container.clientWidth;
                 nextBtn.style.opacity = container.scrollLeft >= maxScrollLeft - 1 ? '0.4' : '1';
                 nextBtn.disabled = container.scrollLeft >= maxScrollLeft - 1;
@@ -208,22 +209,21 @@
             }
         }
 
+        window.scrollCatProd = function(dir) {
+            const scrollAmount = container.clientWidth * 0.6;
+            container.scrollBy({
+                left: dir * scrollAmount,
+                behavior: 'smooth'
+            });
+        };
+
         container.addEventListener('scroll', checkArrows);
         window.addEventListener('resize', checkArrows);
-        checkArrows();
-    };
 
-    window.scrollCatProd = function(dir) {
-        const container = document.getElementById('categoryTabsProd');
-        if (container) {
-            const scrollAmount = container.clientWidth * 0.6;
-            container.scrollBy({ left: dir * scrollAmount, behavior: 'smooth' });
-        }
-    };
-
-    setTimeout(window.initCategoryTabsArrows, 100);
+        setTimeout(checkArrows, 100);
+    })();
 </script>
-<section id="product-list-container" class="mx-auto max-w-7xl px-4 pb-14 sm:px-6 [font-family:Poppins,sans-serif]">
+<section class="mx-auto max-w-7xl px-4 pb-14 sm:px-6 [font-family:Poppins,sans-serif]">
     @if(count($displayProducts) > 0)
     <div id="product-grid"
         class="grid grid-cols-2 gap-[0.85rem] md:grid-cols-3 md:gap-5 lg:grid-cols-4 lg:gap-6">
@@ -246,50 +246,10 @@
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
             </svg>
         </div>
-        <h3 class="text-xl font-bold text-[#5c4432]">
-            {{ isset($isCategoryEmpty) && $isCategoryEmpty ? 'Belum ada produk pada kategori ini.' : 'Produk tidak ditemukan' }}
-        </h3>
+        <h3 class="text-xl font-bold text-[#5c4432]">Produk tidak ditemukan</h3>
     </div>
     @endif
 </section>
 
 <x-product-modal />
-
-@push('scripts')
-<script>
-    document.addEventListener('DOMContentLoaded', () => {
-        const urlParams  = new URLSearchParams(window.location.search);
-        const cartUpdate = urlParams.get('cart_update');
-        const showProduct = urlParams.get('show');
-
-        if (cartUpdate) {
-            // Mode Ubah Ukuran: arahkan form ke cart.update-size
-            const cartForm = document.getElementById('cartForm');
-            if (cartForm) cartForm.action = '{{ route("cart.update-size") }}';
-
-            const cartItemId = document.getElementById('cart_item_id');
-            if (cartItemId) cartItemId.value = cartUpdate;
-
-            // Buka modal secara eksplisit
-            if (showProduct) {
-                const targetName = showProduct.toLowerCase();
-                const cards = document.querySelectorAll('.product-card');
-                const card = Array.from(cards).find(c => c.getAttribute('data-name') === targetName);
-                if (card && typeof window.openModalFromElement === 'function') {
-                    window.openModalFromElement(card);
-                }
-            }
-
-            // Bersihkan cart_update dan show dari URL setelah modal terbuka agar tidak otomatis terbuka setelah checkout
-            setTimeout(() => {
-                const cleanUrl = new URL(window.location.href);
-                cleanUrl.searchParams.delete('cart_update');
-                cleanUrl.searchParams.delete('show');
-                window.history.replaceState({}, '', cleanUrl.toString());
-            }, 100);
-        }
-    });
-</script>
-@endpush
-
 @endsection

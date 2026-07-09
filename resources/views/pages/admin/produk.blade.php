@@ -28,7 +28,7 @@
             </svg>
           </button>
           <ul id="produk-filter-kat-menu"
-            class="produk-filter-menu absolute left-0 top-[calc(100%+6px)] z-[80] hidden w-full overflow-hidden rounded-xl border border-[#d8c3af] bg-white shadow-xl">
+            class="produk-filter-menu absolute left-0 top-[calc(100%+6px)] z-[80] hidden w-full overflow-y-auto max-h-[250px] rounded-xl border border-[#d8c3af] bg-white shadow-xl">
             <li class="produk-kategori-option cursor-pointer border-b border-[#f0e7dd] bg-[#fbf8f5] px-4 py-2.5 text-sm font-medium text-[#BFA28C] transition-colors hover:bg-[#BFA28C] hover:text-white"
               onclick="selectProdukKategoriFilter('')">Semua Kategori</li>
             @foreach($kategori as $kat)

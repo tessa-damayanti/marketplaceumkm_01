@@ -32,7 +32,7 @@
     <div class="grid md:grid-cols-2 min-h-[600px]">
 
         <!-- LEFT SIDE -->
-        <div class="relative min-h-[600px] overflow-hidden">
+        <div class="relative h-[350px] md:h-auto md:min-h-[600px] overflow-hidden">
             <img src="{{ asset('images/logo.png') }}" alt="Logo Velora" class="absolute inset-0 w-full h-full object-cover">
             <div class="absolute inset-0 bg-[#b9a48f]/30"></div>
             <div class="absolute -top-20 -left-20 w-56 h-56 rounded-full bg-white/10"></div>
