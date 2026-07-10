@@ -21,7 +21,7 @@
           class="kategori-add-btn rounded-xl border border-[#a78d78] bg-[#a78d78] px-4 py-2 text-sm font-semibold text-white transition hover:bg-[#8f7561]"
           onclick="openModal('modal-tambah-kat'); setKatModalMode('add')">+ Tambah Kategori</button>
       </div>
-      <div class="tbl-wrap">
+      <div class="hidden md:block tbl-wrap">
         <table>
           <thead>
             <tr>
@@ -33,6 +33,7 @@
           <tbody id="kategori-tbody"></tbody>
         </table>
       </div>
+      <div id="kategori-cards" class="block md:hidden divide-y divide-[#eee5dc]"></div>
       <x-admin.pagination infoId="kat-pagi-info" infoText="1 - 4 dari 4" />
     </div>
   </div>

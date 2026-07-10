@@ -12,6 +12,13 @@
     rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   @vite(['resources/css/app.css', 'resources/css/admin-dashboard.css', 'resources/js/app.js'])
+  <style>
+    html.modal-open,
+    body.modal-open {
+      overflow: hidden !important;
+      height: 100% !important;
+    }
+  </style>
 </head>
 
 <body class="bg-white text-[#5c4432] antialiased">
@@ -142,10 +149,17 @@
 
     function openAdminModal(id) {
       document.getElementById(id).classList.add('open');
+      document.body.classList.add('modal-open');
+      document.documentElement.classList.add('modal-open');
     }
 
     function closeAdminModal(id) {
       document.getElementById(id).classList.remove('open');
+      const openModals = document.querySelectorAll('.overlay.open');
+      if (openModals.length === 0) {
+        document.body.classList.remove('modal-open');
+        document.documentElement.classList.remove('modal-open');
+      }
     }
 
     window.openModal = openAdminModal;
@@ -299,6 +313,28 @@
           <td>${rp(o.total ?? o.items.reduce((s, i) => s + i.harga * i.qty, 0))}</td>
         </tr>`).join('');
 
+      const cardsEl = document.getElementById('dash-orders-cards');
+      if (cardsEl) {
+        cardsEl.innerHTML = recent.map(o => `
+          <div class="p-4 bg-white hover:bg-[#fcfaf8] transition-colors">
+            <div class="flex items-center justify-between mb-2">
+              <span class="text-xs font-bold text-[#8b6f58]">${o.id}</span>
+              <span class="text-xs text-[#9a8575]">${o.tanggal}</span>
+            </div>
+            <div class="flex items-center gap-3 mb-3">
+              <div class="h-8 w-8 rounded-full border border-[#e2d4c5] bg-[#fbf8f5] flex items-center justify-center overflow-hidden shrink-0">
+                <img src="${o.avatar ? o.avatar : `https://ui-avatars.com/api/?name=${encodeURIComponent(o.nama)}&background=f3e6db&color=5c4432&bold=true&size=64`}" alt="${o.nama}" class="h-full w-full object-cover">
+              </div>
+              <span class="font-semibold text-[#5c4432] text-sm">${o.nama}</span>
+            </div>
+            <div class="flex items-center justify-between">
+              ${statusBadge(o.status)}
+              <span class="font-extrabold text-[#7a5a43] text-sm">${rp(o.total ?? o.items.reduce((s, i) => s + i.harga * i.qty, 0))}</span>
+            </div>
+          </div>
+        `).join('');
+      }
+
       renderSalesChart();
     }
 
@@ -435,6 +471,38 @@
           </td>
         </tr>`;
       }).join('');
+
+      const cardsEl = document.getElementById('produk-cards');
+      if (cardsEl) {
+        cardsEl.innerHTML = paginatedList.map((p, index) => {
+          const seqNum = startIdx + index + 1;
+          const image = getProdukImage(p.nama, p.image || '');
+          return `
+          <div class="p-4 bg-white hover:bg-[#fcfaf8] transition-colors">
+            <div class="flex gap-3">
+              <div class="h-16 w-16 shrink-0 overflow-hidden rounded-xl border border-[#f1e8df] bg-[#fcfaf8]">
+                <img src="${image}" alt="${p.nama}" class="h-full w-full object-cover">
+              </div>
+              <div class="min-w-0 flex-1 flex flex-col justify-between">
+                <div>
+                  <div class="flex justify-between items-start gap-2">
+                    <h4 class="text-sm font-bold text-[#5c4432] leading-snug line-clamp-2">${p.nama}</h4>
+                    <span class="text-[10px] bg-[#e8ded3] text-[#5c4432] px-2 py-0.5 rounded-md font-semibold shrink-0">${p.kategori}</span>
+                  </div>
+                  <p class="text-sm font-extrabold text-[#7a5a43] mt-1.5">${rp(p.harga)}</p>
+                </div>
+                <div class="mt-3 flex justify-between items-center">
+                  <span class="text-xs text-[#9a8575]">No. ${seqNum}</span>
+                  <div class="action-buttons !gap-2">
+                    <button class="icon-btn icon-btn-edit !w-8 !h-8" data-tooltip="Edit" type="button" onclick="openEditProduk('${p.id}')">${editIcon}</button>
+                    <button class="icon-btn icon-btn-delete !w-8 !h-8" data-tooltip="Hapus" type="button" onclick="openHapusProduk('${p.id}')">${deleteIcon}</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>`;
+        }).join('');
+      }
 
       const infoEl = document.getElementById('produk-pagi-info');
       if (infoEl) {
@@ -811,6 +879,24 @@
         </tr>`;
       }).join('');
 
+      const cardsEl = document.getElementById('kategori-cards');
+      if (cardsEl) {
+        cardsEl.innerHTML = paginatedList.map((k, index) => {
+          const seqNum = startIdx + index + 1;
+          return `
+          <div class="p-4 bg-white hover:bg-[#fcfaf8] transition-colors flex items-center justify-between">
+            <div>
+              <span class="text-xs text-[#9a8575] font-semibold">No. ${seqNum}</span>
+              <h4 class="text-sm font-bold text-[#5c4432] mt-1">${k.nama}</h4>
+            </div>
+            <div class="action-buttons !gap-2">
+              <button class="icon-btn icon-btn-edit !w-8 !h-8" data-tooltip="Edit" onclick="openEditKat('${k.id}')">${editIcon}</button>
+              <button class="icon-btn icon-btn-delete !w-8 !h-8" data-tooltip="Hapus" onclick="openHapusKat('${k.id}')">${deleteIcon}</button>
+            </div>
+          </div>`;
+        }).join('');
+      }
+
       const infoEl = document.getElementById('kat-pagi-info');
       if (infoEl) {
         const endIdx = Math.min(startIdx + katPerPage, totalItems);
@@ -977,6 +1063,35 @@
           <td class="action-cell"><button class="icon-btn icon-btn-edit" data-tooltip="Edit Stok" onclick="openEditStok('${p.id}')">${editIcon}</button></td>
         </tr>`).join('');
 
+      const cardsEl = document.getElementById('stok-cards');
+      if (cardsEl) {
+        cardsEl.innerHTML = paginatedList.map(p => `
+          <div class="p-4 bg-white hover:bg-[#fcfaf8] transition-colors">
+            <h4 class="text-sm font-bold text-[#5c4432] mb-3">${p.nama}</h4>
+            <div class="flex items-center justify-between">
+              <div class="flex gap-4">
+                <div class="text-center">
+                  <span class="text-[10px] text-[#9a8575] font-bold block uppercase">S</span>
+                  <span class="text-sm font-extrabold text-[#5c4432] block mt-0.5">${p.stok.S}</span>
+                </div>
+                <div class="text-center">
+                  <span class="text-[10px] text-[#9a8575] font-bold block uppercase">M</span>
+                  <span class="text-sm font-extrabold text-[#5c4432] block mt-0.5">${p.stok.M}</span>
+                </div>
+                <div class="text-center">
+                  <span class="text-[10px] text-[#9a8575] font-bold block uppercase">L</span>
+                  <span class="text-sm font-extrabold text-[#5c4432] block mt-0.5">${p.stok.L}</span>
+                </div>
+                <div class="text-center">
+                  <span class="text-[10px] text-[#9a8575] font-bold block uppercase">XL</span>
+                  <span class="text-sm font-extrabold text-[#5c4432] block mt-0.5">${p.stok.XL}</span>
+                </div>
+              </div>
+              <button class="icon-btn icon-btn-edit !w-8 !h-8" data-tooltip="Edit Stok" onclick="openEditStok('${p.id}')">${editIcon}</button>
+            </div>
+          </div>`).join('');
+      }
+
       const infoEl = document.getElementById('stok-pagi-info');
       if (infoEl) {
         const endIdx = Math.min(startIdx + stokPerPage, totalItems);
@@ -1137,6 +1252,33 @@
           <td class="whitespace-nowrap px-6 py-4">${rp(o.items.reduce((s, i) => s + i.harga * i.qty, 0))}</td>
           <td class="whitespace-nowrap px-6 py-4 text-center"><button onclick="openDetailPesanan('${o.id}')" class="inline-flex items-center justify-center rounded-xl border border-[#d8c3af] bg-[#a78d78] px-4 py-2 text-sm font-normal text-white transition hover:bg-[#8f7561]">Detail</button></td>
         </tr>`).join('') : `<tr><td colspan="6" class="px-6 py-6 text-center text-[#b7a08c]">Tidak ada pesanan ditemukan.</td></tr>`;
+
+      const cardsEl = document.getElementById('pesanan-cards');
+      if (cardsEl) {
+        cardsEl.innerHTML = paginatedList.length ? paginatedList.map(o => `
+          <div class="p-4 bg-white hover:bg-[#fcfaf8] transition-colors">
+            <div class="flex items-center justify-between mb-2.5">
+              <span class="text-xs font-bold text-[#8b6f58]">${o.id}</span>
+              <span class="text-xs text-[#9a8575]">${o.tanggal}</span>
+            </div>
+            <div class="flex items-center gap-3 mb-3">
+              <div class="h-8 w-8 rounded-full border border-[#e2d4c5] bg-[#fbf8f5] flex items-center justify-center overflow-hidden shrink-0">
+                <img src="${o.avatar ? o.avatar : `https://ui-avatars.com/api/?name=${encodeURIComponent(o.nama)}&background=f3e6db&color=5c4432&bold=true&size=64`}" alt="${o.nama}" class="h-full w-full object-cover">
+              </div>
+              <span class="font-bold text-[#5c4432] text-sm line-clamp-1 break-all">${o.nama}</span>
+            </div>
+            <div class="flex items-center justify-between">
+              <div>
+                <span class="text-[10px] text-[#9a8575] block leading-none">Total</span>
+                <span class="text-sm font-extrabold text-[#7a5a43] block mt-1">${rp(o.items.reduce((s, i) => s + i.harga * i.qty, 0))}</span>
+              </div>
+              <div class="flex items-center gap-2">
+                ${statusBadge(o.status)}
+                <button onclick="openDetailPesanan('${o.id}')" class="inline-flex items-center justify-center rounded-xl border border-[#d8c3af] bg-[#a78d78] px-3.5 py-1.5 text-xs font-semibold text-white transition hover:bg-[#8f7561] active:scale-95">Detail</button>
+              </div>
+            </div>
+          </div>`) : `<div class="px-6 py-12 text-center text-sm text-[#b7a08c]">Tidak ada pesanan ditemukan.</div>`;
+      }
 
       const endIdx = Math.min(startIdx + pesananPerPage, totalItems);
       const infoEl = document.getElementById('pesanan-pagi-info');

@@ -41,7 +41,8 @@
     </div>
 
     <div class="overflow-hidden rounded-[18px] bg-white shadow-[0_6px_22px_rgba(92,68,50,0.08)]">
-        <div class="overflow-x-auto">
+        <!-- Desktop Table View -->
+        <div class="hidden md:block overflow-x-auto">
             @if ($status === 'all')
             <table class="w-full text-left">
             @else
@@ -137,6 +138,80 @@
                     </tr>
                 </tbody>
             </table>
+        </div>
+
+        <!-- Mobile Card List View -->
+        <div class="block md:hidden">
+            <div class="flex flex-col divide-y divide-[#eee5dc] bg-white">
+                @forelse ($pesanans as $pesanan)
+                    @php
+                        $badge   = $badgeMap[$pesanan->status_pembayaran] ?? ['bg' => 'bg-[#f3f4f6]', 'text' => 'text-[#6b7280]'];
+                        $details = $pesanan->detailPesanans;
+                        $first   = $details->first();
+                        $extraCount = $details->count() - 1;
+
+                        // Gambar produk pertama
+                        $firstImg = 'https://i.pinimg.com/1200x/b1/cc/2f/b1cc2fb9a73cb56f46e167b47d4febbf.jpg';
+                        $firstName = '-';
+                        if ($first && $first->stok && $first->stok->produk) {
+                            $firstName = $first->stok->produk->nama;
+                            if ($first->stok->produk->image) {
+                                $firstImg = asset('images/' . $first->stok->produk->image);
+                            }
+                        }
+                    @endphp
+                    <div class="p-4 transition-colors duration-150 hover:bg-[#fcfaf8]">
+                        <!-- Card Header -->
+                        <div class="flex items-center justify-between mb-3">
+                            <span class="text-xs font-bold text-[#8b6f58]">
+                                {{ $pesanan->order_id ?? 'PSN-' . str_pad($pesanan->id, 3, '0', STR_PAD_LEFT) }}
+                            </span>
+                            @if ($status === 'all')
+                                <span class="inline-flex whitespace-nowrap rounded-full {{ $badge['bg'] }} px-2.5 py-1 text-[10px] font-semibold {{ $badge['text'] }}">
+                                    {{ $pesanan->status_label }}
+                                </span>
+                            @endif
+                        </div>
+
+                        <!-- Card Content -->
+                        <div class="flex gap-3">
+                            <div class="h-16 w-16 shrink-0 overflow-hidden rounded-xl border border-[#f1e8df] bg-[#fcfaf8]">
+                                <img src="{{ $firstImg }}" alt="{{ $firstName }}" class="h-full w-full object-cover">
+                            </div>
+                            <div class="min-w-0 flex-1 flex flex-col justify-between">
+                                <div>
+                                    <h4 class="text-sm font-bold text-[#5c4432] leading-snug line-clamp-2">
+                                        {{ $firstName }}
+                                    </h4>
+                                    @if ($extraCount > 0)
+                                        <p class="mt-0.5 text-xs text-[#8b7a6d] font-semibold">+{{ $extraCount }} produk lainnya</p>
+                                    @endif
+                                </div>
+
+                                <!-- Card Footer: Total Price & Detail Action Button -->
+                                <div class="mt-3 flex items-end justify-between">
+                                    <div>
+                                        <span class="text-[10px] text-[#8b7a6d] block leading-none">Total Belanja</span>
+                                        <span class="text-sm font-extrabold text-[#7a5a43] block mt-1">
+                                            Rp{{ number_format($pesanan->total_harga, 0, ',', '.') }}
+                                        </span>
+                                    </div>
+                                    <button
+                                        data-order-id="{{ $pesanan->id }}"
+                                        onclick="openOrderDetail(this.dataset.orderId)"
+                                        class="rounded-xl border-0 bg-[#BFA28C] px-4 py-2 text-xs font-bold text-white transition-all duration-300 ease-in-out hover:bg-[#A88A72] active:scale-95 shadow-sm hover:shadow-[0_4px_10px_rgba(191,162,140,0.25)]">
+                                        Detail
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                @empty
+                    <div class="px-6 py-12 text-center text-sm text-[#8b7a6d]">
+                        Belum ada riwayat pembelian.
+                    </div>
+                @endforelse
+            </div>
         </div>
         @if ($pesanans->count() > 0)
             <div class="flex items-center justify-between border-t border-[#f0e7dd] bg-white px-6 py-4">

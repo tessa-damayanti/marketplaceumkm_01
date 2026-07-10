@@ -216,7 +216,8 @@
                 modal.classList.remove('hidden');
                 modal.classList.add('flex');
             }
-            document.body.style.overflow = 'hidden';
+            document.body.classList.add('modal-open');
+            document.documentElement.classList.add('modal-open');
         }
 
         function closeOrderModal() {
@@ -225,7 +226,8 @@
                 modal.classList.add('hidden');
                 modal.classList.remove('flex');
             }
-            document.body.style.overflow = '';
+            document.body.classList.remove('modal-open');
+            document.documentElement.classList.remove('modal-open');
         }
 
         function openOrderDetail(orderId) {
@@ -247,10 +249,10 @@
 
                 const badge = document.getElementById('modal-status-badge');
                 if (badge) {
-                    badge.className = 'mt-2 inline-flex rounded-full px-5 py-2 text-sm font-semibold ' + (order.badgeBg || '') + ' ' + (order.badgeText || '');
+                    badge.className = 'mt-1 md:mt-2 inline-flex rounded-full px-3 py-1 text-[10px] md:px-5 md:py-2 md:text-sm font-semibold ' + (order.badgeBg || '') + ' ' + (order.badgeText || '');
                     badge.textContent = order.status || '';
                 }
-
+ 
                 // Isi info pembeli
                 const elName    = document.getElementById('modal-buyer-name');
                 const elPhone   = document.getElementById('modal-buyer-phone');
@@ -258,77 +260,77 @@
                 if (elName)    elName.textContent    = order.buyer_name    || '-';
                 if (elPhone)   elPhone.textContent   = order.buyer_phone   || '-';
                 if (elAddress) elAddress.textContent = order.buyer_address || '-';
-
+ 
                 const itemsContainer = document.getElementById('modal-items');
                 if (itemsContainer) {
                     itemsContainer.innerHTML = '';
-
+ 
                     order.items.forEach(function(item) {
-                        itemsContainer.innerHTML += '<div class="mb-4 rounded-[20px] bg-[#f4ede5] px-3 py-4 sm:px-4 sm:py-5 last:mb-0">'
-                            + '<div class="flex items-center gap-3 sm:gap-4">'
-                            + '<img src="' + item.img + '" alt="' + item.name + '" class="h-[72px] w-[72px] flex-shrink-0 rounded-[14px] object-cover sm:h-[82px] sm:w-[82px]">'
-                            + '<div class="flex min-w-0 flex-1 items-center justify-between gap-4">'
+                        itemsContainer.innerHTML += '<div class="mb-3 rounded-[16px] bg-[#f4ede5] p-3 md:p-4 last:mb-0">'
+                            + '<div class="flex items-center gap-3 md:gap-4">'
+                            + '<img src="' + item.img + '" alt="' + item.name + '" class="h-14 w-14 md:h-[72px] md:w-[72px] flex-shrink-0 rounded-[12px] object-cover">'
+                            + '<div class="flex min-w-0 flex-1 items-center justify-between gap-3 md:gap-4">'
                             + '<div>'
-                            + '<h4 class="text-sm font-semibold leading-snug text-[#5c4432] sm:text-base">' + item.name + '</h4>'
-                            + '<p class="mt-1 text-xs text-[#7b6858]">Ukuran : ' + item.size + '</p>'
+                            + '<h4 class="text-xs md:text-sm font-bold leading-snug text-[#5c4432]">' + item.name + '</h4>'
+                            + '<p class="mt-1 text-[10px] md:text-xs text-[#7b6858]">Ukuran : ' + item.size + '</p>'
                             + '</div>'
-                            + '<div class="text-right">'
-                            + '<p class="text-sm font-semibold leading-none text-[#7a5a43] sm:text-base">' + item.subtotal + '</p>'
-                            + '<p class="mt-1 text-xs font-medium text-[#7b6858] sm:mt-2 sm:text-sm">x' + item.qty + '</p>'
+                            + '<div class="text-right flex-shrink-0">'
+                            + '<p class="text-xs md:text-sm font-bold leading-none text-[#7a5a43]">' + item.subtotal + '</p>'
+                            + '<p class="mt-1 text-[10px] md:text-xs font-semibold text-[#7b6858]">x' + item.qty + '</p>'
                             + '</div>'
                             + '</div>'
                             + '</div>'
                             + '</div>';
                     });
                 }
-
+ 
                 const elTotal = document.getElementById('modal-total');
                 if (elTotal) elTotal.textContent = order.total;
-
+ 
                 // Konfigurasi Footer Aksi Dinamis
                 const footer = document.getElementById('modal-footer');
                 if (footer) {
                     footer.innerHTML = '';
                     footer.classList.add('hidden');
                     footer.classList.remove('flex');
-
+ 
                     if (order.raw_status === 'pending') {
                         footer.classList.remove('hidden');
                         footer.classList.add('flex');
-
+ 
                          // Tombol Batalkan Pesanan
                         const btnCancel = document.createElement('button');
                         btnCancel.textContent = 'Batalkan Pesanan';
-                        btnCancel.className = 'rounded-xl border border-[#dc2626] bg-white px-5 py-2.5 text-sm font-semibold text-[#dc2626] transition-all duration-300 ease-in-out hover:bg-[#fef2f2] hover:scale-[1.03] active:scale-[0.97]';
+                        btnCancel.className = 'rounded-xl border border-[#dc2626] bg-white px-4 py-2 text-xs md:px-5 md:py-2.5 md:text-sm font-semibold text-[#dc2626] transition-all duration-300 ease-in-out hover:bg-[#fef2f2] hover:scale-[1.03] active:scale-[0.97]';
                         btnCancel.onclick = function() {
                             cancelOrder(order.raw_id);
                         };
-
+ 
                         // Tombol Bayar Sekarang
                         const btnPay = document.createElement('button');
                         btnPay.textContent = 'Bayar Sekarang';
-                        btnPay.className = 'rounded-xl bg-[#47c17b] px-5 py-2.5 text-sm font-semibold text-white transition-all duration-300 ease-in-out hover:bg-[#3ca468] hover:scale-[1.03] active:scale-[0.97] hover:shadow-lg hover:shadow-green-500/20';
+                        btnPay.className = 'rounded-xl bg-[#47c17b] px-4 py-2 text-xs md:px-5 md:py-2.5 md:text-sm font-semibold text-white transition-all duration-300 ease-in-out hover:bg-[#3ca468] hover:scale-[1.03] active:scale-[0.97] hover:shadow-lg hover:shadow-green-500/20';
                         btnPay.onclick = function() {
                             payExistingOrder(order.raw_id, order.snap_token);
                         };
-
+ 
                         footer.appendChild(btnCancel);
                         footer.appendChild(btnPay);
-
+ 
                     } else if (order.raw_status === 'cancel' || order.raw_status === 'expire' || order.raw_status === 'settlement') {
                         footer.classList.remove('hidden');
                         footer.classList.add('flex');
-
+ 
                         // Tombol Beli Lagi
                         const btnReorder = document.createElement('button');
                         btnReorder.textContent = 'Beli Lagi';
-                        btnReorder.className = 'rounded-xl bg-[#BFA28C] px-5 py-2.5 text-sm font-semibold text-white transition-all duration-300 ease-in-out hover:bg-[#A88A72] hover:scale-[1.03] active:scale-[0.97] hover:shadow-lg hover:shadow-[#BFA28C]/20';
+                        btnReorder.className = 'rounded-xl bg-[#BFA28C] px-4 py-2 text-xs md:px-5 md:py-2.5 md:text-sm font-semibold text-white transition-all duration-300 ease-in-out hover:bg-[#A88A72] hover:scale-[1.03] active:scale-[0.97] hover:shadow-lg hover:shadow-[#BFA28C]/20';
                         btnReorder.onclick = function() {
                             btnReorder.disabled = true;
                             btnReorder.textContent = 'Memproses...';
                             reorderItems(order.items, btnReorder);
                         };
-
+ 
                         footer.appendChild(btnReorder);
                     }
                 }
@@ -346,15 +348,21 @@
             
             modal.classList.remove('hidden');
             modal.classList.add('flex');
+            document.body.classList.add('modal-open');
+            document.documentElement.classList.add('modal-open');
             
             btnClose.onclick = function() {
                 modal.classList.add('hidden');
                 modal.classList.remove('flex');
+                document.body.classList.remove('modal-open');
+                document.documentElement.classList.remove('modal-open');
             };
             
             btnSubmit.onclick = async function() {
                 modal.classList.add('hidden');
                 modal.classList.remove('flex');
+                document.body.classList.remove('modal-open');
+                document.documentElement.classList.remove('modal-open');
                 
                 const csrfTokenEl = document.querySelector('meta[name="csrf-token"]');
                 const csrf = csrfTokenEl ? csrfTokenEl.getAttribute('content') : '';
@@ -445,14 +453,16 @@
             const modal = document.getElementById('modal-logout');
             modal.classList.remove('hidden');
             modal.classList.add('flex');
-            document.body.style.overflow = 'hidden';
+            document.body.classList.add('modal-open');
+            document.documentElement.classList.add('modal-open');
         }
 
         function closeLogoutModal() {
             const modal = document.getElementById('modal-logout');
             modal.classList.add('hidden');
             modal.classList.remove('flex');
-            document.body.style.overflow = '';
+            document.body.classList.remove('modal-open');
+            document.documentElement.classList.remove('modal-open');
         }
 
         // Lanjutkan pembayaran pesanan pending

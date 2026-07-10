@@ -9,7 +9,7 @@
 <div class="page active" id="page-dashboard">
 
   <!-- 4 Top Cards -->
-  <div class="mb-6 grid gap-4 lg:grid-cols-4">
+  <div class="mb-6 grid grid-cols-2 gap-3 md:gap-4 lg:grid-cols-4">
 
     <!-- Card 1 -->
     <x-admin.metric-card title="Total Pesanan" valueId="s-pesanan" value="14" subtitle="Pesanan masuk">
@@ -98,7 +98,7 @@
             Lihat Semua
           </a>
         </div>
-        <div class="tbl-wrap">
+        <div class="hidden md:block tbl-wrap">
           <table class="w-full">
             <thead>
               <tr>
@@ -112,6 +112,7 @@
             <tbody id="dash-orders-tbody"></tbody>
           </table>
         </div>
+        <div id="dash-orders-cards" class="block md:hidden divide-y divide-[#eee5dc]"></div>
       </div>
     </div>
 

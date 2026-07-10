@@ -85,17 +85,36 @@
 
 <!-- Banner -->
 <section class="mx-auto max-w-7xl px-6 pt-8">
-    <div class="relative min-h-[300px] overflow-hidden rounded-[32px] md:min-h-[380px]">
+    <!-- Banner Desktop -->
+    <div class="hidden md:block relative min-h-[380px] overflow-hidden rounded-[32px]">
         <img src="https://images.unsplash.com/photo-1483985988355-763728e1935b?auto=format&fit=crop&w=1400&q=80"
             alt="Banner Velora" class="absolute inset-0 h-full w-full object-cover">
         <div class="absolute inset-0 bg-[#5c4432]/40"></div>
 
-        <div class="relative z-10 flex min-h-[300px] items-center justify-center px-8 text-center md:min-h-[380px]">
+        <div class="relative z-10 flex min-h-[380px] items-center justify-center px-8 text-center">
             <div class="max-w-3xl text-white">
-                <h1 class="mb-4 text-4xl font-bold leading-tight md:text-6xl">
+                <h1 class="mb-4 text-6xl font-bold leading-tight">
                     Temukan Fashion Wanita Favoritmu
                 </h1>
-                <p class="text-base leading-8 text-white/90 md:text-xl">
+                <p class="text-xl leading-8 text-white/90">
+                    Koleksi kemeja, gaun, cardigan, dan rok dengan gaya modern, nyaman, dan elegan.
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Banner Mobile -->
+    <div class="block md:hidden relative min-h-[160px] overflow-hidden rounded-[24px]">
+        <img src="https://images.unsplash.com/photo-1483985988355-763728e1935b?auto=format&fit=crop&w=1400&q=80"
+            alt="Banner Velora" class="absolute inset-0 h-full w-full object-cover">
+        <div class="absolute inset-0 bg-[#5c4432]/40"></div>
+
+        <div class="relative z-10 flex min-h-[160px] items-center justify-center px-4 text-center">
+            <div class="max-w-xs text-white">
+                <h1 class="mb-2 text-xl font-bold leading-tight">
+                    Temukan Fashion Wanita Favoritmu
+                </h1>
+                <p class="text-[10px] leading-normal text-white/90">
                     Koleksi kemeja, gaun, cardigan, dan rok dengan gaya modern, nyaman, dan elegan.
                 </p>
             </div>
@@ -209,7 +228,7 @@
         @endforeach
     </div>
     @else
-    <div id="product-grid" class="grid grid-cols-1 gap-7 sm:grid-cols-2 lg:grid-cols-4">
+    <div id="product-grid" class="grid grid-cols-2 gap-3 sm:gap-7 lg:grid-cols-4">
         @foreach ($products as $index => $product)
         <x-user.product-card :product="$product" :index="$index" />
         @endforeach

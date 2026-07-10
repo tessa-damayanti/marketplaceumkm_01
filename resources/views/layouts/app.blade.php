@@ -15,6 +15,13 @@
         rel="stylesheet">
         
     @vite(['resources/css/app.css', 'resources/js/app.js'])
+    <style>
+        html.modal-open,
+        body.modal-open {
+            overflow: hidden !important;
+            height: 100% !important;
+        }
+    </style>
     @stack('styles')
 </head>
 
