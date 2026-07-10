@@ -325,10 +325,13 @@
               <div class="h-8 w-8 rounded-full border border-[#e2d4c5] bg-[#fbf8f5] flex items-center justify-center overflow-hidden shrink-0">
                 <img src="${o.avatar ? o.avatar : `https://ui-avatars.com/api/?name=${encodeURIComponent(o.nama)}&background=f3e6db&color=5c4432&bold=true&size=64`}" alt="${o.nama}" class="h-full w-full object-cover">
               </div>
-              <span class="font-semibold text-[#5c4432] text-sm">${o.nama}</span>
+              <span class="font-semibold text-[#5c4432] text-sm line-clamp-1 break-all flex-1">${o.nama}</span>
             </div>
-            <div class="flex items-center justify-between">
+            <div class="mb-3">
               ${statusBadge(o.status)}
+            </div>
+            <div class="flex items-center justify-between border-t border-[#f7f2eb] pt-3">
+              <span class="text-xs text-[#9a8575]">Total Pendapatan</span>
               <span class="font-extrabold text-[#7a5a43] text-sm">${rp(o.total ?? o.items.reduce((s, i) => s + i.harga * i.qty, 0))}</span>
             </div>
           </div>
@@ -1265,17 +1268,17 @@
               <div class="h-8 w-8 rounded-full border border-[#e2d4c5] bg-[#fbf8f5] flex items-center justify-center overflow-hidden shrink-0">
                 <img src="${o.avatar ? o.avatar : `https://ui-avatars.com/api/?name=${encodeURIComponent(o.nama)}&background=f3e6db&color=5c4432&bold=true&size=64`}" alt="${o.nama}" class="h-full w-full object-cover">
               </div>
-              <span class="font-bold text-[#5c4432] text-sm line-clamp-1 break-all">${o.nama}</span>
+              <span class="font-bold text-[#5c4432] text-sm line-clamp-1 break-all flex-1">${o.nama}</span>
             </div>
-            <div class="flex items-center justify-between">
+            <div class="mb-3">
+              ${statusBadge(o.status)}
+            </div>
+            <div class="flex items-center justify-between border-t border-[#f7f2eb] pt-3">
               <div>
                 <span class="text-[10px] text-[#9a8575] block leading-none">Total</span>
                 <span class="text-sm font-extrabold text-[#7a5a43] block mt-1">${rp(o.items.reduce((s, i) => s + i.harga * i.qty, 0))}</span>
               </div>
-              <div class="flex items-center gap-2">
-                ${statusBadge(o.status)}
-                <button onclick="openDetailPesanan('${o.id}')" class="inline-flex items-center justify-center rounded-xl border border-[#d8c3af] bg-[#a78d78] px-3.5 py-1.5 text-xs font-semibold text-white transition hover:bg-[#8f7561] active:scale-95">Detail</button>
-              </div>
+              <button onclick="openDetailPesanan('${o.id}')" class="inline-flex items-center justify-center rounded-xl border border-[#d8c3af] bg-[#a78d78] px-4 py-2 text-xs font-semibold text-white transition hover:bg-[#8f7561] active:scale-95">Detail</button>
             </div>
           </div>`) : `<div class="px-6 py-12 text-center text-sm text-[#b7a08c]">Tidak ada pesanan ditemukan.</div>`;
       }

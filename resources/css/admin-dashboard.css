@@ -1652,9 +1652,7 @@ label.field-label {
     top: 0;
     z-index: 90;
   }
-}
- 
-@media (max-width: 640px) {
+
   .modal {
     max-height: 75vh !important;
     border-radius: 12px !important;
@@ -1732,7 +1730,7 @@ label.field-label {
     font-size: 12px !important;
   }
 
-  /* Detail Pesanan Modal Styles */
+  /* Detail Pesanan Modal Styles - Stacked for perfect layout consistency */
   .detail-grid {
     grid-template-columns: 1fr !important;
     gap: 8px !important;
