@@ -74,7 +74,7 @@ class CheckoutController extends Controller
 
             $items = [];
             foreach ($keranjangItems as $k) {
-                if (!$k->stok || !$k->stok->produk) continue;
+                if (!$k->stok || !$k->stok->produk || $k->stok->produk->trashed()) continue;
 
                 if ($k->jumlah > $k->stok->jumlah_stok) {
                     return response()->json([
@@ -103,8 +103,8 @@ class CheckoutController extends Controller
 
             $stok = Stok::with(['produk', 'ukuran'])->findOrFail($request->stok_id);
 
-            if (!$stok->produk) {
-                return response()->json(['error' => 'Produk tidak ditemukan.'], 422);
+            if (!$stok->produk || $stok->produk->trashed()) {
+                return response()->json(['error' => 'Produk tidak ditemukan atau sudah tidak aktif.'], 422);
             }
 
             $qty = (int) $request->qty;

@@ -78,6 +78,7 @@
                 'subtotal' => 'Rp' . number_format($d->harga_satuan * $d->jumlah, 0, ',', '.'),
                 'img'      => $img,
                 'stok_id'  => $d->stok_id,
+                'trashed'  => $produk?->trashed() ?? false,
             ];
         }
 
@@ -325,7 +326,7 @@
                         btnReorder.onclick = function() {
                             btnReorder.disabled = true;
                             btnReorder.textContent = 'Memproses...';
-                            reorderItems(order.items);
+                            reorderItems(order.items, btnReorder);
                         };
 
                         footer.appendChild(btnReorder);
@@ -397,12 +398,26 @@
             };
         }
 
-        async function reorderItems(items) {
+        async function reorderItems(items, btnEl) {
+            const activeItems = items.filter(item => !item.trashed);
+            if (activeItems.length === 0) {
+                if (typeof window.showCustomAlert === 'function') {
+                    window.showCustomAlert('Produk di dalam pesanan ini sudah tidak tersedia.', 'error');
+                } else {
+                    alert('Produk di dalam pesanan ini sudah tidak tersedia.');
+                }
+                if (btnEl) {
+                    btnEl.disabled = false;
+                    btnEl.textContent = 'Beli Lagi';
+                }
+                return;
+            }
+
             const csrfTokenEl = document.querySelector('meta[name="csrf-token"]');
             const csrf = csrfTokenEl ? csrfTokenEl.getAttribute('content') : '';
 
             try {
-                for (const item of items) {
+                for (const item of activeItems) {
                     const formData = new FormData();
                     formData.append('_token', csrf);
                     formData.append('stok_id', item.stok_id);
@@ -413,12 +428,16 @@
                         body: formData
                     });
                 }
-                const reorderedStoks = items.map(i => i.stok_id);
+                const reorderedStoks = activeItems.map(i => i.stok_id);
                 localStorage.setItem('reordered_stoks', JSON.stringify(reorderedStoks));
                 window.location.href = '/cart';
             } catch (err) {
                 console.error(err);
                 alert('Gagal memproses Beli Lagi.');
+                if (btnEl) {
+                    btnEl.disabled = false;
+                    btnEl.textContent = 'Beli Lagi';
+                }
             }
         }
 
