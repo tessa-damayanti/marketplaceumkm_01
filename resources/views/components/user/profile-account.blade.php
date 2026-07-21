@@ -160,7 +160,7 @@
     }
 
     document.addEventListener('DOMContentLoaded', function() {
-        const form = document.querySelector('form[action="{{ route('profile.update') }}"]');
+        const form = document.querySelector(`form[action="{{ route('profile.update') }}"]`);
         const submitBtn = form ? form.querySelector('button[type="submit"]') : null;
 
         if (form && submitBtn) {

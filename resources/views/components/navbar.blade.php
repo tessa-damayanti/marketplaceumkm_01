@@ -17,6 +17,8 @@
                 <input
                     type="text"
                     name="search"
+                    id="desktop-search"
+                    autocomplete="off"
                     value="{{ request('search') }}"
                     placeholder="Cari Produk..."
                     class="w-full rounded-full border border-[#bfa58e] bg-[#fdfaf7] px-5 py-2.5 pl-11 text-sm outline-none focus:border-[#8f7561]"
@@ -80,13 +82,50 @@
             <a href="{{ route('home') }}#tentang" id="mobile-nav-tentang" class="py-1 transition hover:text-[#8f7561]">Tentang</a>
         </div>
         <form action="{{ route('product') }}" method="GET" class="relative mt-2">
-            <input type="text" name="search" placeholder="Cari Produk..." class="w-full rounded-full border border-[#bfa58e] bg-[#fdfaf7] px-5 py-2.5 pl-11 text-sm outline-none focus:border-[#8f7561]">
+            <input type="text" name="search" id="mobile-search" autocomplete="off" placeholder="Cari Produk..." class="w-full rounded-full border border-[#bfa58e] bg-[#fdfaf7] px-5 py-2.5 pl-11 text-sm outline-none focus:border-[#8f7561]">
             <span class="absolute left-4 top-1/2 -translate-y-1/2 text-[#8b6f58]">
                 <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"></circle><path d="M20 20L17 17"></path></svg>
             </span>
         </form>
     </div>
 </nav>
+
+{{-- Auto-search: ketik nama kategori langsung redirect ke kategori --}}
+<script>
+(function() {
+    const categories = @json($categories ?? \App\Models\Kategori::orderBy('id','asc')->pluck('nama'));
+    const productUrl = "{{ route('product') }}";
+    let autoSearchTimer = null;
+
+    function setupAutoSearch(inputEl) {
+        if (!inputEl) return;
+
+        inputEl.addEventListener('input', function() {
+            clearTimeout(autoSearchTimer);
+            const val = this.value.trim().toLowerCase();
+            if (val.length < 2) return;
+
+            autoSearchTimer = setTimeout(function() {
+                // Cek apakah ketikan cocok dengan nama kategori
+                const matched = categories.find(function(catName) {
+                    const catLower = (typeof catName === 'string' ? catName : catName.nama).toLowerCase();
+                    return catLower === val
+                        || (val.length >= 3 && catLower.includes(val))
+                        || (val.length >= 3 && val.includes(catLower));
+                });
+
+                if (matched) {
+                    const name = (typeof matched === 'string' ? matched : matched.nama).toLowerCase();
+                    window.location.href = productUrl + '?category=' + encodeURIComponent(name);
+                }
+            }, 400); // Tunggu 400ms setelah berhenti mengetik
+        });
+    }
+
+    setupAutoSearch(document.getElementById('desktop-search'));
+    setupAutoSearch(document.getElementById('mobile-search'));
+})();
+</script>
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {

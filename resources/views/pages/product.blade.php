@@ -246,7 +246,11 @@
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
             </svg>
         </div>
+        @if($isCategoryEmpty)
+        <h3 class="text-xl font-bold text-[#5c4432]">Belum ada produk pada kategori ini.</h3>
+        @else
         <h3 class="text-xl font-bold text-[#5c4432]">Produk tidak ditemukan</h3>
+        @endif
     </div>
     @endif
 </section>

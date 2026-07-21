@@ -9,7 +9,7 @@ class KategoriController extends Controller
 {
     public function kategori()
     {
-        // Cek akses: Hanya admin yang boleh masuk sini.
+        // Hanya admin
         if (session('role') !== 'admin') {
             return redirect()->route('login')->with('error', 'Silakan login sebagai admin terlebih dahulu.');
         }

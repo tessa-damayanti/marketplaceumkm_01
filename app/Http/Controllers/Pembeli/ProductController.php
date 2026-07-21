@@ -89,6 +89,20 @@ class ProductController extends Controller
             return redirect()->to(route('home') . '#tentang');
         }
 
+        if ($searchLower && $defaultCategory === 'semua') {
+            $matchedCategory = $categories->first(function ($cat) use ($searchLower) {
+                $catNameLower = strtolower($cat->nama);
+                return $catNameLower === $searchLower
+                    || (strlen($searchLower) >= 3 && str_contains($catNameLower, $searchLower))
+                    || (strlen($searchLower) >= 3 && str_contains($searchLower, $catNameLower));
+            });
+
+            if ($matchedCategory) {
+                // Redirect ke halaman kategori yang cocok
+                return redirect()->route('product', ['category' => strtolower($matchedCategory->nama)]);
+            }
+        }
+
         if ($defaultCategory === 'semua') {
             $displayProducts = [];
              // Menggabungkan seluruh produk dari semua kategori //
