@@ -1627,3 +1627,154 @@ label.field-label {
     white-space: nowrap;
   }
 }
+ 
+/* CUSTOM RESPONSIVE REVAMP */
+@media (max-width: 768px) {
+  html,
+  body {
+    overflow-y: auto !important;
+    height: auto !important;
+  }
+  .shell {
+    height: auto !important;
+    overflow: visible !important;
+  }
+  .main-wrap {
+    height: auto !important;
+    overflow: visible !important;
+  }
+  .main-content {
+    overflow-y: visible !important;
+    height: auto !important;
+  }
+  .topbar {
+    position: sticky;
+    top: 0;
+    z-index: 90;
+  }
+
+  .modal {
+    max-height: 75vh !important;
+    border-radius: 12px !important;
+  }
+
+  .modal-body {
+    padding: 12px 16px !important;
+    gap: 8px !important;
+  }
+
+  .modal-header {
+    padding: 12px 16px 8px !important;
+  }
+
+  .modal-footer {
+    padding: 10px 16px 12px !important;
+    gap: 8px !important;
+    flex-direction: row !important;
+  }
+
+  .modal-title {
+    font-size: 15px !important;
+  }
+
+  .modal-action-footer {
+    padding: 12px 16px !important;
+  }
+
+  /* Compact form inputs inside modals on mobile */
+  .modal input[type="text"],
+  .modal input[type="number"],
+  .modal select,
+  .modal textarea,
+  .modal .modal-select-btn {
+    min-height: 38px !important;
+    padding: 6px 10px !important;
+    border-radius: 8px !important;
+    font-size: 12.5px !important;
+    border-width: 1.5px !important;
+  }
+
+  .modal textarea {
+    min-height: 60px !important;
+  }
+
+  .modal .upload-zone {
+    min-height: 52px !important;
+    padding: 6px 10px !important;
+    border-radius: 8px !important;
+  }
+
+  .modal .upload-btn-fake {
+    min-height: 28px !important;
+    padding: 0 10px !important;
+    border-radius: 6px !important;
+    font-size: 11px !important;
+    line-height: 26px !important;
+  }
+
+  .modal .upload-hint {
+    font-size: 11px !important;
+  }
+
+  .modal .field-label {
+    margin-bottom: 2px !important;
+    font-size: 11px !important;
+  }
+
+  .modal .btn-modal-cancel,
+  .modal .btn-modal-save {
+    width: 50% !important;
+    min-height: 34px !important;
+    border-radius: 6px !important;
+    padding: 4px 10px !important;
+    font-size: 12px !important;
+  }
+
+  /* Detail Pesanan Modal Styles - Stacked for perfect layout consistency */
+  .detail-grid {
+    grid-template-columns: 1fr !important;
+    gap: 8px !important;
+  }
+  .detail-field {
+    padding: 8px 12px !important;
+    border-radius: 8px !important;
+    gap: 2px !important;
+  }
+  .detail-field-label {
+    font-size: 11px !important;
+  }
+  .detail-field-value {
+    font-size: 13px !important;
+  }
+
+  /* Explicit Filter Row Gaps on Mobile */
+  #page-pesanan .pesanan-filter-row {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 12px !important;
+    padding: 16px 20px !important;
+  }
+  #page-produk .produk-header {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 12px !important;
+    padding: 16px 20px !important;
+  }
+  #page-produk .produk-filter-row {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 12px !important;
+  }
+  #page-kategori .kategori-header {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 12px !important;
+    padding: 16px 20px !important;
+  }
+  #page-stok .surface > div:first-child {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 12px !important;
+    padding: 16px 20px !important;
+  }
+}

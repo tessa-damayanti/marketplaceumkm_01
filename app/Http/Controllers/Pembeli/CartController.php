@@ -24,7 +24,7 @@ class CartController extends Controller
 
         $cartItems = [];
         foreach ($dbCart as $item) {
-            if (!$item->stok || !$item->stok->produk) {
+            if (!$item->stok || !$item->stok->produk || $item->stok->produk->trashed()) {
                 continue;
             }
 
@@ -97,6 +97,9 @@ class CartController extends Controller
         ]);
 
         $stok   = Stok::with('produk')->findOrFail($request->stok_id);
+        if (!$stok->produk || $stok->produk->trashed()) {
+            return back()->with('error', 'Produk sudah tidak tersedia.');
+        }
         $userId = Auth::id();
 
         // Mengecek produk dengan ukuran yang sama sudah ada di keranjang //

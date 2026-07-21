@@ -20,15 +20,15 @@
         <div class="max-h-[90vh] overflow-y-auto grid grid-cols-1 md:grid-cols-[46%_54%]">
 
             <!-- Kolom kiri: Gambar produk -->
-            <div class="flex items-center justify-center bg-[#F5EDE4] p-6 md:min-h-[500px] md:p-8">
+            <div class="flex items-center justify-center bg-[#F5EDE4] p-3 md:min-h-[500px] md:p-8">
                 <img id="modalImage"
                     src=""
                     alt="Foto produk"
                     class="w-full rounded-2xl object-contain shadow-[0_8px_28px_rgba(92,68,50,0.12)]
-        max-h-[260px] md:max-h-[440px]">
+        max-h-[160px] md:max-h-[440px]">
             </div>
 
-            <div class="flex flex-col overflow-hidden p-5 sm:p-7 md:p-8 [font-family:'Poppins',sans-serif]">
+            <div class="flex flex-col overflow-hidden p-4 md:p-8 [font-family:'Poppins',sans-serif]">
 
                 <!-- Label kategori -->
                 <p id="modalCategory"
@@ -40,10 +40,10 @@
 
                 <!-- Harga -->
                 <p id="modalPrice"
-                    class="mb-4 font-bold text-[#7a5a43] text-[clamp(1.05rem,3vw,1.4rem)]"></p>
+                    class="mb-3 md:mb-4 font-bold text-[#7a5a43] text-[clamp(1.05rem,3vw,1.4rem)]"></p>
 
                 <!-- Deskripsi produk  -->
-                <div class="mb-4">
+                <div class="mb-3 md:mb-4">
                     <h3 class="mb-1.5 text-[14px] font-bold normal-case tracking-normal text-[#9C7B62]">
                         Deskripsi Produk
                     </h3>
@@ -65,7 +65,7 @@
                     </p>
                 </div>
 
-                <div class="mb-4">
+                <div class="mb-3 md:mb-4">
                     <h3 class="mb-0.5 text-[14px] font-bold normal-case tracking-normal text-[#9C7B62]">
                         Stok
                     </h3>
@@ -76,7 +76,7 @@
                 </div>
 
                 <!-- Jumlah dan tombol + / - -->
-                <div class="mb-4">
+                <div class="mb-3 md:mb-4">
                     <h3 class="mb-2 text-[14px] font-bold normal-case tracking-normal text-[#9C7B62]">
                         Jumlah
                     </h3>
@@ -107,11 +107,11 @@
                 <!-- Tombol Keranjang dan Beli Sekarang -->
                 <div class="mt-auto flex gap-2.5">
                     <button type="button" onclick="addToCart()"
-                        class="flex-1 rounded-[14px] bg-[#BFA28C] py-3 text-sm font-bold text-white transition-all duration-200 hover:-translate-y-px hover:bg-[#A88A72] hover:shadow-[0_6px_18px_rgba(191,162,140,0.22)]">
+                        class="flex-1 rounded-[14px] bg-[#BFA28C] py-2.5 md:py-3 text-xs md:text-sm font-bold text-white transition-all duration-200 hover:-translate-y-px hover:bg-[#A88A72] hover:shadow-[0_6px_18px_rgba(191,162,140,0.22)]">
                         Tambah Ke Keranjang
                     </button>
                     <button type="button" onclick="buyNow()"
-                        class="flex-1 rounded-[14px] bg-[#A98B76] py-3 text-sm font-bold text-white transition-all duration-200 hover:-translate-y-px hover:bg-[#967A66] hover:shadow-[0_6px_18px_rgba(169,139,118,0.22)]">
+                        class="flex-1 rounded-[14px] bg-[#A98B76] py-2.5 md:py-3 text-xs md:text-sm font-bold text-white transition-all duration-200 hover:-translate-y-px hover:bg-[#967A66] hover:shadow-[0_6px_18px_rgba(169,139,118,0.22)]">
                         Beli Sekarang
                     </button>
                 </div>

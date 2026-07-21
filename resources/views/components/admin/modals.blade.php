@@ -148,7 +148,7 @@
 
 <!-- Detail Pesanan -->
 <div class="overlay" id="modal-pesanan">
-  <div class="modal" style="width:520px;" id="pesanan-modal-content">
-
+  <div class="modal w-full max-w-[520px] max-h-[85vh]" id="pesanan-modal-content">
+ 
   </div>
 </div>

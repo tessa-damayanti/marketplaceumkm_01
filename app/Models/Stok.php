@@ -16,7 +16,7 @@ class Stok extends Model
     // Data stok punya satu produk
     public function produk()
     {
-        return $this->belongsTo(Produk::class, 'produk_id');
+        return $this->belongsTo(Produk::class, 'produk_id')->withTrashed();
     }
     //Data stok mewakili SATU ukuran tertentu
     public function ukuran()

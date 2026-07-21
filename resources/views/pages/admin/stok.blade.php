@@ -18,7 +18,7 @@
             class="search-input" style="padding-left: 40px;">
         </div>
       </div>
-      <div class="tbl-wrap">
+      <div class="hidden md:block tbl-wrap">
         <table>
           <thead>
             <tr class="bg-[#f3ecdf]">
@@ -33,6 +33,7 @@
           <tbody id="stok-tbody"></tbody>
         </table>
       </div>
+      <div id="stok-cards" class="block md:hidden divide-y divide-[#eee5dc]"></div>
       <x-admin.pagination infoId="stok-pagi-info" infoText="1 - 8 dari 8" />
     </div>
   </div>
