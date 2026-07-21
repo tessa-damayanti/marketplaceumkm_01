@@ -36,8 +36,6 @@
     {{-- Toast --}}
     <x-user.profile-toast />
 
-@endsection
-
 @php
     // Mapping badge warna per status
     $badgeMap = [
@@ -99,8 +97,7 @@
         ];
     }
 @endphp
-
-
+@endsection
 
 @push('scripts')
     <script src="https://app.sandbox.midtrans.com/snap/snap.js" data-client-key="{{ config('midtrans.client_key') }}"></script>
@@ -381,11 +378,11 @@
                         if (typeof window.showCustomAlert === 'function') {
                             window.showCustomAlert('Pesanan berhasil dibatalkan.', 'success');
                             setTimeout(() => {
-                                window.location.href = '{{ route('profile') }}?tab=riwayat&status=all';
+                                window.location.href = "{{ route('profile') }}?tab=riwayat&status=all";
                             }, 1500);
                         } else {
                             alert('Pesanan berhasil dibatalkan.');
-                            window.location.href = '{{ route('profile') }}?tab=riwayat&status=all';
+                            window.location.href = "{{ route('profile') }}?tab=riwayat&status=all";
                         }
                     } else {
                         const errMsg = data.error || 'Gagal membatalkan pesanan.';
@@ -538,22 +535,22 @@
                     if (typeof window.showCustomAlert === 'function') {
                         window.showCustomAlert('Pembayaran berhasil! Terima kasih.', 'success');
                         setTimeout(() => {
-                            window.location.href = '{{ route('profile') }}?tab=riwayat&status=all';
+                            window.location.href = "{{ route('profile') }}?tab=riwayat&status=all";
                         }, 1500);
                     } else {
                         alert('Pembayaran berhasil! Terima kasih.');
-                        window.location.href = '{{ route('profile') }}?tab=riwayat&status=all';
+                        window.location.href = "{{ route('profile') }}?tab=riwayat&status=all";
                     }
                 },
                 onPending: function(result){
                     if (typeof window.showCustomAlert === 'function') {
                         window.showCustomAlert('Menunggu pembayaran Anda!', 'success');
                         setTimeout(() => {
-                            window.location.href = '{{ route('profile') }}?tab=riwayat&status=all';
+                            window.location.href = "{{ route('profile') }}?tab=riwayat&status=all";
                         }, 1500);
                     } else {
                         alert('Menunggu pembayaran Anda!');
-                        window.location.href = '{{ route('profile') }}?tab=riwayat&status=all';
+                        window.location.href = "{{ route('profile') }}?tab=riwayat&status=all";
                     }
                 },
                 onError: function(result){

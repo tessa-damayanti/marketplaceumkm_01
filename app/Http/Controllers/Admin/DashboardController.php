@@ -20,7 +20,7 @@ class DashboardController extends Controller
             'pesanan'  => $this->getPesananData(),
         ]);
     }
-
+ 
     private function getProdukData()
     {
         $produks = Produk::with(['kategori', 'stoks.ukuran'])->get();

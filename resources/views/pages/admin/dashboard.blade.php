@@ -45,7 +45,7 @@
     </x-admin.metric-card>
   </div>
 
-  <!-- Filter Bar (antara card dan statistik) -->
+  <!-- Filter Bar  -->
   <div class="mb-4 flex items-center justify-end gap-3">
     <span class="text-sm font-bold text-[#5c4432]">Pendapatan:</span>
     <div class="relative min-w-[180px]">
